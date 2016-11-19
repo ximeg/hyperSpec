@@ -13,7 +13,7 @@
  pdfkeywords={hyperSpec, data format, file, import, export}}
 
 % \VignetteIndexEntry{fileio: Import and Export of Spectra into R/hyperSpec}
-% \VignetteKeywords{hyperSpec, import, export}
+% \VignetteKeywords{hyperSpec, import, export, .spc, ENVI, ASCII}
 % \VignettePackage{hyperSpec}
 
 \begin{document}
@@ -300,43 +300,15 @@ appropriate tolerance can be chosen:
 read.jdx ("jcamp-dx/virgilio.jdx", ytol = 1e-9)
 @ 
 
-To test the import, read a number of test files: 
-<<test-read-jdx, echo = FALSE>>=
-files <- c (Sys.glob ("jcamp-dx/*.DX"), Sys.glob ("jcamp-dx/*.dx"), 
-            Sys.glob ("jcamp-dx/*.jdx"), Sys.glob ("jcamp-dx/*.JCM"), 
-            Sys.glob ("jcamp-dx/PE-IR/*.DX"), 
-				"jcamp-dx/GMD_20111121_MDN35_ALK_JCAMP.txt" # MPI Golm
-				)
-
-## not covered:
-# setdiff (c (Sys.glob ("jcamp-dx/*"), Sys.glob ("jcamp-dx/PE-IR/*")), files)
-
-## exclude files already checked with the visible examples: 
-files <- setdiff (files, c ("jcamp-dx/shimadzu.jdx", "jcamp-dx/virgilio.jdx"))
-
-unsupported <- c ("jcamp-dx/BRUKER2.JCM", 
-                  "jcamp-dx/BRUKER1.JCM", 
-                  "jcamp-dx/TESTSPEC.DX",  
-                  "jcamp-dx/TEST32.DX", 
-                  "jcamp-dx/SPECFILE.DX",  
-                  "jcamp-dx/ISAS_MS2.DX", 
-                  "jcamp-dx/ISAS_MS3.DX", # NTUPLES
-                  "jcamp-dx/BRUKSQZ.DX", 
-                  "jcamp-dx/BRUKDIF.DX",
-                  "jcamp-dx/BRUKNTUP.DX", # NTUPLES
-                  "jcamp-dx/ISAS_CDX.DX", # PEAK ASSIGNMENTS= (XYMA)
-                  "jcamp-dx/TESTFID.DX", # NTUPLES
-                  "jcamp-dx/TESTNTUP.DX" # NTUPLES
-                  )
-
-for (file in files [! files %in% unsupported]) {
-  cat (file)
-  read.jdx (file, ytol = 1e-6)
-  cat ("\n")
-}
-@
-
 \warnbox{Note}{\Rfunction{read.jdx.Shimadzu} is deprecated.}
+\warnbox{Note}{An R package dedicated to importing JCAMP-DX is currently under development by Bryan Hanson 
+(\url{https://github.com/bryanhanson/readJDX}).
+\phy will use that package once it is available on CRAN. Maintenance of \phy's \Rfunction{read.jdx} function 
+is limited from now on in favor of Bryan's pacakge.}
+
+<<test-read.jdx, echo = FALSE, results=hide>>=
+tests <- test_file_keep ("test-read.jdx.R", reporter, tests)
+@ 
 
 \subsection{Basic Atomic Spectra from NIST Tables}
 \label{sec:aes-nist}
@@ -362,7 +334,7 @@ file <- file [! grepl ("^[[:space:]]+$", file)]
 colnames <- file [1]
 colnames <- gsub ("[[:space:]][[:space:]]+", "\t",  file [1])
 colnames <- strsplit (colnames, "\t")[[1]]
-if (colnames != c ("Intensity", "Wavelength (&Aring;)", "Spectrum", "Ref. "))
+if (! all (colnames == c ("Intensity", "Wavelength (&Aring;)", "Spectrum", "Ref. ")))
   stop ("file format changed!")
 
 tablestart <- grep ("^[[:blank:]]*[[:alpha:]]+$", file) + 1
@@ -564,6 +536,9 @@ read.spc ("spc.Kaisermap/ebroAVII.spc", keys.hdr2data = TRUE)
 read.spc ("spc.Kaisermap/ebroAVII.spc", keys.log2data = TRUE)
 @ 
 
+<<test-hdr2data, echo=FALSE, results=hide>>=
+read.spc ("spc/BARBITUATES.SPC", keys.hdr2data = TRUE)
+@ 
 
 
 .spc files may contain multiple spectra that do \emph{not} share a common wavelength axis. In this
@@ -583,6 +558,10 @@ barbiturates [[1:10, , 25 ~ 30]]
 \paragraph{Unit Tests}
 <<spc-tests, echo = FALSE>>=
 tests <- test_file_keep ("test-read.spc.R", reporter, tests)
+@
+<<Horiba-spc, echo=FALSE, results=hide>>=
+read.spc("spc.LabRam/LabRam-1.spc")
+read.spc("spc.LabRam/LabRam-2.spc")
 @
 
 \paragraph{Deriving manufacturer specific import filters.}
@@ -842,29 +821,22 @@ spc
 
 Note that Labspec .txt files can contains lots of spectra with zero intensity: Labspec saves a
 complete rectangular grid even if only part of a map was measured. These spectra are by removed
-(\Rcode{remove.zerospc = TRUE}).
+by default if option \Rcode{file.remove.emptyspc} is \Rcode{TRUE} (the default).
 
 For convenience, functions to further wrappers to import maps (\Rfunction{read.txt.Horiba.xy}) and
 time series (\Rfunction{read.txt.Horiba.t}) are provided.
 
 <<testHoriba, echo=FALSE, results=hide>>=
 spc <- read.txt.Horiba.xy ("txt.HoribaJobinYvon/map.txt")
-if (any (dim (spc) != c (141, 3, 616)) || 
+if (any (dim (spc) != c (141, 4, 616)) || 
     any (abs (spc) < .Machine$double.eps^.5) ||
     is.null (spc$x) || any (is.na (spc$x)) || 
     is.null (spc$y) || any (is.na (spc$y)) ||
     length (setdiff (wl (spc), 1 : 616)) == 0L)
   stop ("error in testing read.txt.Horiba.xy. Please contact ", maintainer ("hyperSpec"))
 
-spc <- read.txt.Horiba.xy ("txt.HoribaJobinYvon/map.txt", remove.zerospc = FALSE)
-if (any (dim (spc) != c (398, 3, 616)) || 
-    is.null (spc$x) || any (is.na (spc$x)) || 
-    is.null (spc$y) || any (is.na (spc$y)) ||
-    length (setdiff (wl (spc), 1 : 616)) == 0L)
-  stop ("error in testing read.txt.Horiba.xy. Please contact ", maintainer ("hyperSpec"))
-
-spc <- read.txt.Horiba.t ("txt.HoribaJobinYvon/ts.txt", remove.zerospc = FALSE)
-if (any (dim (spc) != c (100, 2, 1024)) || 
+spc <- read.txt.Horiba.t ("txt.HoribaJobinYvon/ts.txt")
+if (any (dim (spc) != c (100, 3, 1024)) || 
     is.null (spc$t) || any (is.na (spc$t)) ||
     length (setdiff (wl (spc), 1 : 1024)) == 0L)
   stop ("error in testing read.txt.Horiba.xy. Please contact ", maintainer ("hyperSpec"))
