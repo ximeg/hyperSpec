@@ -1,5 +1,8 @@
-all: barbiturates.rda paracetamol.rda fileio.pdf 
+all: barbiturates.rda paracetamol.rda fileio.pdf
 
+clean:
+	rm -f *-fig-*.pdf *.aux *.bbl *.blg *.out *.log *-pkg.bib *.toc *.idx *.ilg *.ind *.rda
+	rm -f *~ .*~ \#*\#
 
 .SECONDARY: barbiturates.rda paracetamol.rda
 .PRECIOUS: barbiturates.rda paracetamol.rda
@@ -34,7 +37,8 @@ jcamp-dx = jcamp-dx/2934luana.JDX jcamp-dx/2934luana-nolinkblock.JDX \
           jcamp-dx/testjose.dx \
           jcamp-dx/TESTNTUP.DX \
           jcamp-dx/TESTSPEC.DX \
-          jcamp-dx/virgilio.jdx
+          jcamp-dx/virgilio.jdx \
+          jcamp-dx/IR_S_1.DX
 
 mat.cytospec = mat.cytospec/cytospec.mat
 
@@ -43,7 +47,7 @@ mat.Witec = mat.Witec/LineX.mat mat.Witec/LineY.mat mat.Witec/Map.mat mat.Witec/
 
 NIST      = NIST/mercurytable2.htm
 
-pz2       = pz2/handyspec_soilplant.PZ2 pz2/scan.txt.pz2.R
+pz2       = pz2/handyspec_soilplant.PZ2 pz2/read.txt.pz2.R
 
 spc       = spc/BARBITUATES.SPC spc/barbsvd.spc spc/BENZENE.SPC spc/CONTOUR.SPC spc/DEMO\ 3D.SPC \
           spc/DRUG\ SAMPLE_PEAKS.SPC spc/DRUG\ SAMPLE.SPC spc/FID.SPC spc/HCL.SPC spc/HOLMIUM.SPC \
@@ -105,9 +109,9 @@ spc.Witec = spc.Witec/P_A32_006_Spec.Data\ 1.spc spc.Witec/P_A32_007_Spec.Data\ 
 
 spe =     spe/aspirin.spe  spe/HeNe.SPE spe/noise.spe spe/polystyrene.SPE \
           spe/blut1.SPE spe/blut2.SPE spe/kuvette.SPE \
-          spe/blut1.spc spe/blut2.spc spe/kuvette.spc 
+          spe/blut1.spc spe/blut2.spc spe/kuvette.spc
 
-spe.gasmet = spe.gasmet/06dvan_BS_cdst_Diesel_run3_281011_00001.SPE 
+spe.gasmet = spe.gasmet/06dvan_BS_cdst_Diesel_run3_281011_00001.SPE
 
 sp.PerkinElmer = sp.PerkinElmer/A1701001.SP sp.PerkinElmer/A1702001.SP sp.PerkinElmer/A1703001.SP \
           sp.PerkinElmer/A1704001.SP sp.PerkinElmer/A1705001.SP sp.PerkinElmer/A1706001.SP \
@@ -222,7 +226,9 @@ txt.Witec = txt.Witec/Witec-Map_full.txt \
           txt.Witec/Witec-timeseries\ (X-Axis).txt txt.Witec/Witec-timeseries\ (Y-Axis).txt \
           txt.Witec/Witec-timeseries_label.txt txt.Witec/Witec-timeseries_no.txt  \
           txt.Witec/Witec-timeseries_unit.txt \
-          txt.Witec/Witec-timeseries-x.dat txt.Witec/Witec-timeseries-y.dat
+          txt.Witec/Witec-timeseries-x.dat txt.Witec/Witec-timeseries-y.dat \
+          txt.Witec/nofilename\ (Header).txt txt.Witec/nofilename\ (X-Axis).txt txt.Witec/nofilename\ (Y-Axis).txt
+
 uxd = uxd/DIV1208200(1).UXD uxd/DIV1208300(1).UXD uxd/DIV1208400(1).UXD uxd/DIV1208500(1).UXD  \
           uxd/DIV1208600(1).UXD uxd/DIV1208700(1).UXD uxd/DIV1208800(1).UXD uxd/DIV1208900(1).UXD \
           uxd/DIV1209000(1).UXD uxd/DIV1214300(1).UXD uxd/DIV1214400(1).UXD uxd/DIV1214500(1).UXD \
@@ -258,10 +264,10 @@ RAWFILES = $(asc.Andor) \
            $(txt.Witec) \
            $(uxd) \
            $(wdf.Renishaw) \
-           $(WIP.Witec) 
+           $(WIP.Witec)
 
 fileio.pdf: fileio.Rnw vignettes.defs barbiturates.rda | $(RAWFILES)
-	R CMD Sweave fileio.Rnw --clean --pdf --compact="both" 
+	R CMD Sweave fileio.Rnw --pdf --compact="both" 
 
 vignettes.defs: ../vignettes.defs
 	cp -av $< $@
@@ -272,5 +278,5 @@ $(RAWFILES):
 barbiturates.rda:
 	touch barbiturates.rda
 
-paracetamol.rda: 
+paracetamol.rda:
 	touch paracetamol.rda

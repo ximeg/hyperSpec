@@ -1,11 +1,26 @@
 Package: hyperSpec
+Encoding: UTF-8
 Type: Package
 Title: Work with Hyperspectral Data, i.e. Spectra + Meta Information (Spatial,
     Time, Concentration, ...)
-Version: 0.98-20161119
-Date: 2016-11-19
-Author: Claudia Beleites
+Version: 0.99-171005
+Date: 2017-10-05
 Maintainer: Claudia Beleites <chemometrie@beleites.de>
+Authors@R: c(
+    person("Claudia",   "Beleites",  role = c("aut","cre", "dtc"), email = "chemometrie@beleites.de"),
+    person("Valter",    "Sergo",     role = c("aut")),
+    person("Alois",     "Bonifacio", role = c ("ctb", "dtc")),
+    person("Marcel",    "Dahms",     role = "ctb"),
+    person("Björn",     "Egert",     role = "ctb"),
+    person("Simon",     "Fuller",    role = "ctb"),
+    person("Vilmantas", "Gegzna",    role = "ctb"),
+    person("Rustam",    "Guliev",    role = "ctb"),
+    person("Bryan",     "Hanson",    role = "ctb"),
+    person("Michael",   "Hermes",    role = "ctb"),
+    person("Martin",    "Kammer",    role = "dtc"),
+    person("Roman",     "Kiselev",   role = "ctb"),
+    person("Sebastian", "Mellor",    role = "ctb")
+    )
 Description: Comfortable ways to work with hyperspectral data sets.
     I.e. spatially or time-resolved spectra, or spectra with any other kind
     of information associated with each of the spectra. The spectra can be data
@@ -36,23 +51,22 @@ Suggests:
     fastcluster,
     pls,
     mvtnorm,
-    digest
+    digest,
+    reshape,
+    devtools,
+    R.rsp
 Imports:
     testthat,
     methods,
     utils,
     latticeExtra
 URL: http://hyperSpec.r-forge.r-project.org/
-Collate:
+BugReports: https://github.com/cbeleites/hyperSpec/issues
+VignetteBuilder: R.rsp
+Collate: 
     'validate.R'
     'hyperspec-class.R'
     'unittest.R'
-    'barbiturates.R'
-    'paracetamol.R'
-    'laser.R'
-    'chondro.R'
-    'flu.R'
-    'hyperspec-package.R'
     'paste.row.R'
     'Arith.R'
     'Compare.R'
@@ -63,21 +77,32 @@ Collate:
     'all.equal.R'
     'apply.R'
     'as.data.frame.R'
+    'barbiturates.R'
     'bind.R'
     'call.list.R'
     'chk.hy.R'
+    'chondro.R'
     'colMeans.R'
     'collapse.R'
     'cov.R'
     'decomposition.R'
+    'deprecated.R'
     'dim.R'
     'dimnames.R'
+    'droplevels.R'
     'empty.R'
     'wl2i.R'
     'extract.R'
     'factor2num.R'
     'fileio.optional.R'
+    'flu.R'
     'getbynames.R'
+    'options.R'
+    'regexps.R'
+    'guesswavelength.R'
+    'paracetamol.R'
+    'laser.R'
+    'hyperspec-package.R'
     'initialize.R'
     'labels.R'
     'plotmap.R'
@@ -92,7 +117,6 @@ Collate:
     'merge.R'
     'mvtnorm.R'
     'normalize01.R'
-    'options.R'
     'orderwl.R'
     'pearson.dist.R'
     'plot.R'
@@ -106,24 +130,23 @@ Collate:
     'rbind.fill.R'
     'read.ENVI.Nicolet.R'
     'read.ENVI.R'
+    'read.txt.Witec.R'
+    'read.asc.Andor.R'
     'read.ini.R'
     'read.jdx.R'
-    'read.jdx.Shimadzu.R'
     'read.mat.Cytospec.R'
     'read.mat.Witec.R'
     'read.spc.Kaiser.R'
     'read.spc.R'
     'read.spe.R'
     'read.txt.Horiba.R'
+    'read.txt.Renishaw.R'
     'read.txt.Shimadzu.R'
     'read.txt.long.R'
     'read.txt.wide.R'
     'replace.R'
     'sample.R'
     'scale.R'
-    'scan.txt.Witec.R'
-    'scan.asc.Andor.R'
-    'scan.txt.Renishaw.R'
     'seq.R'
     'show.R'
     'spc.NA.approx.R'
@@ -148,4 +171,4 @@ Collate:
     'write.txt.wide.R'
     'y-pastenames.R'
     'zzz.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
