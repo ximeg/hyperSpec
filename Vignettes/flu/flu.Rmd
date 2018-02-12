@@ -57,8 +57,8 @@ more detail in the "fileio" vignette.
 
 It  needs to be `source`d before use:
 ```{r read.txt.PE}
-source ("scan.txt.PerkinElmer.R")
-flu <- scan.txt.PerkinElmer ("flu-data-?.txt", skip = 54)
+source ("read.txt.PerkinElmer.R")
+flu <- read.txt.PerkinElmer ("flu-data-?.txt", skip = 54)
 ```
 Now the spectra are in a `hyperSpec` object and can be examined e.g. by
 ```{r rawspc}
