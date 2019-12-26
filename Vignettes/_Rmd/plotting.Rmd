@@ -14,6 +14,22 @@ vignette: >
     %\VignetteEncoding{UTF-8}
 ---
 
+```{r setup, include = FALSE}
+library(hyperSpec)
+
+knitr::opts_chunk$set(
+  echo       = TRUE,     # Should blocks with program code be shown in knitted documents?
+  eval       = TRUE,     # Should program code be evaluated?
+  fig.height = 3,        # Default height for plots.
+  fig.width  = 5,        # Default width for plots.
+  fig.align  = "center", # Default alignment for plots in knitted documents.
+  collapse   = TRUE,
+  comment    = "#>"
+)
+
+options("width" = 100, "digits" = 5)
+```
+
 \SweaveOpts{concordance=TRUE}
 \newlength{\plotcol}
 \newlength{\textcol}
