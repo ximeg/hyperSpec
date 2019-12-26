@@ -14,7 +14,7 @@ vignette: >
     %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r setup, include=FALSE}
 library(hyperSpec)
 
 knitr::opts_chunk$set(
@@ -53,7 +53,7 @@ beginning of the file in order to have the code as similar as possible to intera
 \warnbox[blue!50!black]{Suggested Packages}{
 <!-- latticeExtra -->
 
-```{r check-required, echo = FALSE, results = tex}
+```{r check-required, echo=FALSE, results='tex'}
 msg <- function (...) system (sprintf ("echo '%s'", paste (...)))
 
 required.pkgs <- c("latticeExtra", "deldir", "rgl", "ggplot2")
@@ -119,13 +119,15 @@ by e. g. `print (plotmap (object))`{.r}
 Fig. \@ref(fig:plotspc) "plotspc" 
 plots the spectra, i.e., the intensities `\$spc`{.r} over the wavelengths `@wavelength`{.r}.
 
-```{r plotspc, fig = TRUE, width = 4, height = 2.6, include = FALSE }
+```{r plotspc, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (flu)
 ```
 Fig. \@ref(fig:plotmat-flu) "plotmat" 
 plots the spectra, i.e., the colour coded intensities `\$spc`{.r} over the wavelengths `@wavelength`{.r} and the row number.
 
-```{r plotmat-flu, fig = TRUE, width = 4, height = 2.6, include = FALSE }
+```{r plotmat-flu, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmat (flu)
 ```
 Fig. \@ref(fig:plotflu) "plotc" 
@@ -137,26 +139,30 @@ Fig. \@ref(fig:plotflu) "plotc"
     -  depth profile
     
 
-```{r plotflu, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotflu, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotc (flu)
 ```
 Fig. \@ref(fig:levelplot) "levelplot" 
   plots a false colour map, defined by a formula.
 
-```{r levelplot, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r levelplot, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 levelplot (spc ~ x * y, chondro, aspect = "iso")
 ```
 Warning: `Only first wavelength is used for plotting`
 Fig. \@ref(fig:plotmap) "plotmap" 
   `plotmap()`{.r} is a specialized version of `levelplot()`{.r}. It uses a single value (e.g., average intensity or cluster membership) over two data columns (default `\$x`{.r} and `\$y`{.r})
 
-```{r plotmap, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (chondro)
 ```
 Fig. \@ref(fig:voronoi) "plotvoronoi" 
   Function `plotvoronoi()`{.r} is a special version of `plotmap()`{.r} that produces Voronoi diagram of the hyperSpec object.
 
-```{r voronoi, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r voronoi, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotvoronoi (sample (chondro, 300), clusters ~ x * y)
 ```
 \end{longtable}
@@ -180,13 +186,15 @@ plotvoronoi (sample (chondro, 300), clusters ~ x * y)
 Fig. \@ref(fig:plotspcflu) "plot (x, "spc")"  
 is equivalent to `plotspc (flu)`{.r}
 
-```{r plotspcflu, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotspcflu, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (flu, "spc")
 ```
 Fig. \@ref(fig:plotchomean) "plot (x, "spcmeansd")" 
 plots mean spectrum $\pm$ 1 standard deviation
 
-```{r plotchomean, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotchomean, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (chondro.preproc, "spcmeansd")
 ```
 Fig. \@ref(fig:plotchoprctl) "plot (x, "spcprctile")" %
@@ -196,32 +204,37 @@ percentile are equal to mean $\pm$ standard deviation. Spectroscopic data freque
 distributed. The percentiles give a better idea of the true distribution. They are also less
 sensitive to outliers.
 
-```{r plotchoprctl, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotchoprctl, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (chondro.preproc, "spcprctile")
 ```
 Fig. \@ref(fig:plotchoprctl5) "plot (x, "spcprctl5")" 
 like `"spcprctl"`{.r} plus 5^th^ and 95^th^percentile.
 
-```{r plotchoprctl5, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotchoprctl5, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (chondro.preproc, "spcprctl5")
 ```
 Fig. \@ref(fig:plotflu2) "plot (x, "c")" 
 
-```{r plotflu2, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotflu2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (flu, "c")
 ```
 is equivalent to `plotc (flu)`{.r}
 Fig. \@ref(fig:plotts) "plot (x, "ts")" 
 plots a time series plot
 
-```{r plotts, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotts, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (laser [,, 405], "ts")
 ```
 equivalent to `plotc (laser, spc ~ ~t)`{.r}
 Fig. \@ref(fig:plotdepth) "plot (x, "depth")" 
 plots a depth profile plot
 
-```{r plotdepth, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotdepth, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 depth.profile <- new ("hyperSpec",
     spc = as.matrix (rnorm (20) + 1:20),
     data = data.frame (z = 1 : 20),
@@ -234,28 +247,31 @@ the same as `plotc (laser, spc ~ ~z)`{.r}
 Fig. \@ref(fig:plotmat) "plot (x, "mat")" 
 plots the spectra matrix.
 
-```{r plotmat, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmat, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (laser, "mat")
 ```
 Equivalent to 
 
-```{r include = FALSE}
+```{r include=FALSE}
 plotmat (laser)
 ```
 A lattice alternative is:
 
-```{r include = FALSE}
+```{r include=FALSE}
 levelplot (spc ~ .wavelength * .row, laser)
 ```
 Fig. \@ref(fig:plotmapcho2) "plot (x, "map")" 
 is equivalent to `plotmap (chondro)`{.r}
 
-```{r plotmapcho2, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmapcho2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (chondro, "map")
 ```
 Fig. \@ref(fig:plotvoronoi) "plot (x, "voronoi")" 
 
-```{r plotvoronoi, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotvoronoi, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (sample (chondro, 300), "voronoi")
 ```
 See `plotvoronoi()`{.r}
@@ -269,7 +285,8 @@ plots. To plot ...
 Fig. \@ref(fig:wavelength) "particular wavelength range"  if only one wavelength range is needed, the
   extract command (see `vignette ("introduction")`) is handiest:
 
-```{r wavelength, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r wavelength, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (paracetamol [,, 700 ~ 1200])
 ```
 Numbers connected with the tilde (`~`) are interpreted as having the same units as the
@@ -278,7 +295,8 @@ Fig. \@ref(fig:wavelength-2) "more wavelength ranges"  use `wl.range = list (600
   1800, 2800 ~{} 3100)}.  Cut the wavelength axis appropriately with \Rcode{xoffset =
   750}
 
-```{r wavelength-2, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r wavelength-2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (paracetamol, 
          wl.range = c (300 ~ 1800, 2800 ~ max), 
          xoffset = 750)
@@ -288,53 +306,61 @@ If available, the package package **plotrix**`r cite.pkg("plotrix")` is used to 
 mark.
 Fig. \@ref(fig:abscissa) "with reversed abscissa"  use `wl.reverse = TRUE`{.r}
 
-```{r abscissa, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r abscissa, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (paracetamol, wl.reverse = TRUE )
 ```
 Fig. \@ref(fig:colours) "in different colours" 
 use `col = vector.of.colours`{.r}
 
-```{r colours, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r colours, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (flu, col = matlab.dark.palette (6))
 ```
 Fig. \@ref(fig:dots) "dots instead of lines " 
 use `lines.args = list (pch = 20, type = "p")`{.r}
 
-```{r dots, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r dots, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (paracetamol [,, 2800 ~ 3200], 
          lines.args = list (pch = 20, type = "p"))
 ```
 Fig. \@ref(fig:mass) "mass spectra " 
 use `lines.args = list (type = "h")`{.r}
 
-```{r mass, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r mass, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (barbiturates [[1]], lines.args = list (type = "h"))
 ```
 Fig. \@ref(fig:add) "more spectra into an existing plot" 
 use `add = TRUE`{.r}
 
-```{r add, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r add, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (chondro [ 30,,])
 plotspc (chondro [300,,], add = TRUE, col = "blue")
 ```
 Fig. \@ref(fig:sd) "Summary characteristics"  `func`{.r} may be used to calculate summary
 characteristics prior to plotting. To plot e.g., the standard deviation of the spectra, use:
 
-```{r sd, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r sd, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (chondro.preproc, func = sd)
 ```
 Fig. \@ref(fig:diffline) "with different line at $I =0$" 
 `zeroline`{.r} takes a list with parameters to `abline()`{.r},
 `NA`{.r} suppresses the line.
 
-```{r diffline, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r diffline, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (paracetamol, 
          zeroline = list (col = "red"))
 ```
 Fig. \@ref(fig:add-line) "adding to a spectra plot"  `plotspc()`{.r} uses base graphics. After plotting
 the spectra, more content may be added to the graphic by `abline()`{.r}, `lines()`{.r}, `points()`{.r}, etc.
 
-```{r add-line, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r add-line, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (laser, "spcmeansd")
 abline (v = c(405.0063, 405.1121, 405.2885, 405.3591), 
         col = c("black", "blue", "red", "darkgreen"))
@@ -347,7 +373,8 @@ abline (v = c(405.0063, 405.1121, 405.2885, 405.3591),
 Fig. \@ref(fig:stacked1) "stacked" 
 use `stacked = TRUE`{.r}
 
-```{r stacked1, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r stacked1, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (cluster.means, 
          col = cluster.cols,
          stacked = TRUE)
@@ -356,7 +383,8 @@ Fig. \@ref(fig:stacked2) "Stacking groups of spectra"  The spectra to be stacked
 `stacked = *factor*`{.r}. Alternatively, the name of the grouping extra data column can be
 used:
 
-```{r stacked2, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r stacked2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plot (cluster.meansd, 
       stacked = ".aggregate",
       fill = ".aggregate",
@@ -365,7 +393,8 @@ plot (cluster.meansd,
 Fig. \@ref(fig:stacked3) "Manually giving yoffset" 
 Stacking values can also be given manually as numeric values in `yoffset`{.r}:
 
-```{r stacked3, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r stacked3, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotspc (cluster.meansd, 
          yoffset = rep (0:2, each = 3), 
          col = rep (cluster.cols, each = 3))
@@ -373,7 +402,8 @@ plotspc (cluster.meansd,
 Fig. \@ref(fig:stacked4) "Dense stacking" 
 To obtain a denser stacking:
 
-```{r stacked4, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r stacked4, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 yoffsets <- apply (cluster.means [[]], 2, diff)
 yoffsets <- - apply (yoffsets, 1, min) 
 plot (cluster.means, yoffset = c (0, cumsum (yoffsets)), 
@@ -381,7 +411,8 @@ plot (cluster.means, yoffset = c (0, cumsum (yoffsets)),
 ```
 Fig. \@ref(fig:stacked5) "Elaborate example" 
 
-```{r stacked5, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r stacked5, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 yoffset <- apply (chondro.preproc, 2, quantile, c(0.05, 0.95))
 yoffset <- range (yoffset)
 plot(chondro.preproc[1], 
@@ -412,33 +443,38 @@ axes, etc. The arguments for these functions should be given in lists as `plot.a
 Fig. \@ref(fig:lin-cal-1) "Intensities over concentration" 
 Plotting the Intensities of one wavelength over the concentration for univariate calibration:
 
-```{r lin-cal-1, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r lin-cal-1, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotc (flu [,, 450])
 ```
 The default is to use the first intensity only.
 Fig. \@ref(fig:lin-cal-3) "Summary Intensities over concentration" 
 A function to compute a summary of the intensities before drawing can be used:
 
-```{r lin-cal-3, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r lin-cal-3, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotc (flu, func = range, groups = .wavelength)
 ```
 If `func()`{.r} returns more than one value, the different results are accessible by
 `.wavelength`.
 Fig. \@ref(fig:plotc2) "Conditioning: plotting more traces separately" 
 
-```{r plotc2, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r plotc2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotc (flu [,, c (405, 445)], spc ~ c | .wavelength, 
        cex = .3, scales = list (alternating = c(1, 1)))
 ```
 Fig. \@ref(fig:plotc3) "Grouping: plot more traces in one panel" 
 
-```{r plotc3, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r plotc3, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
  plotc (flu [,, c (405, 445)], groups = .wavelength)
 ```
 Fig. \@ref(fig:lin-cal-4) "Changing Axis Labels (and other parameters)" 
 Arguments for `xyplot()`{.r} can be given to `plotc()`{.r}:
 
-```{r lin-cal-4, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r lin-cal-4, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotc (flu [,, 450], 
        ylab = expression (I ["450 nm"] / a.u.),
        xlim = range (0, flu$c + .01), 
@@ -463,7 +499,8 @@ panelcalibration <- function (x, y, ..., clim = range (x), level = .95) {
 }
 ```
 
-```{r lin-cal-5, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r lin-cal-5, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotc (flu [,,405], panel = panelcalibration,
        pch = 4, clim = c (0, 0.35), level = .99)
 ```
@@ -476,7 +513,8 @@ plotc (flu [,,405], panel = panelcalibration,
 Fig. \@ref(fig:plotc4) "Abscissae other than c" 
  Other abscissae may be specified by explicitly giving the model formula:
 
-```{r plotc4, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r plotc4, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
  plotc (laser [,, c(405.0063, 405.1121, 405.2885, 405.3591)], 
         spc ~ t, 
         groups = .wavelength, 
@@ -496,13 +534,15 @@ Besides that, it behaves exactly like `levelplot()`{.r}. Particularly, the data 
 \begin{longtable}{@{}p{\plotcol} p{\textcol}}
 Fig. \@ref(fig:levelplot) "levelplot" 
 
-```{r levelplot, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r levelplot, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
  levelplot (spc ~ x * y, chondro)
 ```
 Fig. \@ref(fig:levelplot-factor) "factors as z" 
 If the colour-coded value is a factor, the display is adjusted to this fact:
 
-```{r levelplot-factor, fig = TRUE, width = 4, height = 2.6,include = FALSE}
+```{r levelplot-factor, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
  levelplot (clusters ~ x * y, chondro)
 ```
 
@@ -519,36 +559,40 @@ conditioned.
 \begin{longtable}{@{}p{\plotcol} p{\textcol}}
 Fig. \@ref(fig:plotmat1) "different palette" 
 
-```{r }
+```{r}
 plot (laser, "mat", col = heat.colors (20))
 ```
 is the same as 
 
-```{r plotmat1, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmat1, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmat (laser, col = heat.colors (20))
 ```
 Fig. \@ref(fig:plotmat1a) "different y axis" 
  Using a different extra data column for the y axis:
 
-```{r plotmat1a, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmat1a, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmat (laser, y = "t")
 ```
 alternatively, y values and axis label can be given separately.
 
-```{r }
+```{r}
 plotmat (laser, y = laser$t, ylab = labels (laser, "t"))
 ```
 Fig. \@ref(fig:plotmat2) "contour lines" 
 Contour lines may be added:
 
-```{r plotmat2, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmat2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmat (flu, col = matlab.dark.palette (20))
 plotmat (flu, col = "white", 
          contour = TRUE, add = TRUE)
 ```
 Fig. \@ref(fig:plotmap-barb) "colour-coded points: `levelplot()`{.r} with special panel function" 
 
-```{r plotmap-barb, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-barb, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 require ("latticeExtra")
 barb <- do.call (collapse, barbiturates[1:50])
 barb <- orderwl (barb)
@@ -567,19 +611,22 @@ used for x and y axes (`aspect = "iso"`{.r}).
 \begin{longtable}{@{}p{\plotcol} p{\textcol}}
 Fig. \@ref(fig:plotmap-clu) "plotting map" 
 
-```{r plotmap-chondro, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-chondro, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (chondro)
 ```
 Fig. \@ref(fig:plotmap-yx) "plotting maps with other than x and y" 
  specify the colour-coded variable, abscissa and ordinate as formula:
 `colour.coded ~\ abscissa * ordinate`{.r}
 
-```{r plotmap-yx, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-yx, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (chondro, spc ~ y * x)
 ```
 Fig. \@ref(fig:plotmap-clu) "colour-coded factors" 
 
-```{r plotmap-clu, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-clu, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (chondro, clusters ~ x * y)
 ```
 
@@ -588,7 +635,8 @@ accordingly.
 Fig. \@ref(fig:plotmap-col) "different palette"  
 To plot with a different palette, use argument `col.regions`{.r}.
 
-```{r plotmap-col, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-col, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (chondro, clusters ~ x * y,
                 col.regions = cluster.cols)
 ```
@@ -600,7 +648,7 @@ The plotting of color maps is done via R package `lattice()`{.r} (aka Trellis gr
 which is highly customizable. Use `trellis.par.get()`{.r} and
 `trellis.par.set()`{.r} to get/set the settings for the current graphics device.
 
-```{r lattice-params, fig = FALSE }
+```{r lattice-params, fig=FALSE}
 my.theme = trellis.par.get()
 names(my.theme)       # note how many parameters are tunable
 ```
@@ -615,7 +663,8 @@ via `par.settings`{.r}.
 Fig. \@ref(fig:plotmap-col-default) "changed palette" 
 This plot uses a customized lattice theme.
 
-```{r plotmap-col-default, fig = TRUE, width = 4, height = 2.6, include = FALSE }
+```{r plotmap-col-default, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 my.theme$regions$col = grDevices::terrain.colors
 plotmap (chondro, par.settings = my.theme)
 ```
@@ -631,11 +680,12 @@ The current settings can be visualized via a call to `show.settings()()`{.r}
 \begin{longtable}{@{}p{\plotcol} p{\textcol}}
 Fig. \@ref(fig:lattice-settings) "show current lattice settings" 
 
-```{r lattice-settings, fig = TRUE, width = 8, height = 6, include = FALSE, echo = FALSE }
+```{r lattice-settings, fig.cap=CAPTION, width=8, height=6, include=FALSE, echo=FALSE}
+CAPTION = "???"
 show.settings(my.theme)
 ```
 
-```{r lattice-settings-dummy, fig = FALSE }
+```{r lattice-settings-dummy, fig=FALSE}
 # Display current trellis parameters
 show.settings()
 ```
@@ -648,14 +698,16 @@ in the **R color cheatsheet**.
 Fig. \@ref(fig:plotmap-wave) "defined wavelengths" 
 To plot a map of the average intensity at particular wavelengths use extraction:  
 
-```{r plotmap-wave, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-wave, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (chondro.preproc [, , c(728, 782, 1098, 
                                 1240, 1482, 1577)],
          col.regions = matlab.palette)
 ```
 Fig. \@ref(fig:plotmap-pca) "Conditioning" 
 
-```{r plotmap-pca, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-pca, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (chondro, 
          spc ~ y * x | x > 5, 
          col.regions = matlab.palette(20))
@@ -667,7 +719,8 @@ conditioning on the wavelengths.
 
 To plot e.g., the first two score maps of a principal component analysis:
 
-```{r plotmap-pca2, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-pca2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 pca <- prcomp (~ spc, data = chondro.preproc$.)
 scores <- decomposition (chondro, pca$x, 
                          label.wavelength = "PC", 
@@ -680,7 +733,8 @@ plotmap (scores [,,1:2],
 Fig. \@ref(fig:plotmap-pca3) "Conditioning on `.wavelength`{.r} II" 
 Alternatively, use `levelplot()`{.r} directly:
 
-```{r plotmap-pca3, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r plotmap-pca3, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 levelplot (spc ~ y * x | as.factor(.wavelength), 
            scores [,,1:2], 
            aspect = "iso",
@@ -688,7 +742,8 @@ levelplot (spc ~ y * x | as.factor(.wavelength),
 ```
 Fig. \@ref(fig:voronoi-2) "Voronoi plot" 
 
-```{r voronoi-2, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r voronoi-2, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotvoronoi (sample (chondro, 300), clusters ~ x * y, 
              col.regions = matlab.palette(20))
 ```
@@ -702,7 +757,8 @@ FOSS (free and open source software), so users are kindly asked to review packag
 Fig. \@ref(fig:missing) "Mark missing spectra"  If the spectra come from a rectangular grid, missing
 positions can be marked with this panel function:
 
-```{r missing, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r missing, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 mark.missing <- function (x, y, z, ...){
   panel.levelplot (x, y, z, ...)
 
@@ -726,30 +782,34 @@ Even if the spectra are measured on a nominally evenly spaced grid, the actual s
 \begin{longtable}{@{}p{\plotcol} p{\textcol}}
 Fig. \@ref(fig:uneven-I) "" This leads to weird looking output with holes, and possibly wrong columns: 
 
-```{r uneven-prep, echo=FALSE, results=hide}
+```{r uneven-prep, echo=FALSE, results='hide'}
 uneven <- chondro
 uneven$x <- uneven$x + round (rnorm (nrow (uneven), sd = 0.05), digits = 1)
 uneven$y <- uneven$y + round (rnorm (nrow (uneven), sd = 0.05), digits = 1)
 ```
 
-```{r uneven-I, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r uneven-I, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (uneven)
 ```
 The symptom of this situation are warnings about values in x and/or y not being equispaced; and that the output therefore may be wrong.
 Fig. \@ref(fig:uneven-II) ""  One possibility to obtain a correct map is using `plotvoronoi()`{.r} instead which will construct a mosaic-like image with the respective"ixe"areas being centered around the actually recorded `\$x` and `\$y` position:
 
-```{r uneven-II, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r uneven-II, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotvoronoi (uneven)
 ```
 Fig. \@ref(fig:uneven-III) ""  Another possibility that underlines a point shape of the measurements is switching to `latticeExtra::panel.levelplot.points()`{.r}:
 
-```{r uneven-III, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r uneven-III, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 plotmap (uneven, panel = panel.levelplot.points, 
 				 cex = 0.75, col.symbol=NA)
 ```
 Fig. \@ref(fig:uneven-IV) ""  Alternatively, the measurement raster positions can be rounded to their nominal raster, e. g.:
 
-```{r uneven-IV, fig = TRUE, width = 4, height = 2.6,include = FALSE }
+```{r uneven-IV, fig.cap=CAPTION, width=4, height=2.6, include=FALSE}
+CAPTION = "???"
 rx <- makeraster (uneven$x, start = -11.55, d = 1, tol = 0.3)
 uneven$x <- rx$x
 ry <- makeraster (uneven$y, start = -4.77, d = 1, tol = 0.3)
@@ -772,7 +832,9 @@ package **rgl**`r cite.pkg("rgl")` offers fast 3d
   plotting in R. As package **rgl**'s axis annotations are sometimes awkward, they may better be set
   manually:
 
-```{r rgl-plot, eval = FALSE}  evaluation in rgl-do
+
+<!--   evaluation in rgl-do -->
+```{r rgl-plot, eval=FALSE}
 laser <- laser [,,404.8 ~ 405.6] / 10000
 laser$t <- laser$t / 3600
 cols <- rep (matlab.palette (nrow (laser)), nwl (laser))
@@ -787,7 +849,7 @@ mtext3d ("I / a.u.", edge = 'z--', line = 2.5)
 ```
 \end{longtable}
 
-```{r rgl-do, echo = FALSE, results = hide}
+```{r rgl-do, echo=FALSE, results='hide'}
   if (require (rgl)){
     open3d (windowRect=c(20,20,600, 350))  # this is needed only for automatically 
                                         # producing the snapshot
@@ -815,12 +877,12 @@ mtext3d ("I / a.u.", edge = 'z--', line = 2.5)
 \begin{longtable}{@{}p{\plotcol} p{\textcol}}
 Fig. \@ref(fig:ggplotspc) "plot spectra with `as.long.df()`{.r}"  
 
-```{r ggplotspc, eval = FALSE}
+```{r ggplotspc, eval=FALSE}
 qplotspc (flu) + aes (colour = c)
 ```
 Fig. \@ref(fig:ggplotmap) "Map with package **ggplot2**"  
 
-```{r ggplotmap, eval = FALSE}
+```{r ggplotmap, eval=FALSE}
 qplotmap (chondro) + 
   scale_fill_gradientn ("spc", colours = matlab.palette ()) 
 ```
@@ -842,7 +904,7 @@ beforehand.
 \begin{longtable}{@{}p{\plotcol} p{\textcol}}
 Fig. \@ref(fig:ggplotmeansd) "Mean $\pm$ standard deviation with package **ggplot2**"  
 
-```{r ggplotmeansd, eval = FALSE}
+```{r ggplotmeansd, eval=FALSE}
 qplotspc (mean (chondro)) +
 geom_ribbon (aes (ymin = mean + sd, 
                   ymax = mean - sd, 
@@ -854,14 +916,14 @@ Note that `qpotspc()`{.r} specifies aesthetics `y = spc` and `groups = .rownames
 Fig. \@ref(fig:ggplotspccut) "Cut spectra with package **ggplot2**"  %
 Cut axes can be implemented by faceting:
 
-```{r ggplotspccut, eval = FALSE}
+```{r ggplotspccut, eval=FALSE}
 qplotspc (paracetamol / 1e4, 
           wl.range = c( min ~ 1800, 2800 ~ max)) +
 	  scale_x_continuous (breaks = seq (0, 3200, 400)) 
 ```
 \end{longtable}
 
-```{r ggplot2-do, echo = FALSE, results = hide}
+```{r ggplot2-do, echo=FALSE, results='hide'}
 if (require (ggplot2)){
 # <<ggplotspc>>
   ggsave("plotting-fig--ggplotspc.pdf", width = 4, height = 2.6)
@@ -905,7 +967,7 @@ that lies inside the user defined polygon.
 `spc.identify()`{.r} allows to measure points in graphics produced by `plotspc()`{.r}. It
 works correctly with reversed and cut wavelength axes.
 
-```{r eval = FALSE}
+```{r eval=FALSE}
 spc.identify (plotspc (paracetamol, wl.range = c (600 ~ 1800, 2800 ~ 3200), xoffset = 800))
 ```
 The result is a data.frame with the indices of the spectra, the wavelength, and its intensity.
@@ -914,7 +976,7 @@ The result is a data.frame with the indices of the spectra, the wavelength, and 
 
 `map.identify()`{.r} returns the spectra indices of the clicked points.
 
-```{r eval = FALSE}
+```{r eval=FALSE}
 map.identify (chondro)
 ```
 
@@ -922,7 +984,7 @@ map.identify (chondro)
 
 `map.sel.poly()`{.r} returns a logical indicating which spectra are inside the polygon drawn by the user:
 
-```{r eval = FALSE}
+```{r eval=FALSE}
 map.sel.poly (chondro)
 ```
 
@@ -935,7 +997,7 @@ Co.
 For lattice graphics, `grid.locator()`{.r} may be used instead. If it is not called in the panel
 function, a preceding call to `trellis.focus()`{.r} is needed:
 
-```{r eval = FALSE}
+```{r eval=FALSE}
 plot (laser, "mat")
 trellis.focus ()
 grid.locator ()
@@ -949,7 +1011,7 @@ of the plot directly. Note that the returned indices correspond to the plotted o
 # Session Info {-}
 \begin{footnotesize}
 
-```{r bib, echo = FALSE}
+```{r bib, echo=FALSE}
 make.bib (c("latticeExtra", "rgl", "ggplot2", "playwith",  "plotrix", "deldir", "tripack"), 
           file = "plotting-pkg.bib")
 print (as.matrix(Sys.info()))
