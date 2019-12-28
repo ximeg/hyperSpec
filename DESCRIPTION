@@ -54,7 +54,9 @@ Suggests:
     digest,
     reshape,
     devtools,
-    R.rsp
+    R.rsp,
+    knitr,
+    rmarkdown
 Imports:
     testthat,
     methods,
@@ -65,7 +67,7 @@ Imports:
     dplyr
 URL: https://github.com/cbeleites/hyperSpec
 BugReports: https://github.com/cbeleites/hyperSpec/issues
-VignetteBuilder: R.rsp
+VignetteBuilder: knitr
 Collate: 
     'validate.R'
     'hyperspec-class.R'
