@@ -1,0 +1,10 @@
+Princeton Instruments publishes the manuals at:
+
+WinSpec 2.6:
+ftp://ftp.princetoninstruments.com/public/Manuals/Princeton%20Instruments/WinSpec%202.6%20Spectroscopy%20Software%20User%20Manual.pdf
+
+LightField  (= spe 3.0)
+ftp://ftp.princetoninstruments.com/public/Manuals/Princeton%20Instruments/SPE%203.0%20File%20Format%20Specification.pdf
+
+TriVista:
+ftp://ftp.princetoninstruments.com/public/Manuals/Princeton%20Instruments/TriVista%20System%20Manual.pdf
