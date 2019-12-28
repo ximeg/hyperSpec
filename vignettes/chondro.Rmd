@@ -72,8 +72,8 @@ make_bib(
 \tableofcontents
 
 ```{r startup, echo=FALSE, results='hide'}
-options(SweaveHooks=list(fig=function() par(mar = c (4.1, 4.1, .6, .6))))
-options ("width" = 100)
+options(SweaveHooks = list(fig = function() par(mar = c(4.1, 4.1, .6, .6))))
+options("width" = 100)
 ```
 
 # Introduction
@@ -110,7 +110,7 @@ packages.
   \par
 \end{centering}
 \caption{ {#fig:vis-all}Microphotograph of the cartilage section. The frame indicates the
-  measurement area ($mu m${35~×~25}).}
+  measurement area ($\mu m${35~×~25}).}
 \end{figure}
 
 Raman spectra of a cartilage section were measured on each point of a grid, resulting in a so-called
@@ -122,7 +122,7 @@ The measurement parameters were:
 -  [Excitation wavelength:] 633 nm
 -  [Exposure time:] 10 s per spectrum
 -  [Objective:] 100$×$, NA 0.85
--  [Measurement grid:] 35 $×$ 25 $mu m${}, 1 $mu m${} step size
+-  [Measurement grid:] 35 $×$ 25 $\mu m${}, 1 $\mu m${} step size
 -  [Spectrometer:] Renishaw InVia
 \end{compactdesc}
 
@@ -138,7 +138,7 @@ to speed up the reading `read.txt.Renishaw()`{.r} does not allow missing values,
 with `NA`{.r}.
 
 ```{r import}
-chondro <- read.txt.Renishaw ("rawdata/chondro.txt", data = "xyspc")
+chondro <- read.txt.Renishaw("rawdata/chondro.txt", data = "xyspc")
 chondro
 ```
 
@@ -147,12 +147,11 @@ To get an overview of the spectra (figure~\@ref(fig:raw:a)):
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rawspc, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-plot (chondro, "spcprctl5")
+plot(chondro, "spcprctl5")
 ```
 
 A mean intensity map (figure~\@ref(fig:raw:b)) is produced by:
@@ -160,12 +159,11 @@ A mean intensity map (figure~\@ref(fig:raw:b)) is produced by:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rawmap, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-plotmap (chondro, func.args = list (na.rm = TRUE), col.regions = seq.palette (20))
+plotmap(chondro, func.args = list(na.rm = TRUE), col.regions = seq.palette(20))
 ```
 `plotmap()`{.r} applies a function to squeeze all spectral intensities into a summary characteristic for the whole spectrum. This function defaults to the `mean()`{.r}. Further arguments that should be handed to this function can be given in list `func.args`{.r}. As the raw data contains `NA`{.r}s due to deleting cosmic ray spikes, this argument is needed here.
 \begin{figure}[tbh]
@@ -192,32 +190,32 @@ underlying the data. The symptoms are warnings"x' values are not equispaced; out
 
 ```{r}
 ## disturb a few points
-chondro$x [500] <- chondro$x [500] + rnorm (1, sd = 0.01)
-chondro$y [660] <- chondro$y [660] + rnorm (1, sd = 0.01)
+chondro$x[500] <- chondro$x[500] + rnorm(1, sd = 0.01)
+chondro$y[660] <- chondro$y[660] + rnorm(1, sd = 0.01)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r irregular-grid, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-plotmap (chondro, col.regions = seq.palette (20))
+plotmap(chondro, col.regions = seq.palette(20))
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r irregular-pts, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-require ("latticeExtra")
-plotmap (chondro, col.regions = seq.palette (20), panel = panel.levelplot.points,
-         col = NA, pch = 22, cex = 1.9)
+require("latticeExtra")
+plotmap(chondro,
+  col.regions = seq.palette(20), panel = panel.levelplot.points,
+  col = NA, pch = 22, cex = 1.9
+)
 ```
 
 Such slight rounding errors can be corrected by `fitraster`{.r} or `makeraster`{.r}.
@@ -226,20 +224,19 @@ Such slight rounding errors can be corrected by `fitraster`{.r} or `makeraster`{
 points are affected by rounding errors, `makeraster`{.r} works fine:
 
 ```{r}
-chondro$x <- fitraster (chondro$x)$x
-chondro$y <- fitraster (chondro$y)$x
+chondro$x <- fitraster(chondro$x)$x
+chondro$y <- fitraster(chondro$y)$x
 ```
 the result is shown in figure~\@ref(fig:irregular:c).
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r irregular-corr, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-plotmap (chondro, col.regions = seq.palette (20))
+plotmap(chondro, col.regions = seq.palette(20))
 ```
 
 \begin{figure}[tbh]
@@ -255,7 +252,7 @@ As the overview shows that the spectra contain `NA`{.r}s (from cosmic spike remo
 
 <!--   -->
 ```{r interp}
-chondro <- spc.loess (chondro, seq (602, 1800, 4))
+chondro <- spc.loess(chondro, seq(602, 1800, 4))
 chondro
 ```
    
@@ -273,7 +270,7 @@ baselines. The default is a linear baseline, which is appropriate
 in our case:
 
 ```{r bl}
-baselines <- spc.fit.poly.below (chondro)
+baselines <- spc.fit.poly.below(chondro)
 chondro <- chondro - baselines
 ```
 
@@ -290,13 +287,12 @@ As the spectra are quite similar, area normalization should work well:.
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r norm, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-chondro <- chondro / rowMeans (chondro)
-plot (chondro, "spcprctl5")
+chondro <- chondro / rowMeans(chondro)
+plot(chondro, "spcprctl5")
 ```
 
 Note that normalization effectively cancels the information of one variate (wavelength), it
@@ -317,13 +313,12 @@ the 5^th^ percentile spectrum is subtracted:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r perc, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-chondro <- chondro - quantile (chondro, 0.05)
-plot (chondro, "spcprctl5")
+chondro <- chondro - quantile(chondro, 0.05)
+plot(chondro, "spcprctl5")
 ```
 
 The resulting data set is shown in figure~\@ref(fig:bl:perc). Some
@@ -338,20 +333,24 @@ I use it for outlier detection. The resulting scores and loadings
 are put again into `hyperSpec`{.r} objects by `decomposition()`{.r}:
 
 ```{r pca}
-pca <- prcomp (chondro, center = TRUE)
+pca <- prcomp(chondro, center = TRUE)
 
-scores <- decomposition (chondro, pca$x, label.wavelength = "PC",
-                         label.spc = "score / a.u.")
+scores <- decomposition(chondro, pca$x,
+  label.wavelength = "PC",
+  label.spc = "score / a.u."
+)
 
-loadings <- decomposition (chondro, t(pca$rotation), scores = FALSE,
-                           label.spc = "loading I / a.u.")
+loadings <- decomposition(chondro, t(pca$rotation),
+  scores = FALSE,
+  label.spc = "loading I / a.u."
+)
 ```
 
 Plotting the scores of each PC against all other gives a good idea
 where to look for outliers.
 
 ```{r pca-pairs, eval=FALSE}
-pairs (scores [[,,1:20]], pch = 19, cex = 0.5)
+pairs(scores [[, , 1:20]], pch = 19, cex = 0.5)
 ```
 
 Now the spectra can be found either by plotting two scores against
@@ -362,9 +361,9 @@ which could be used to identify principal components that are heavily influenced
 
 ```{r pca-identify, eval=FALSE}
 ## omit the first 4 PCs
-out <- map.identify (scores [,,5])
-out <- c (out, map.identify (scores [,,6]))
-out <- c (out, map.identify (scores [,,7]))
+out <- map.identify(scores [, , 5])
+out <- c(out, map.identify(scores [, , 6]))
+out <- c(out, map.identify(scores [, , 7]))
 ```
 
 ```{r pca-out, echo=FALSE, results='hide'}
@@ -373,10 +372,10 @@ out <- c(105, 140, 216, 289, 75, 69)
 
 ```{r pca-cols}
 out
-outcols <- c ("red", "blue", "#800080", "orange", "magenta", "brown")
+outcols <- c("red", "blue", "#800080", "orange", "magenta", "brown")
 
-cols <- rep ("black", nrow(chondro))
-cols [out] <- outcols
+cols <- rep("black", nrow(chondro))
+cols[out] <- outcols
 ```
 
 We can check our findings by comparing the spectra to the bulk of
@@ -385,19 +384,22 @@ spectra (figure~\@ref(PCA:b)):
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r pca-outspc, fig.cap=CAPTION, width=7.5, height=7.5, include=FALSE}
+plot(chondro[1],
+  plot.args = list(ylim = c(1, length(out) + .7)),
+  lines.args = list(type = "n")
+)
 
-plot(chondro[1], plot.args = list (ylim = c (1, length (out) + .7)),
-		 lines.args = list(  type = "n"))
-
-for (i in seq (along = out)){
-   plot(chondro, "spcprctl5", yoffset = i, add = TRUE, col = "gray")
-   plot (chondro [out[i]], yoffset = i, col = outcols[i] , add = TRUE,
-   			lines.args = list (lwd = 2))
-   text (600, i + .33, out [i])
+for (i in seq(along = out)) {
+  plot(chondro, "spcprctl5", yoffset = i, add = TRUE, col = "gray")
+  plot(chondro[out[i]],
+    yoffset = i, col = outcols[i], add = TRUE,
+    lines.args = list(lwd = 2)
+  )
+  text(600, i + .33, out[i])
 }
 ```
 
@@ -405,17 +407,17 @@ and also by looking where these spectra appear in the scores `pairs()`{.r}
 plot (figure~\@ref(PCA:a)):
 
 ```{r pca-pairs2, include=FALSE, results='hide'}
-png ("chondro-fig--pca-pairs2.png", width = 500, height = 500)
-pch <- rep (46L, nrow (chondro))
-pch [out] <- 19L
-pairs (scores [[,,1:7]], pch = pch, cex = 1, col = cols)
-dev.off ()
+png("chondro-fig--pca-pairs2.png", width = 500, height = 500)
+pch <- rep(46L, nrow(chondro))
+pch[out] <- 19L
+pairs(scores[[, , 1:7]], pch = pch, cex = 1, col = cols)
+dev.off()
 ```
 
 Finally, the outliers are removed:
 
 ```{r outdel}
-chondro <- chondro [- out]
+chondro <- chondro[-out]
 ```
 
 %
@@ -443,20 +445,20 @@ distance for calculating the dendrogram, \textsc{Euclid}ean distance
 also for the distance matrix :
 
 ```{r hca}
-dist <- dist (chondro)
-dendrogram <- hclust (dist, method = "ward.D")
+dist <- dist(chondro)
+dendrogram <- hclust(dist, method = "ward.D")
 ```
 
 ```{r denddummy, eval=FALSE}
-plot (dendrogram)
+plot(dendrogram)
 ```
 
 In order to get clusters, the dendrogram is cut at a level specified
 either by height or by the number of clusters.
 
 ```{r dendcut}
-chondro$clusters <- as.factor (cutree (dendrogram, k = 3))
-cols <- c ("dark blue", "orange", "#C02020")
+chondro$clusters <- as.factor(cutree(dendrogram, k = 3))
+cols <- c("dark blue", "orange", "#C02020")
 ```
 %
 The result for $k$= 3 clusters is plotted as a map (figure~\@ref(fig:clustmap)). If the color-coded
@@ -466,19 +468,18 @@ colors, and `hyperSpec`{.r}'s `levelplot()`{.r} method uses the levels of the fa
 Thus  meaningful names are assigned
 
 ```{r clustname}
-levels (chondro$clusters) <- c ("matrix", "lacuna", "cell")
+levels(chondro$clusters) <- c("matrix", "lacuna", "cell")
 ```
 and the cluster membership map is plotted:
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r clustmap, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-print (plotmap (chondro, clusters ~ x * y, col.regions = cols))
+print(plotmap(chondro, clusters ~ x * y, col.regions = cols))
 ```
 
 The cluster membership can also be marked in the dendrogram:
@@ -486,14 +487,13 @@ The cluster membership can also be marked in the dendrogram:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r dend, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-par (xpd = TRUE)                        # allow plotting the markers into the margin
-plot (dendrogram, labels = FALSE, hang = -1)
-mark.dendrogram (dendrogram, chondro$clusters, col = cols)
+par(xpd = TRUE) # allow plotting the markers into the margin
+plot(dendrogram, labels = FALSE, hang = -1)
+mark.dendrogram(dendrogram, chondro$clusters, col = cols)
 ```
 
 Figure~\@ref(fig:dend) shows the dendrogram and \@ref(fig:clustmap)
@@ -508,13 +508,12 @@ We can plot the cluster mean spectra $\pm$
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r clustmeans, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-cluster.means <- aggregate (chondro, chondro$clusters, mean_pm_sd)
-plot (cluster.means, stacked = ".aggregate", fill = ".aggregate", col = cols)
+cluster.means <- aggregate(chondro, chondro$clusters, mean_pm_sd)
+plot(cluster.means, stacked = ".aggregate", fill = ".aggregate", col = cols)
 ```
 
 %
@@ -539,14 +538,14 @@ look at the nucleic acid distribution, using the DNA bands at 728,
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r DNA, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-DNAcols <- colorRampPalette (c("white", "gold", "dark green"), space = "Lab") (20)
-plotmap (chondro[, , c( 728, 782, 1098, 1240, 1482, 1577)],
-       col.regions = DNAcols)
+DNAcols <- colorRampPalette(c("white", "gold", "dark green"), space = "Lab")(20)
+plotmap(chondro[, , c(728, 782, 1098, 1240, 1482, 1577)],
+  col.regions = DNAcols
+)
 ```
 \begin{figure}[tbh]
 \subfloat[ {#fig:DNA} False color map of DNA.]{\includegraphics[width=0.495\textwidth]{chondro-fig--DNA}}
@@ -566,14 +565,14 @@ e.g. by using the `panel.2dsmoother()`{.r} wrapper provided by package **lattice
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r DNAsm, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-plotmap (chondro[, , c( 728, 782, 1098, 1240, 1482, 1577)],
-       col.regions = DNAcols,
-       panel = panel.2dsmoother, args = list (span = 0.05))
+plotmap(chondro[, , c(728, 782, 1098, 1240, 1482, 1577)],
+  col.regions = DNAcols,
+  panel = panel.2dsmoother, args = list(span = 0.05)
+)
 ```
 
 For interpolation (i.e. no smoothing at the available data points), a Voronoi plot  (a.k.a. Delaunay triangulation) is basically a 2d constant interpolation: each point in space has the same z/color value as its closest available point. For a full rectangular grid, this corresponds to the usual square/rectangular pixel plot. With missing points, differences become clear (fig.~\@ref(fig:DNAmissing)):
@@ -581,25 +580,25 @@ For interpolation (i.e. no smoothing at the available data points), a Voronoi pl
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r DNAmissing, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-tmp <- sample (chondro[, , c( 728, 782, 1098, 1240, 1482, 1577)], 500)
-plotmap (tmp, col.regions = DNAcols)
+tmp <- sample(chondro[, , c(728, 782, 1098, 1240, 1482, 1577)], 500)
+plotmap(tmp, col.regions = DNAcols)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r DNAvoronoi, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-plotmap (tmp, col.regions = DNAcols,
-        panel = panel.voronoi, pch = 19, col = "black", cex = 0.1)
+plotmap(tmp,
+  col.regions = DNAcols,
+  panel = panel.voronoi, pch = 19, col = "black", cex = 0.1
+)
 ```
 \begin{figure}[tbh]
 \subfloat[Omitting missing data points.]{\includegraphics[width=0.495\textwidth]{chondro-fig--DNAmissing}}
@@ -612,21 +611,20 @@ plotmap (tmp, col.regions = DNAcols,
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r DNAinterp, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
+if (require("akima")) {
+  tmp <- rowMeans(chondro[[, , c(728, 782, 1098, 1240, 1482, 1577)]])
+  chondro.bilinear <- interp(chondro$x, chondro$y, as.numeric(tmp), nx = 100, ny = 100)
 
-if (require ("akima")){
-
-tmp <- rowMeans (chondro[[, , c( 728, 782, 1098, 1240, 1482, 1577)]])
-chondro.bilinear <- interp (chondro$x, chondro$y, as.numeric (tmp), nx = 100, ny = 100)
-
-image (chondro.bilinear, 
-  xlab = labels (chondro, "x"), ylab = labels (chondro, "y"), 
-  col = DNAcols)
+  image(chondro.bilinear,
+    xlab = labels(chondro, "x"), ylab = labels(chondro, "y"),
+    col = DNAcols
+  )
 } else {
-  plot (NULL)
+  plot(NULL)
 }
 ```
 \begin{figure}[tbh]
@@ -642,20 +640,21 @@ Finally, the example data set is put together and saved. In order to keep the pa
 only a PCA-compressed version with 10 PCs is shipped as example data set of the package.
 
 ```{r save}
-spectra.to.save$clusters <- factor (NA, levels = levels (chondro$clusters))
-spectra.to.save$clusters[- out] <- chondro$clusters
+spectra.to.save$clusters <- factor(NA, levels = levels(chondro$clusters))
+spectra.to.save$clusters[-out] <- chondro$clusters
 
-pca <- prcomp (spectra.to.save)
-.chondro.scores   <- pca$x      [, seq_len (10)]
-.chondro.loadings <- pca$rot    [, seq_len (10)]
+pca <- prcomp(spectra.to.save)
+.chondro.scores   <- pca$x[  , seq_len(10)]
+.chondro.loadings <- pca$rot[, seq_len(10)]
 .chondro.center   <- pca$center
-.chondro.wl       <- wl (chondro)
-.chondro.labels   <- lapply (labels (chondro), as.expression)
-.chondro.extra    <- spectra.to.save$..
+.chondro.wl <- wl(chondro)
+.chondro.labels <- lapply(labels(chondro), as.expression)
+.chondro.extra <- spectra.to.save$..
 
-save (.chondro.scores, .chondro.loadings, .chondro.center,
-      .chondro.wl, .chondro.labels, .chondro.extra,
-      file = "chondro-internal.rda")
+save(.chondro.scores, .chondro.loadings, .chondro.center,
+  .chondro.wl, .chondro.labels, .chondro.extra,
+  file = "chondro-internal.rda"
+)
 ```
 This is the file distributed with package **hyperSpec** as example data set.
 
