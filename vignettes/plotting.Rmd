@@ -147,34 +147,35 @@ For details about the pre-processing, please refer to the example workflow in `v
 Package **hyperSpec** comes with 6 major predefined plotting functions:
 
 **`plot()`{.r}** 
-  ~  main switchyard for most plotting tasks.
-     More details in section \@ref(fun-plot).
+:  main switchyard for most plotting tasks.
+   More details in section \@ref(fun-plot).
   
 **`plotspc()`{.r}** 
-  ~  plots spectra.
-     More details in sections \@ref(exm-plotspc), \@ref(arg-spc), and \@ref(fun-plotspc).
+:  plots spectra.
+   More details in sections \@ref(exm-plotspc), \@ref(arg-spc), and \@ref(fun-plotspc).
 
 **`plotc()`{.r}** 
-  ~  calibration plot, time series, depth profile.
-     More details in sections \@ref(exm-plotc), \@ref(arg-c), \@ref(arg-ts), \@ref(arg-depth), and \@ref(fun-plotc).  
-  (`plotc()`{.r} is a package **lattice** function)
+:  calibration plot, time series, depth profile.
+   More details in sections \@ref(exm-plotc), \@ref(arg-c), \@ref(arg-ts), \@ref(arg-depth), and \@ref(fun-plotc).  
+   (`plotc()`{.r} is a package **lattice** function)
 
 **`levelplot()`{.r}** 
-  ~  package **hyperSpec** has a method for package **lattice**`r cite_pkg("lattice")` function `levelplot()`{.r}.
-  More details in sections \@ref(exm-levelplot), and \@ref(fun-levelplot).
+:  package **hyperSpec** has a method for package **lattice**`r cite_pkg("lattice")` function `levelplot()`{.r}.
+   More details in sections \@ref(exm-levelplot), and \@ref(fun-levelplot).
 
 **`plotmat()`{.r}** 
-  ~  plots the spectra matrix.
-     More details in sections \@ref(exm-plotmat), \@ref(arg-mat), and \@ref(fun-plotmat).
+:  plots the spectra matrix.
+   More details in sections \@ref(exm-plotmat), \@ref(arg-mat), and \@ref(fun-plotmat).
 
 **`plotmap()`{.r}** 
-  ~  more specialized version of `levelplot()`{.r} for map or image plots.
-   More details in sections \@ref(exm-plotmap), \@ref(arg-map), and \@ref(fun-plotmap).    (`plotmap()`{.r} is a package **lattice** function)
+:  more specialized version of `levelplot()`{.r} for map or image plots.
+   More details in sections \@ref(exm-plotmap), \@ref(arg-map), and \@ref(fun-plotmap).
+   (`plotmap()`{.r} is a package **lattice** function)
   
 **`plotvoronoi()`{.r}** 
-  ~  more specialized version of `plotmap()`{.r} that produces Voronoi tesselations.  
-     More details in sections \@ref(exm-plotvoronoi), and \@ref(arg-voronoi).      
-     (`plotvoronoi()`{.r} is a package **lattice** function) 
+:  more specialized version of `plotmap()`{.r} that produces Voronoi tesselations.  
+   More details in sections \@ref(exm-plotvoronoi), and \@ref(arg-voronoi).      
+   (`plotvoronoi()`{.r} is a package **lattice** function) 
   
 
 > **NOTE.**
