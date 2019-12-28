@@ -133,17 +133,18 @@ points (see figure~\@ref(fig:classical)):
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r classical-bl, fig.cap=CAPTION, width=8, height=4, include=FALSE}
+bl <- spc.fit.poly(chondro[c(1, 101), , c(633, 1788)], chondro[c(1, 101)])
 
-bl <- spc.fit.poly (chondro [c (1, 101),, c (633, 1788)], chondro [c (1, 101)])
-
-plot (chondro [c (1, 101)], plot.args = list (ylim = c(200, 600)), col = 1 : 2)
-plot (chondro [c (1, 101),, c(633, 1788)], add = TRUE, col = 1:2, 
-      lines.args = list (type = "p", pch = 20))
-plot (bl, add = TRUE, col = 1 : 2)
+plot(chondro[c(1, 101)], plot.args = list(ylim = c(200, 600)), col = 1:2)
+plot(chondro[c(1, 101), , c(633, 1788)],
+  add = TRUE, col = 1:2,
+  lines.args = list(type = "p", pch = 20)
+)
+plot(bl, add = TRUE, col = 1:2)
 ```
 \begin{figure}[tbh]
 \begin{center}
@@ -200,12 +201,11 @@ are shown in figure~\@ref(fig:iter).
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig1, fig.cap=CAPTION, pdf=TRUE, echo=FALSE, results='hide', eps=FALSE, width=12, height=4, include=FALSE}
-
-bl <- spc.fit.poly.below (chondro [1], poly.order = 1, max.iter = 8, npts.min = 2, debuglevel = 3L)
+bl <- spc.fit.poly.below(chondro[1], poly.order = 1, max.iter = 8, npts.min = 2, debuglevel = 3L)
 ```
 \begin{figure}
 \begin{center}
@@ -215,23 +215,22 @@ bl <- spc.fit.poly.below (chondro [1], poly.order = 1, max.iter = 8, npts.min = 
 \end{center}
 \end{figure}
 
+
+
 ## Specifying the spectral range
 
-
-
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r figspcrange, fig.cap=CAPTION, pdf=TRUE, echo=FALSE, results='hide', eps=FALSE, width=8, height=4, include=FALSE}
+plot(chondro[3, , 1700 ~ 1750], lines.args = list(type = "b"), plot.args = list(ylim = range(chondro[3, , 1700 ~ 1750]) + c(-50, 0)))
+bl <- spc.fit.poly.below(chondro[3, , 1700 ~ 1750], NULL, poly.order = 1)
+abline(bl[[]], col = "black")
 
-plot (chondro [3,,1700 ~ 1750], lines.args = list(type = "b"), plot.args = list (ylim = range (chondro [3,,1700 ~ 1750]) + c(-50, 0)))
-bl <- spc.fit.poly.below (chondro [3,,1700 ~ 1750], NULL, poly.order = 1)
-abline (bl[[]], col ="black")
-
-plot (chondro [3,,1720 ~ 1750], lines.args = list(type = "p", pch = 19, cex = .6), col = "blue", add=T)
-bl <- spc.fit.poly.below (chondro [3,,1720 ~ 1750], NULL, poly.order = 1)
-abline (bl[[]], col ="blue")
+plot(chondro[3, , 1720 ~ 1750], lines.args = list(type = "p", pch = 19, cex = .6), col = "blue", add = T)
+bl <- spc.fit.poly.below(chondro[3, , 1720 ~ 1750], NULL, poly.order = 1)
+abline(bl[[]], col = "blue")
 ```
 \begin{figure}
 \begin{center}
@@ -250,8 +249,8 @@ on the number of data points per spectrum. Thus one should also consider requiri
 the default value suggests.
 
 ```{r fit-apply}
-system.time (spc.fit.poly.below (chondro, NULL, npts.min = 20))
-system.time (spc.fit.poly.below (chondro [,, c (min ~ 700, 1700 ~ max)], NULL, npts.min = 20))
+system.time(spc.fit.poly.below(chondro, NULL, npts.min = 20))
+system.time(spc.fit.poly.below(chondro[, , c(min ~ 700, 1700 ~ max)], NULL, npts.min = 20))
 ```
 
 The choice of the spectral range in `fit.to`{.r} influences the resulting baselines to a certain
@@ -262,34 +261,31 @@ extent, as becomes clear from figure~\@ref(fig:spectralrange).
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r figorder0, fig.cap=CAPTION, pdf=TRUE, echo=FALSE, results='hide', eps=FALSE, width=5, height=4, include=FALSE}
-
-bl <- spc.fit.poly.below (chondro [1], poly.order = 0, debuglevel = 2, max.iter = 5)
+bl <- spc.fit.poly.below(chondro[1], poly.order = 0, debuglevel = 2, max.iter = 5)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r figorder1, fig.cap=CAPTION, pdf=TRUE, echo=FALSE, results='hide', eps=FALSE, width=5, height=4, include=FALSE}
-
-bl <- spc.fit.poly.below (chondro [1], poly.order = 1, debuglevel = 2, max.iter = 5)
+bl <- spc.fit.poly.below(chondro[1], poly.order = 1, debuglevel = 2, max.iter = 5)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r figorder2, fig.cap=CAPTION, pdf=TRUE, echo=FALSE, results='hide', eps=FALSE, width=5, height=4, include=FALSE}
-
-bl <- spc.fit.poly.below (chondro [1], poly.order = 2, debuglevel = 2, max.iter = 5)
+bl <- spc.fit.poly.below(chondro[1], poly.order = 2, debuglevel = 2, max.iter = 5)
 ```
 \begin{figure}
 \begin{center}
@@ -310,26 +306,24 @@ with `order`{.r} $=$ 0 to 3 for the first spectrum of the chondro data set.
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig3, fig.cap=CAPTION, pdf=TRUE, echo=FALSE, results='hide', eps=FALSE, width=8, height=3, include=FALSE}
-
-spc <- new ("hyperSpec", spc = matrix (rnorm (100, mean = 100, sd = 2), ncol = 100))
-noise = 4
-spc.fit.poly.below (spc, poly.order = 0, noise = noise, debuglevel = 2)
-plot (spc.fit.poly.below (spc, poly.order = 0), col = "black", add = T)
+spc <- new("hyperSpec", spc = matrix(rnorm(100, mean = 100, sd = 2), ncol = 100))
+noise <- 4
+spc.fit.poly.below(spc, poly.order = 0, noise = noise, debuglevel = 2)
+plot(spc.fit.poly.below(spc, poly.order = 0), col = "black", add = T)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig4, fig.cap=CAPTION, pdf=TRUE, echo=FALSE, results='hide', eps=FALSE, width=12, height=4, include=FALSE}
-
-bl <- spc.fit.poly.below (chondro [1], poly.order = 1, noise = 15, max.iter = 8, debuglevel = 3L)
+bl <- spc.fit.poly.below(chondro[1], poly.order = 1, noise = 15, max.iter = 8, debuglevel = 3L)
 ```
 \begin{figure}[t]
 \begin{center}
@@ -371,7 +365,7 @@ For the `paracetamol`{.r} spectrum (fig.~\@ref(fig:rubberband)), a noise level o
 equivalent of 20 degrees of freedom work well.
 
 ```{r}
-bl <- spc.rubberband (paracetamol [,, 175 ~ 1800], noise = 300, df = 20)
+bl <- spc.rubberband(paracetamol[, , 175 ~ 1800], noise = 300, df = 20)
 ```
 
 \begin{figure}[th]
@@ -380,13 +374,12 @@ bl <- spc.rubberband (paracetamol [,, 175 ~ 1800], noise = 300, df = 20)
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rubberband-raw, fig.cap=CAPTION, width=6, height=4, echo=FALSE, results='hide', include=TRUE}
-
-plot (paracetamol [,, 175 ~ 1800])
-plot (bl, add = TRUE, col = 2)
+plot(paracetamol[, , 175 ~ 1800])
+plot(bl, add = TRUE, col = 2)
 ```
 }%  
 \subfloat[Corrected spectrum.]{
@@ -394,12 +387,11 @@ plot (bl, add = TRUE, col = 2)
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rubberband, fig.cap=CAPTION, width=6, height=4, echo=FALSE, results='hide', include=TRUE}
-
-plot (paracetamol [,, 175 ~ 1800] - bl)
+plot(paracetamol[, , 175 ~ 1800] - bl)
 ```
 }
   \caption{Rubberband baselines for the paracetamol spectrum.}
@@ -411,8 +403,8 @@ the original spectrum is slightly concave. This can be corrected by bending the 
 applying the rubberband correction (fig.~\@ref(fig:rubberband-bent)):
 
 ```{r bent-rubberband}
-bend <- 5e4 * wl.eval (paracetamol [,, 175 ~ 1800], function (x) x^2, normalize.wl=normalize01)
-bl <- spc.rubberband (paracetamol [,, 175 ~ 1800] + bend) - bend
+bend <- 5e4 * wl.eval(paracetamol[, , 175 ~ 1800], function(x) x^2, normalize.wl = normalize01)
+bl <- spc.rubberband(paracetamol[, , 175 ~ 1800] + bend) - bend
 ```
 
 \begin{figure}[th]
@@ -421,13 +413,13 @@ bl <- spc.rubberband (paracetamol [,, 175 ~ 1800] + bend) - bend
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rubberband-bent-raw, fig.cap=CAPTION, width=6, height=4, echo=FALSE, results='hide', include=TRUE}
 
-plot (paracetamol [,, 175 ~ 1800] + bend)
-plot (bl + bend, add = T, col = 2)
+plot(paracetamol[, , 175 ~ 1800] + bend)
+plot(bl + bend, add = T, col = 2)
 ```
 }%  
 \subfloat[Corrected spectrum.]{
@@ -435,12 +427,11 @@ plot (bl + bend, add = T, col = 2)
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rubberband-bent-corrected, fig.cap=CAPTION, width=6, height=4, echo=FALSE, results='hide', include=TRUE}
-
-plot (paracetamol [,, 175 ~ 1800] - bl)
+plot(paracetamol[, , 175 ~ 1800] - bl)
 ```
 }
   \caption{Rubberband baselines for the paracetamol spectrum after bending.}
@@ -453,7 +444,7 @@ plot (paracetamol [,, 175 ~ 1800] - bl)
 # Session Info {-}
 
 ```{r echo=FALSE}
-make.bib ("baseline", file = "baseline-pkg.bib")
+make.bib("baseline", file = "baseline-pkg.bib")
 # <<cleanup>>
 ```
 
