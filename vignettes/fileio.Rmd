@@ -50,12 +50,12 @@ source("man/vignette-default-settingsR.R", encoding = "UTF-8")
 ```{r bib, echo=FALSE, paged.print=FALSE}
 make_bib(
   c(
-    "hyperSpec"
+    "hyperSpec",
+    "R.matlab"
   ),
   file = "man/fileio-pkg.bib"
 )
 ```
-
 
 \SweaveOpts{concordance=TRUE}
 \title{Import and Export of Spectra Files}
@@ -73,13 +73,12 @@ From now on, all import functions have names starting with `read.`. All function
 
   The information should include
   
-
-  -  The type of spectroscopy
-  -  Spectrometer model, manufacturer, and software
-  -  The"ativ"file format (including a sample file)
-  -  Description of relevant procedures to convert the file
-  -  R code to import the data together with an example file that can actually be read by R.
-  -  Documentation, particularly the description of the data format
+-  The type of spectroscopy
+-  Spectrometer model, manufacturer, and software
+-  The"ativ"file format (including a sample file)
+-  Description of relevant procedures to convert the file
+-  R code to import the data together with an example file that can actually be read by R.
+-  Documentation, particularly the description of the data format
   
 
   If you need help finding out how to import your data, please search and eventually ask on
@@ -126,7 +125,7 @@ p.~\pageref{sec:spectroscopy}).
 To create a `hyperSpec`{.r} object from data in R's workspace, use:
 
 ```{r eval=FALSE}
-spc <- new ("hyperSpec", spc, wavelength, data, labels)
+spc <- new("hyperSpec", spc, wavelength, data, labels)
 ```
 
 With the arguments:
@@ -148,7 +147,7 @@ more than welcome to contribute such import code to package **hyperSpec**. Secio
 As spectra matices are the internal format of `hyperSpec`{.r}, the consructor can directly be used:
 
 ```{r eval=FALSE}
-spc <- new ("hyperSpec", spc, wavelength, data, labels)
+spc <- new("hyperSpec", spc, wavelength, data, labels)
 ```
 
 ## Creating a `hyperSpec`{.r} Object from a Data Cube (Spectra Array)
@@ -173,24 +172,26 @@ The solution is to convert the array into a spectra matrix and have separate $x$
 Assume `data`{.r} is the data cube, and `x`{.r}, `y`{.r} and `wl`{.r} hold vectors with the proper $x$ and $y$ coordinates and the wavelengths:
 
 ```{r array}
-data <- array (1 : 24, 4 : 2)
-wl <- c (550, 630)
-x <- c (1000, 1200, 1400)
-y <- c (1800, 1600, 1400, 1200)
+data <- array(1:24, 4:2)
+wl <- c(550, 630)
+x <- c(1000, 1200, 1400)
+y <- c(1800, 1600, 1400, 1200)
 data
 ```
 
 Such data can be converted into a `hyperSpec`{.r} object by:
 
 ```{r array-import}
-d <- dim (data)
-dim (data) <- c (d [1] * d [2], d [3])
+d <- dim(data)
+dim(data) <- c(d[1] * d[2], d[3])
 
-x <- rep (x, each = d [1])
-y <- rep (y, d [2])
+x <- rep(x, each = d[1])
+y <- rep(y, d[2])
 
-spectra <- new ("hyperSpec", spc = data,
-   data = data.frame (x, y), wavelength = wl)
+spectra <- new("hyperSpec",
+  spc = data,
+  data = data.frame(x, y), wavelength = wl
+)
 ```
 
 If no proper coordinates (vectors `x`{.r}, `y`{.r} and `wl`{.r}) are available, they can be left
@@ -200,8 +201,8 @@ such sequences (the row/column/pixel numbers) can be used instead of the origina
 `y`{.r} as well:
 
 ```{r}
-y <- seq_len (d [1])
-x <- seq_len (d [2])
+y <- seq_len(d[1])
+x <- seq_len(d[2])
 ```
 
 Data cubes often come from spectral imaging systems that use an"mag"coordinate system counting
@@ -221,12 +222,12 @@ p.~\pageref{sec:read.spc.KaiserMap}) may take care of measurements consisting of
 Usually, the most convenient way to import multiple files into one `hyperSpec`{.r} object is reading all files into a list of `hyperSpec`{.r} objects, and then `collapse()`{.r}ing this list into a single `hyperSpec`{.r} object:
 
 ```{r readcollapse}
-files <- Sys.glob ("spc.Kaisermap/*.spc")
-files <- files [seq (1, length (files), by = 2)] # import low wavenumber region only
-spc <- lapply (files, read.spc)
-length (spc)
-spc [[1]]
-spc <- collapse (spc)
+files <- Sys.glob("spc.Kaisermap/*.spc")
+files <- files[seq(1, length(files), by = 2)] # import low wavenumber region only
+spc <- lapply(files, read.spc)
+length(spc)
+spc[[1]]
+spc <- collapse(spc)
 spc
 ```
 
@@ -284,24 +285,27 @@ columns whereas `hyperSpec`{.r} expects them to be in rows. The header line give
 Import is straightforward, just the spectra matrix needs to be transposed to make a `hyperSpec`{.r} object:
 
 ```{r read.txt.t}
-file <- read.table ("txt.t/Triazine 5_31.txt", header = TRUE, dec = ",", sep = "\t")
+file <- read.table("txt.t/Triazine 5_31.txt", header = TRUE, dec = ",", sep = "\t")
 
-triazine <- new ("hyperSpec", wavelength = file [,1], spc = t (file [, -1]),
-                 data = data.frame (sample = colnames (file [, -1])),
-                 labels = list (.wavelength = expression (2 * theta / degree),
-                               spc = "I / a.u."))
+triazine <- new("hyperSpec",
+  wavelength = file[, 1], spc = t(file[, -1]),
+  data = data.frame(sample = colnames(file[, -1])),
+  labels = list(
+    .wavelength = expression(2 * theta / degree),
+    spc = "I / a.u."
+  )
+)
 triazine
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r plot-triazine, fig.cap=CAPTION}
-
-plot (triazine [1])
+plot(triazine[1])
 ```
 
 Witec also saves ASCII data with spectra in columns (Export $\rightarrow$ Table), see \@ref(sec:read.txt.Witec).
@@ -322,8 +326,8 @@ Limited import of JCAMP-DX files v. 4.24 [@McDonald1988] is available in functio
 `XY..XY` and `X++(Y..Y)`.
 
 ```{r}
-read.jdx ("jcamp-dx/shimadzu.jdx", encoding = "latin1", keys.hdr2data=TRUE)
-read.jdx ("jcamp-dx/virgilio.jdx")
+read.jdx("jcamp-dx/shimadzu.jdx", encoding = "latin1", keys.hdr2data = TRUE)
+read.jdx("jcamp-dx/virgilio.jdx")
 ```
 
 The last file has a slight inconsistenty between its meta data and spectroscopic data,
@@ -332,7 +336,7 @@ However, the difference is minute compared to the intensities. If this is known 
 appropriate tolerance can be chosen:
 
 ```{r}
-read.jdx ("jcamp-dx/virgilio.jdx", ytol = 1e-9)
+read.jdx("jcamp-dx/virgilio.jdx", ytol = 1e-9)
 ```
 
 \warnbox{Note}{`read.jdx.Shimadzu()`{.r} has been removed.}
@@ -355,40 +359,46 @@ Here's an example how to extract the data of the Hg strong lines file:
 
 ```{r nist-aes}
 file <- readLines("NIST/mercurytable2.htm")
-#file <- readLines("http://physics.nist.gov/PhysRefData/Handbook/Tables/mercurytable2.htm")
+# file <- readLines("http://physics.nist.gov/PhysRefData/Handbook/Tables/mercurytable2.htm")
 
-file <- file [- (1 : grep ("Intensity.*Wavelength", file) - 1)]
-file <- file [1 : (grep ("</pre>", file) [1] - 1)]
-file <- gsub ("<[^>]*>", "", file)
-file <- file [! grepl ("^[[:space:]]+$", file)]
+file <- file[-(1:grep("Intensity.*Wavelength", file) - 1)]
+file <- file[1:(grep("</pre>", file) [1] - 1)]
+file <- gsub("<[^>]*>", "", file)
+file <- file[!grepl("^[[:space:]]+$", file)]
 
-colnames <- file [1]
-colnames <- gsub ("[[:space:]][[:space:]]+", "\t",  file [1])
-colnames <- strsplit (colnames, "\t")[[1]]
-if (! all (colnames == c ("Intensity", "Wavelength (&Aring;)", "Spectrum", "Ref. ")))
-  stop ("file format changed!")
-
-tablestart <- grep ("^[[:blank:]]*[[:alpha:]]+$", file) + 1
-tableend   <- c (tablestart [-1] - 2, length (file))
-tables <- list ()
-for (t in seq_along (tablestart)){
-  tmp <- file [tablestart [t] : tableend [t]]
-  tables [[t]] <- read.fwf (textConnection (tmp), c (5, 8, 12, 15, 9))
-  colnames (tables [[t]]) <- c("Intensity", "persistent", "Wavelength", "Spectrum", "Ref. ")
-  tables [[t]]$type <- gsub ("[[:space:]]", "", file [tablestart [t] - 1])
+colnames <- file[1]
+colnames <- gsub("[[:space:]][[:space:]]+", "\t", file[1])
+colnames <- strsplit(colnames, "\t")[[1]]
+if (!all(colnames == c("Intensity", "Wavelength (&Aring;)", "Spectrum", "Ref. "))) {
+  stop("file format changed!")
 }
-tables <- do.call (rbind, tables)
-levels (tables$Spectrum) <- gsub (" ", "", levels (tables$Spectrum))
 
-Hg.AES <- list ()
-for (s in levels (tables$Spectrum))
-  Hg.AES [[s]] <- new ("hyperSpec", wavelength = tables$Wavelength [tables$Spectrum == s],
-                       spc = tables$Intensity [tables$Spectrum == s],
-                       data = data.frame (Spectrum = s),
-                       label = list (.wavelength = expression (lambda / ring (A)),
-                                      spc = "I"))
+tablestart <- grep("^[[:blank:]]*[[:alpha:]]+$", file) + 1
+tableend <- c(tablestart[-1] - 2, length(file))
+tables <- list()
+for (t in seq_along(tablestart)) {
+  tmp <- file[tablestart[t]:tableend[t]]
+  tables[[t]] <- read.fwf(textConnection(tmp), c(5, 8, 12, 15, 9))
+  colnames(tables[[t]]) <- c("Intensity", "persistent", "Wavelength", "Spectrum", "Ref. ")
+  tables[[t]]$type <- gsub("[[:space:]]", "", file[tablestart[t] - 1])
+}
+tables <- do.call(rbind, tables)
+levels(tables$Spectrum) <- gsub(" ", "", levels(tables$Spectrum))
 
-plot (collapse (Hg.AES), lines.args = list (type = "h"), col = 1 : 2)
+Hg.AES <- list()
+for (s in levels(tables$Spectrum)) {
+  Hg.AES[[s]] <- new("hyperSpec",
+    wavelength = tables$Wavelength[tables$Spectrum == s],
+    spc = tables$Intensity[tables$Spectrum == s],
+    data = data.frame(Spectrum = s),
+    label = list(
+      .wavelength = expression(lambda / ring(A)),
+      spc = "I"
+    )
+  )
+}
+
+plot(collapse(Hg.AES), lines.args = list(type = "h"), col = 1:2)
 ```
 
 ## Further ASCII Formats
@@ -410,12 +420,14 @@ Matlab files can be read and written using the package package **R.matlab**\cite
 which is available at CRAN and can be installed by \Rcode{install.packages (\textquotedbl
 R.matlab\textquotedbl)}.
 ```{r}
-spc.mat <- readMat ("spectra.mat")```
+spc.mat <- readMat("spectra.mat")
+```
 
 If the .mat file was saved with compression, the additional package package **Rcompression** is
 needed. It can be installed from omegahat:
 ```{r}
-install.packages("Rcompression", repos = "http://www.omegahat.org/R")```
+install.packages("Rcompression", repos = "http://www.omegahat.org/R")
+```
 See the documentation of package **R.matlab** for more details and possibly needed further packages.
 
 `readMat()`{.r} imports the .mat file's contents as a list. The variables in the .mat file are
@@ -448,13 +460,13 @@ to be read can be specified with the `block`{.r} argument. `TRUE`{.r} will read 
 a list:
 
 ```{r read.mat.Cytospec-blocks}
-read.mat.Cytospec ("mat.cytospec/cytospec.mat", blocks = TRUE)
+read.mat.Cytospec("mat.cytospec/cytospec.mat", blocks = TRUE)
 ```
 
 otherwise, select a block:
 
 ```{r read.mat.Cytospec}
-read.mat.Cytospec ("mat.cytospec/cytospec.mat", blocks = 1)
+read.mat.Cytospec("mat.cytospec/cytospec.mat", blocks = 1)
 ```
 
 
@@ -483,7 +495,7 @@ software (section~\@ref(sec:read.ENVI.Bruker), p.~\pageref{sec:read.ENVI.Bruker}
 Here is how to use `read.ENVI()`{.r}:
 
 ```{r read.ENVI}
-spc <- read.ENVI ("ENVI/example2.img")
+spc <- read.ENVI("ENVI/example2.img")
 spc
 ```
 
@@ -547,8 +559,8 @@ used. Note that the header file field names are always lowercase.
 Here's how to find out what extra information could be read from the header and log:
 
 ```{r}
-read.spc ("spc.Kaisermap/ebroAVII.spc", keys.hdr2data = TRUE)
-read.spc ("spc.Kaisermap/ebroAVII.spc", keys.log2data = TRUE)
+read.spc("spc.Kaisermap/ebroAVII.spc", keys.hdr2data = TRUE)
+read.spc("spc.Kaisermap/ebroAVII.spc", keys.log2data = TRUE)
 ```
 
 .spc files may contain multiple spectra that do *not* share a common wavelength axis. In this
@@ -556,13 +568,13 @@ case, `read.spc()`{.r} returns a list of `hyperSpec`{.r} objects with one spectr
 each. `collapse()`{.r} may be used to combine this list into one `hyperSpec`{.r} object:
 
 ```{r read.spc.list}
-barbiturates <- read.spc ("spc/BARBITUATES.SPC")
-save (barbiturates, file = "barbiturates.rda")
-class (barbiturates)
-length (barbiturates)
-barbiturates <- collapse (barbiturates, collapse.equal = FALSE)
+barbiturates <- read.spc("spc/BARBITUATES.SPC")
+save(barbiturates, file = "barbiturates.rda")
+class(barbiturates)
+length(barbiturates)
+barbiturates <- collapse(barbiturates, collapse.equal = FALSE)
 barbiturates
-barbiturates [[1:10, , 25 ~ 30]]
+barbiturates[[1:10, , 25 ~ 30]]
 ```
 
 #### Deriving manufacturer specific import filters.
@@ -593,11 +605,13 @@ OPUS software. As mentioned above, the header files are frequently empty. We fou
 information to be:
 
 ```{r eval=FALSE}
-header <- list (samples = 64 * no.images.in.row,
-                lines = 64 * no.images.in.column,
-                bands = no.data.points.per.spectrum,
-                `data type` = 4,
-                interleave = "bip")
+header <- list(
+  samples = 64 * no.images.in.row,
+  lines = 64 * no.images.in.column,
+  bands = no.data.points.per.spectrum,
+  `data type` = 4,
+  interleave = "bip"
+)
 ```
 No spatial information is given in the ENVI header (if written). The lateral coordinates can be setup
 by specifying origin and pixel size for $x$ and $y$ directions. For details please see the help page.
@@ -622,7 +636,7 @@ mm. Thus a flag `nicolet.correction`{.r} is provided that divides the pixel size
 Alternatively, the correct offset and pixel size values may be given as function arguments.
 
 ```{r readENVINicolet}
-spc <- read.ENVI.Nicolet ("ENVI/example2.img", nicolet.correction = TRUE)
+spc <- read.ENVI.Nicolet("ENVI/example2.img", nicolet.correction = TRUE)
 spc ## dummy sample with all intensities zero
 ```
 
@@ -680,15 +694,15 @@ Thus care must be taken:
 
 ```{r Kaiser.txt.comma}
 ## 1. import as character
-tmp <- scan ("txt.Kaiser/test-lo-4.txt", what = rep ("character",4), sep = ",")
-tmp <- matrix (tmp, nrow = 4)
+tmp <- scan("txt.Kaiser/test-lo-4.txt", what = rep("character", 4), sep = ",")
+tmp <- matrix(tmp, nrow = 4)
 
 ## 2. concatenate every two columns by a dot
-wl <- apply (tmp [1:2, ], 2, paste, collapse = '.')
-spc <- apply (tmp [3:4, ], 2, paste, collapse = '.')
+wl <- apply(tmp[1:2, ],  2, paste, collapse = ".")
+spc <- apply(tmp[3:4, ], 2, paste, collapse = ".")
 
 ## 3. convert to numeric and create hyperSpec object
-spc <- new ("hyperSpec", spc = as.numeric (spc), wavelength = as.numeric (wl))
+spc <- new("hyperSpec", spc = as.numeric(spc), wavelength = as.numeric(wl))
 ```
 
 ### Kaiser Optical Systems Raman Maps {#sec:read.spc.KaiserMap}
@@ -711,10 +725,10 @@ Raman shift. Thus two files for each spectrum were saved by Hologram. Thus, a fi
 difficult to give and a vector of file names is used instead:
 
 ```{r readspcKaiserMap}
-files <- Sys.glob ("spc.Kaisermap/*.spc")
-spc.low <- read.spc.KaiserMap (files [seq (1, length (files), by = 2)])
-spc.high <- read.spc.KaiserMap (files [seq (2, length (files), by = 2)])
-wl (spc.high) <- wl (spc.high) + 1340
+files <- Sys.glob("spc.Kaisermap/*.spc")
+spc.low  <- read.spc.KaiserMap(files[seq(1, length(files), by = 2)])
+spc.high <- read.spc.KaiserMap(files[seq(2, length(files), by = 2)])
+wl(spc.high) <- wl(spc.high) + 1340
 spc
 ```
 
@@ -769,28 +783,28 @@ coordinates (default)
 Instead of a file name, `read.txt.Renishaw()`{.r} accepts also a connection.
 
 ```{r read.txt.Renishaw}
-paracetamol <- read.txt.Renishaw ("txt.Renishaw/paracetamol.txt", "spc")
+paracetamol <- read.txt.Renishaw("txt.Renishaw/paracetamol.txt", "spc")
 paracetamol
-save (paracetamol, file = "paracetamol.rda")
-read.txt.Renishaw ("txt.Renishaw/laser.txt.gz", "ts")
+save(paracetamol, file = "paracetamol.rda")
+read.txt.Renishaw("txt.Renishaw/laser.txt.gz", "ts")
 ```
 
 Very large files can  be read in chunks to save  memory:
 
 ```{r read.txt.Renishaw}
-read.txt.Renishaw ("txt.Renishaw/chondro.txt", nlines = 1e5, nspc = 875)
+read.txt.Renishaw("txt.Renishaw/chondro.txt", nlines = 1e5, nspc = 875)
 ```
 
 R accepts a variety of compressed file formats for ASCII files:
 
 ```{r read.txt.Renishaw-compressed, results='hide'}
-read.txt.Renishaw ("txt.Renishaw/chondro.gz")
-read.txt.Renishaw ("txt.Renishaw/chondro.xz")
-read.txt.Renishaw ("txt.Renishaw/chondro.lzma")
-read.txt.Renishaw ("txt.Renishaw/chondro.gz")
-read.txt.Renishaw ("txt.Renishaw/chondro.bz2")
+read.txt.Renishaw("txt.Renishaw/chondro.gz")
+read.txt.Renishaw("txt.Renishaw/chondro.xz")
+read.txt.Renishaw("txt.Renishaw/chondro.lzma")
+read.txt.Renishaw("txt.Renishaw/chondro.gz")
+read.txt.Renishaw("txt.Renishaw/chondro.bz2")
 
-read.zip.Renishaw ("txt.Renishaw/chondro.zip")
+read.zip.Renishaw("txt.Renishaw/chondro.zip")
 ```
 
 ## Horiba / Jobin Yvon (e.g. LabRAM)  {#sec:read.txt.Horiba}
@@ -808,10 +822,12 @@ Horiba's Labspec software (e. g. LabRAM spectrometers) saves spectra in a wide A
 read by `read.txt.Horiba()`{.r}, e. g.:
 
 ```{r Horiba}
-spc <- read.txt.Horiba ("txt.HoribaJobinYvon/ts.txt",
-                      cols = list (t = "t / s", spc = "I / a.u.",
-                        .wavelength = expression (Delta * tilde (nu) / cm^-1))
-                      )
+spc <- read.txt.Horiba("txt.HoribaJobinYvon/ts.txt",
+  cols = list(
+    t = "t / s", spc = "I / a.u.",
+    .wavelength = expression(Delta * tilde(nu) / cm^-1)
+  )
+)
 spc
 ```
 
@@ -823,21 +839,23 @@ For convenience, functions to further wrappers to import maps (`read.txt.Horiba.
 time series (`read.txt.Horiba.t()`{.r}) are provided.
 
 ```{r testHoriba, echo=FALSE, results='hide'}
-spc <- read.txt.Horiba.xy ("txt.HoribaJobinYvon/map.txt")
-if (any (dim (spc) != c (141, 4, 616)) ||
-    any (abs (spc) < .Machine$double.eps^.5) ||
-    is.null (spc$x) || any (is.na (spc$x)) ||
-    is.null (spc$y) || any (is.na (spc$y)) ||
-    length (setdiff (wl (spc), 1 : 616)) == 0L)
-  stop ("error in testing read.txt.Horiba.xy. Please contact ", maintainer ("hyperSpec"))
+spc <- read.txt.Horiba.xy("txt.HoribaJobinYvon/map.txt")
+if (any(dim(spc) != c(141, 4, 616)) ||
+  any(abs(spc) < .Machine$double.eps^.5) ||
+  is.null(spc$x) || any(is.na(spc$x)) ||
+  is.null(spc$y) || any(is.na(spc$y)) ||
+  length(setdiff(wl(spc), 1:616)) == 0L) {
+  stop("error in testing read.txt.Horiba.xy. Please contact ", maintainer("hyperSpec"))
+}
 
-spc <- read.txt.Horiba.t ("txt.HoribaJobinYvon/ts.txt")
-if (any (dim (spc) != c (100, 3, 1024)) ||
-    is.null (spc$t) || any (is.na (spc$t)) ||
-    length (setdiff (wl (spc), 1 : 1024)) == 0L)
-  stop ("error in testing read.txt.Horiba.xy. Please contact ", maintainer ("hyperSpec"))
+spc <- read.txt.Horiba.t("txt.HoribaJobinYvon/ts.txt")
+if (any(dim(spc) != c(100, 3, 1024)) ||
+  is.null(spc$t) || any(is.na(spc$t)) ||
+  length(setdiff(wl(spc), 1:1024)) == 0L) {
+  stop("error in testing read.txt.Horiba.xy. Please contact ", maintainer("hyperSpec"))
+}
 
-rm (spc)
+rm(spc)
 ```
 
 ## Andor Solis {#sec:read.asc.Andor}
@@ -866,31 +884,33 @@ read.asc.Andor("asc.Andor/ASCII-Andor-Solis.asc")
 The Witec project software supports exporting spectra as Thermo Galactic `.spc` files.
 
 ```{r witec-spc, results='hide'}
-read.spc ("spc.Witec/Witec-timeseries.spc")
-read.spc ("spc.Witec/Witec-Map.spc")
+read.spc("spc.Witec/Witec-timeseries.spc")
+read.spc("spc.Witec/Witec-Map.spc")
 ```
 `.spc` is in general the recommended format for package **hyperSpec** import. For imaging data no spatial information for the set of spectra is provided (in version 2.10 this export option is not supported).
 
 Imaging data (but also single spectra and time series) can be exported as ASCII X and Y files (Save ASCII X and Save ASCII Y, not supported in version 4). These can be read by `read.dat.Witec()`{.r}:
 
 ```{r witec-dat, results='hide'}
-read.dat.Witec ("txt.Witec/Witec-timeseries-x.dat")
-read.dat.Witec (filex = "txt.Witec/Witec-Map-x.dat",
-                points.per.line = 5, lines.per.image = 5, type = "map")
+read.dat.Witec("txt.Witec/Witec-timeseries-x.dat")
+read.dat.Witec(
+  filex = "txt.Witec/Witec-Map-x.dat",
+  points.per.line = 5, lines.per.image = 5, type = "map"
+)
 ```
 Note that the Y data files also contain a wavelength information, but (at least Witec Project 2.10) this information is always wavelength in nm, not Raman shift in wavenumbers: this is provided by the X data file only.
 
 Another option is Witec's txt table ASCII export (Export $\rightarrow$ Table), which produces ASCII files with each row corresponding to one wavelength. The first column contains the wavelength axis, all further columns contain one spectrum each column. Such files can be read with `read.txt.Witec()`{.r}:
 
 ```{r witec-txt, results='hide'}
-read.txt.Witec ("txt.Witec/Witec-timeseries_no.txt")
+read.txt.Witec("txt.Witec/Witec-timeseries_no.txt")
 ```
 `read.txt.Witec()`{.r} determines the number of wavelengths automaticallly.
 
 Note that there are several Export Filter Options. Here you can determine, which units should be used for the export (see XUnits tab). In addition, it is possible to export two additional header lines containing information about spectra labels and units. Therefore parameters `hdr.label`{.r} and `hdr.units`{.r} have to be set properly. Otherwise, either an error will be displayed like
 
 ```{r witec-txt-error, echo=FALSE}
-cat ("Error in scan(file, what, nmax, sep, dec, quote, skip, nlines, na.strings,  :
+cat("Error in scan(file, what, nmax, sep, dec, quote, skip, nlines, na.strings,  :
   scan() expected 'a real', got 'rel.'")
 ```
 or the one or two wavelengths will be skipped.
@@ -898,49 +918,59 @@ or the one or two wavelengths will be skipped.
 Depending on the used export options the header files should look like:
 
 ```{r witec-txt-textfiles, echo=FALSE}
-headline <- c ("with exported labels and units headerlines:",
-               "\nwith exported labels headerline:",
-               "\nwith exported units headerline:",
-               "\nwithout headerline:")
-files <- c ("txt.Witec/Witec-timeseries_full.txt",
-            "txt.Witec/Witec-timeseries_label.txt",
-            "txt.Witec/Witec-timeseries_unit.txt",
-            "txt.Witec/Witec-timeseries_no.txt")
+headline <- c(
+  "with exported labels and units headerlines:",
+  "\nwith exported labels headerline:",
+  "\nwith exported units headerline:",
+  "\nwithout headerline:"
+)
+files <- c(
+  "txt.Witec/Witec-timeseries_full.txt",
+  "txt.Witec/Witec-timeseries_label.txt",
+  "txt.Witec/Witec-timeseries_unit.txt",
+  "txt.Witec/Witec-timeseries_no.txt"
+)
 
-for (f in seq_along(files)){
-  cat (headline [f], "\n")
-  tmp <- format (as.matrix (read.table (files [f], sep = '\t')[1:4, 1:3]))
-  apply (tmp, 1, function (l) cat (l, "\n"))
+for (f in seq_along(files)) {
+  cat(headline[f], "\n")
+  tmp <- format(as.matrix(read.table(files[f], sep = "\t")[1:4, 1:3]))
+  apply(tmp, 1, function(l) cat(l, "\n"))
 }
 ```
 For imaging data set parameter `type`{.r} to "map". If the label header is exported, the spatial information can be extracted from this line. Otherwise, at least one, `points.per.line`{.r} or `lines.per.image`{.r}, has to be given manually, if not, a warning will be shown.
 
 ```{r witec-txt-map, results='hide', echo=FALSE}
-read.txt.Witec ("txt.Witec/Witec-Map_full.txt", type = "map", hdr.label = TRUE, hdr.units = TRUE)
+read.txt.Witec("txt.Witec/Witec-Map_full.txt",  type = "map", hdr.label = TRUE, hdr.units = TRUE)
 
-read.txt.Witec ("txt.Witec/Witec-Map_label.txt", type = "map", hdr.label = TRUE, hdr.units = FALSE)
+read.txt.Witec("txt.Witec/Witec-Map_label.txt", type = "map", hdr.label = TRUE, hdr.units = FALSE)
 
-read.txt.Witec ("txt.Witec/Witec-Map_unit.txt", type = "map", hdr.label = FALSE, hdr.units = TRUE)
+read.txt.Witec("txt.Witec/Witec-Map_unit.txt",  type = "map", hdr.label = FALSE, hdr.units = TRUE)
 
-read.txt.Witec ("txt.Witec/Witec-Map_unit.txt", type = "map", hdr.label = FALSE, hdr.units = TRUE,
-                points.per.line = 5)
+read.txt.Witec("txt.Witec/Witec-Map_unit.txt",
+  type = "map", hdr.label = FALSE, hdr.units = TRUE,
+  points.per.line = 5
+)
 
-read.txt.Witec ("txt.Witec/Witec-Map_no.txt", type = "map", hdr.label = FALSE, hdr.units = FALSE)
+read.txt.Witec("txt.Witec/Witec-Map_no.txt", type = "map", hdr.label = FALSE, hdr.units = FALSE)
 
-read.txt.Witec ("txt.Witec/Witec-Map_no.txt", type = "map", hdr.label = FALSE, hdr.units = FALSE,
-                lines.per.image = 5)
+read.txt.Witec("txt.Witec/Witec-Map_no.txt",
+  type = "map", hdr.label = FALSE, hdr.units = FALSE,
+  lines.per.image = 5
+)
 
-read.txt.Witec ("txt.Witec/Witec-Map_no.txt", type = "map", hdr.label = FALSE, hdr.units = FALSE,
-                points.per.line = 5, lines.per.image = 5)
+read.txt.Witec("txt.Witec/Witec-Map_no.txt",
+  type = "map", hdr.label = FALSE, hdr.units = FALSE,
+  points.per.line = 5, lines.per.image = 5
+)
 ```
 For line scans and z-stacks use `type = "single"`{.r} because the provided information are looking the same like for timeseries, so no further information can be extracted from the header files.
 
 Since version 4 WITec Project offers the Graph ASCII export (Export $\rightarrow$ Graph ASCII) which produces three ASCII files, named Header containing additional information, X-Axis containing the wavelength values and Y-Axis containing the spectra one spectrum in each column. Data exported in this way can be read with `read.txt.Witec.Graph()`{.r}:
 
 ```{r witec-txt-Graph, results='hide'}
-read.txt.Witec.Graph ("txt.Witec/Witec-timeseries (Header).txt")
-read.txt.Witec.Graph ("txt.Witec/Witec-Map (Header).txt", type = "map")
-read.txt.Witec.Graph ("txt.Witec/nofilename (Header).txt", encoding = "latin1")
+read.txt.Witec.Graph("txt.Witec/Witec-timeseries (Header).txt")
+read.txt.Witec.Graph("txt.Witec/Witec-Map (Header).txt", type = "map")
+read.txt.Witec.Graph("txt.Witec/nofilename (Header).txt", encoding = "latin1")
 ```
 This function reads the spectra files automatically, if they are named properly and extracts additional information of the header file. As for the other Witec functions it is possible to read image data by by selecting `type = "map"`{.r}. Line scans and z-stacks should be read as single spectra.
 
@@ -992,8 +1022,8 @@ data column called `spc`{.r}.
 Thus,
 
 ```{r read.txt.PerkinElmer}
-source ("read.txt.PerkinElmer.R")
-read.txt.PerkinElmer (Sys.glob("txt.PerkinElmer/flu?.txt"), skip = 54)
+source("read.txt.PerkinElmer.R")
+read.txt.PerkinElmer(Sys.glob("txt.PerkinElmer/flu?.txt"), skip = 54)
 ```
 imports the spectra.
 
@@ -1029,11 +1059,6 @@ formatcom=\footnotesize]{read.ENVI.Nicolet.R}
 Please note that future changes inside the read.spc function are likely to occur.
 However, if you just post-process the `hyperSpec`{.r} object returned by `read.spc()`{.r}, you should be fine.
 
-# References {-}
-
-```{r citations, echo=FALSE}
-make.bib ("R.matlab", file = "fileio-pkg.bib")
-```
 
 \clearpage
 \appendix
@@ -1050,41 +1075,43 @@ make.bib ("R.matlab", file = "fileio-pkg.bib")
   \multicolumn{4}{@{}l}{***ASCII file formats***}\tabularnewline
 
 ```{r results='tex', echo=FALSE}
-fileformats <- read.table ("fileformats.org", header = TRUE, sep = "|", strip.white=TRUE)
-fileformats <- fileformats [, ! apply (is.na (fileformats), 2, all)]
+fileformats <- read.table("fileformats.org", header = TRUE, sep = "|", strip.white = TRUE)
+fileformats <- fileformats[, !apply(is.na(fileformats), 2, all)]
 
-i <- order (fileformats$Name)
-res <- apply (fileformats [i,][fileformats$Type [i] == "ASCII",], 1,
-       function (x) {
-         cat (x [2], "&", x [3])
-         if (nchar (x [4]) > 0)
-           cat (" (", x[4],  ")", sep = "")
-         cat (" & \`", x[5], "()`{.r} & 
+i <- order(fileformats$Name)
+res <- apply(
+  fileformats[i, ][fileformats$Type[i] == "ASCII", ], 1,
+  function(x) {
+    cat(x[2], "&", x[3])
+    if (nchar(x[4]) > 0) {
+      cat(" (", x[4], ")", sep = "")
+    }
+    cat(" & \\Rfunction{", x[5], "} & \\ref{sec:", x[6], "}, p. \\pageref{sec:",
+      x[6], "} & ", x[7], "\\tabularnewline\n",
+      sep = ""
+    )
+  }
+)
 ```
-ref(sec:", x[6], "), p. 
-pageref{sec:",
-              x[6],"} & ", x [7], "
-tabularnewline\n",
-              sep = "")
-       })
-@
+
 \multicolumn{4}{@{}l}{***binary file formats***}\tabularnewline
 
 ```{r results='tex', echo=FALSE}
-res <- apply (fileformats [i,][fileformats$Type [i] == "binary",], 1,
-       function (x) {
-         cat (x [2], "&", x [3])
-         if (nchar (x [4]) > 0)
-           cat (" (", x[4],  ")", sep = "")
-         cat (" & \`", x[5], "()`{.r} & 
+res <- apply(
+  fileformats[i, ][fileformats$Type[i] == "binary", ], 1,
+  function(x) {
+    cat(x[2], "&", x[3])
+    if (nchar(x[4]) > 0) {
+      cat(" (", x[4], ")", sep = "")
+    }
+    cat(" & \\Rfunction{", x[5], "} & \\ref{sec:", x[6], "}, p. \\pageref{sec:",
+      x[6], "} & ", x[7], "\\tabularnewline\n",
+      sep = ""
+    )
+  }
+)
 ```
-ref(sec:", x[6], "), p. 
-pageref{sec:",
-              x[6],"} & ", x [7], "
-tabularnewline\n",
-              sep = "")
-       })
-@
+
 \end{tabular}
 \end{footnotesize}
 
@@ -1099,19 +1126,20 @@ tabularnewline\n",
 \multicolumn{4}{l}{***Manufacturers***}\tabularnewline
 
 ```{r results='tex', echo=FALSE}
-i <- order (fileformats$Manufacturer)
-res <- apply (fileformats [i,][fileformats$Manufacturer [i] != "",], 1,
-       function (x) {
-         cat (x [3])
-         if (nchar (x [4]) > 0)
-           cat (" (", x[4],  ")", sep = "")
-         cat ("&", x [2], " & \`", x[5], "()`{.r} & 
-ref{sec:", x[6],
-              "}, p. 
-pageref{sec:", x[6],"} & ", x [7], "
-tabularnewline\n",
-              sep = "")
-       })
+i <- order(fileformats$Manufacturer)
+res <- apply(
+  fileformats[i, ][fileformats$Manufacturer[i] != "", ], 1,
+  function(x) {
+    cat(x[3])
+    if (nchar(x[4]) > 0) {
+      cat(" (", x[4], ")", sep = "")
+    }
+    cat("&", x[2], " & \\Rfunction{", x[5], "} & \\ref{sec:", x[6],
+      "}, p. \\pageref{sec:", x[6], "} & ", x[7], "\\tabularnewline\n",
+      sep = ""
+    )
+  }
+)
 ```
 \end{tabular}
 \end{footnotesize}
@@ -1127,20 +1155,20 @@ tabularnewline\n",
   **Notes**\tabularnewline
 
 ```{r results='tex', echo=FALSE}
-i <- order (fileformats$Spectroscopy, tolower (fileformats$Name))
-res <- apply (fileformats [i,][fileformats$Spectroscopy [i] != "",], 1,
-       function (x) {
-         if (nchar (x [4]) > 0) cat (x[4])
-         cat ( "&", x [2], "&", x [3])
-         cat (" & \`", x[5], "()`{.r} & 
+i <- order(fileformats$Spectroscopy, tolower(fileformats$Name))
+res <- apply(
+  fileformats[i, ][fileformats$Spectroscopy[i] != "", ], 1,
+  function(x) {
+    if (nchar(x[4]) > 0) cat(x[4])
+    cat("&", x[2], "&", x[3])
+    cat(" & \\Rfunction{", x[5], "} & \\ref{sec:", x[6], "}, p. \\pageref{sec:",
+      x[6], "} & ", x[7], "\\tabularnewline\n",
+      sep = ""
+    )
+  }
+)
 ```
-ref(sec:", x[6], "), p. 
-pageref{sec:",
-              x[6],"} & ", x [7], "
-tabularnewline\n",
-              sep = "")
-       })
-@
+
 \end{tabular}
 \end{footnotesize}
 
