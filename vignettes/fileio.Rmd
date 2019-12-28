@@ -1,0 +1,8 @@
+---
+title: "fileio"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{fileio}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
