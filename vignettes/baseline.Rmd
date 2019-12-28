@@ -1,0 +1,8 @@
+---
+title: "baseline"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{baseline}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
