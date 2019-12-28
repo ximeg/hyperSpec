@@ -75,13 +75,13 @@ In order to reproduce the examples by typing in the commands, have a look at the
 <!-- latticeExtra -->
 
 ```{r check-required, echo=FALSE, results='tex'}
-check.req.pkg ("rgl", donothing = "")
+check.req.pkg("rgl", donothing = "")
 ```
 
 }
 
 ```{r loadlaser, echo=FALSE, include=FALSE}
-laser <- read.txt.Renishaw ("rawdata/laser.txt.gz", data = "ts")
+laser <- read.txt.Renishaw("rawdata/laser.txt.gz", data = "ts")
 ```
 
 # Introduction
@@ -103,13 +103,12 @@ This document shows
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rawspc, fig.cap=CAPTION, width=5, height=3, include=FALSE}
-
-laser <- read.txt.Renishaw ("rawdata/laser.txt.gz", data = "ts")
-plot (laser, "spcprctl5") 
+laser <- read.txt.Renishaw("rawdata/laser.txt.gz", data = "ts")
+plot(laser, "spcprctl5")
 ```
 
 As the laser emission was recorded with a Raman spectrometer, the wavelength axis initially is the Raman shift in wavenumbers (cm^-1^).
@@ -122,13 +121,12 @@ The results are shown in figure \@ref(fig:cutspc).
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r cut, fig.cap=CAPTION, width=5, height=3, include=FALSE}
-
-laser <- laser [,,-75~0]
-plot (laser, "spcprctl5") 
+laser <- laser[, , -75 ~ 0]
+plot(laser, "spcprctl5")
 ```
 \begin{figure}[tbh]
   \centering
@@ -144,7 +142,7 @@ the spectra were taken before calibrating the wavelength axis.
 The band at -50 cm^-1^ is known to be at 405 nm. 
 
 ```{r wlspc1}
-wl (laser) <- wl (laser) + 50
+wl(laser) <- wl(laser) + 50
 ```
 
 Furthermore, as the spectra are not Raman shift but emission, the wavelength axis should be converted to proper wavelengths in nm.
@@ -161,21 +159,21 @@ Taking into account that 1~cm = 10$^7$ nm, we arrive at the new
 wavelength axis:
 
 ```{r wlcalc}
-wl (laser) <- list (
-   wl = 1e7 / (1/405e-7 - wl (laser)),
-   label = expression (lambda / nm)
-   )
+wl(laser) <- list(
+  wl = 1e7 / (1 / 405e-7 - wl(laser)),
+  label = expression(lambda / nm)
+)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r wlspc, fig.cap=CAPTION, width=5, height=3, include=FALSE}
 
-plot (laser, "spcprctl5") 
+plot(laser, "spcprctl5")
 ```
 
 Note that the new wavelength axis label is immediately assigned as well.
@@ -183,7 +181,7 @@ Note that the new wavelength axis label is immediately assigned as well.
 Now, save `laser`{.r} as the `laser`{.r} data set shipped with package **hyperSpec**.
 
 ```{r save}
-save (laser, file = "laser.rda") 
+save(laser, file = "laser.rda")
 laser
 ```
 
@@ -198,20 +196,20 @@ wls <- locator()$x
 ```
 
 ```{r echo=FALSE, results='hide'}
-wls <-  c(405.0063, 405.1121, 405.2885, 405.3591)
+wls <- c(405.0063, 405.1121, 405.2885, 405.3591)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r markspc, fig.cap=CAPTION, width=5, height=3, include=FALSE}
 
-plot (laser, "spcmeansd")
+plot(laser, "spcmeansd")
 cols <- c("black", "blue", "red", "darkgreen")
-abline (v = wls, col = cols )  
+abline(v = wls, col = cols)
 ```
 
 `plotc()`{.r} can also be used to plot time-series. In that case,
@@ -224,12 +222,11 @@ variable,
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r ts, fig.cap=CAPTION, width=10, height=3, include=FALSE}
-
-plotc (laser [,, wls], spc ~ t, groups = .wavelength, type = "b",  cex = 0.3, col = cols)
+plotc(laser[, , wls], spc ~ t, groups = .wavelength, type = "b", cex = 0.3, col = cols)
 ```
 
 \begin{figure}[t]
@@ -247,12 +244,11 @@ Another option is to condition the plot on $\lambda$:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r tsextra, fig.cap=CAPTION, width=12, include=FALSE}
-
-plotc (laser [,, wls], spc ~ t | .wavelength, type = "b", cex = 0.3, col = "black")
+plotc(laser[, , wls], spc ~ t | .wavelength, type = "b", cex = 0.3, col = "black")
 ```
 
 \begin{figure}[t]
@@ -268,12 +264,11 @@ package **hyperSpec** supplies functions to draw the spectral matrix using packa
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r plotmatr, fig.cap=CAPTION, include=FALSE}
-
-plot (laser, "mat", contour = TRUE, col = "#00000060")
+plot(laser, "mat", contour = TRUE, col = "#00000060")
 ```
 
 package **hyperSpec**'s `levelplot()`{.r} method can be used to display the spectra matrix over a data column (instead of the row number): figure~\@ref(fig:tsmat). Note that the `hyperSpec`{.r} object is the *second* argument to the function (according to the notation in `levelplot()`{.r}).
@@ -281,12 +276,12 @@ package **hyperSpec**'s `levelplot()`{.r} method can be used to display the spec
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r plotmatt, fig.cap=CAPTION, include=FALSE}
 
-levelplot (spc ~ .wavelength * t, laser, contour = TRUE, col ="#00000080")
+levelplot(spc ~ .wavelength * t, laser, contour = TRUE, col = "#00000080")
 ```
 \begin{figure}[tbh]
   \centering
@@ -300,48 +295,54 @@ levelplot (spc ~ .wavelength * t, laser, contour = TRUE, col ="#00000080")
 `hyperSpec`{.r} objects  can easily be drawn with package **rgl**`r cite.pkg ("rgl")`:
 
 ```{r libraryrgl}
-require (rgl)
+require(rgl)
 ```
 package **rgl**'s `persp3d()`{.r} plots a surface in 3d defined by points in x, y, and z. Handing over the appropriate data columns of the `hyperSpec`{.r} object is easy (fig.~\@ref(fig:laser3d)):
 
 ```{r rgl-plot, eval=FALSE}
-message ("plot chunk")
-laser <- laser [,,404.8 ~ 405.6] / 10000
+message("plot chunk")
+laser <- laser [, , 404.8 ~ 405.6] / 10000
 laser$t <- laser$t / 3600
-cols <- rep (matlab.palette (nrow (laser)), nwl (laser))
+cols <- rep(matlab.palette(nrow(laser)), nwl(laser))
 
-surface3d(y = wl(laser), x = laser$t, z = laser$spc, col =  cols)
-surface3d(y = wl(laser), x = laser$t, z = laser$spc + .1 * min (laser), 
-          col =  "black", alpha = .2,front = "lines", line_antialias = TRUE)
+surface3d(y = wl(laser), x = laser$t, z = laser$spc, col = cols)
+surface3d(
+  y = wl(laser), x = laser$t, z = laser$spc + .1 * min(laser),
+  col = "black", alpha = .2, front = "lines", line_antialias = TRUE
+)
 
-aspect3d (c(1, 1, 0.25))
+aspect3d(c(1, 1, 0.25))
 
-axes3d (c ('x+-', 'y--', 'z--'))
-axes3d ('y--', nticks = 25, labels= FALSE)
-mtext3d ("t / h",    'x+-', line = 2.5)
-mtext3d ("lambda / nm",   'y--', line = 2.5)
-mtext3d ("I / a.u.", 'z--', line = 2.5)
+axes3d(c("x+-", "y--", "z--"))
+axes3d("y--", nticks = 25, labels = FALSE)
+mtext3d("t / h", "x+-", line = 2.5)
+mtext3d("lambda / nm", "y--", line = 2.5)
+mtext3d("I / a.u.", "z--", line = 2.5)
 ```
 
 ```{r rgl-do, echo=FALSE, results='hide'}
-  if (require (rgl)){
-    open3d (windowRect=c(20,20,600, 350))  # this is needed only for automatically 
-                                        # producing the snapshot
-# <<rgl-plot>>
-     par3d (userMatrix = matrix (c (-0.52,  0.4, -0.75, 0, 
-                                    -0.85, -0.28, 0.44, 0, 
-                                    -0.04,  0.87, 0.49, 0, 
-                                    -0.75,  0.75,     0, 1), ncol = 4L),
-            scale = c (2.75, 5, 0.175),
-            windowRect = c(20L, 50L, 520L, 330L),
-            zoom = 0.75)
-    rgl.snapshot ("fig-3D.png", fmt="png", top=TRUE )
-    rgl.quit ()
-  } else {
-    png ("fig-3D.png")
-    ploterrormsg ("", "rgl")
-    dev.off ()
-  }
+if (require(rgl)) {
+  open3d(windowRect = c(20, 20, 600, 350)) # this is needed only for automatically
+  # producing the snapshot
+  # <<rgl-plot>>
+  par3d(
+    userMatrix = matrix(c(
+      -0.52, 0.4, -0.75, 0,
+      -0.85, -0.28, 0.44, 0,
+      -0.04, 0.87, 0.49, 0,
+      -0.75, 0.75, 0, 1
+    ), ncol = 4L),
+    scale = c(2.75, 5, 0.175),
+    windowRect = c(20L, 50L, 520L, 330L),
+    zoom = 0.75
+  )
+  rgl.snapshot("fig-3D.png", fmt = "png", top = TRUE)
+  rgl.quit()
+} else {
+  png("fig-3D.png")
+  ploterrormsg("", "rgl")
+  dev.off()
+}
 ```
 \begin{figure}[t]
   \centering
@@ -351,7 +352,7 @@ mtext3d ("I / a.u.", 'z--', line = 2.5)
 \end{figure}
 
 ```{r makebib, echo=FALSE, results='hide'}
-make.bib (file = "laser-pkg.bib")
+make.bib(file = "laser-pkg.bib")
 ```
 
 # References {-}
@@ -362,7 +363,7 @@ make.bib (file = "laser-pkg.bib")
 
 <!--   -->
 ```{r echo=FALSE}
-make.bib (file = "laser-pkg.bib") 
-# <<cleanup>> 
+make.bib(file = "laser-pkg.bib")
+# <<cleanup>>
 ```
 \end{footnotesize}
