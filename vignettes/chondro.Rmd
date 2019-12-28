@@ -1,0 +1,8 @@
+---
+title: "chondro"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{chondro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
