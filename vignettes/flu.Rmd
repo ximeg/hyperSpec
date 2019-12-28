@@ -1,0 +1,8 @@
+---
+title: "flu"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{flu}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
