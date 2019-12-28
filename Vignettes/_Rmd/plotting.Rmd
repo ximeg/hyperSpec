@@ -1,8 +1,18 @@
 ---
 title:     "**_hyperSpec_** Plotting Functions" 
-subtitle:  "Introduction to the **_hyperSpec_** plotting functions"
-file_name: plotting
-author:    "C. Beleites"
+# subtitle:  "Introduction to the **_hyperSpec_** plotting functions"
+# file_name: plotting
+# Authors --------------------------------------------------------------------
+author:
+  - name: Claudia Beleites
+    email: chemometrie@beleites.de
+    address: |
+        DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)  
+        Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)  
+        ÖPV, JKI, Berlin/Germany (2017--2019)  
+        Arbeitskreis Lebensmittelmikrobiologie und Biotechnologie, Hamburg University, Hamburg/Germany (2019 -- 2020)  
+        Chemometric Consulting and Chemometrix GmbH, Wölfersheim/Germany (since 2016)
+# Document -------------------------------------------------------------------
 date:      "`r Sys.Date()`"
 output:
     bookdown::html_document2:
@@ -18,9 +28,9 @@ vignette: >
     %\VignetteEncoding{UTF-8}
 # Citations/References -------------------------------------------------------
 link-citations: yes
-bibliography: plotting-pkg.bib
+bibliography: man/plotting-pkg.bib
 biblio-style: plain
-csl: elsevier-with-titles.csl
+csl: man/elsevier-with-titles.csl
 ---
 
 ```{r setup, include = FALSE}
@@ -31,162 +41,35 @@ library(deldir)
 library(rgl)
 library(ggplot2)
 
-# Hooks ----------------------------------------------------------------------
-knitr::knit_hooks$set(small.mar = function(before, options, envir) {
-  if (before) { 
-    par(mar = c(4.1, 4.1, 1, .6))
-  } 
-})
-
-
 # Functions ------------------------------------------------------------------
-# set standardized color palettes
-seq.palette <- colorRampPalette(c("white", "dark green"), space = "Lab")
-
-YG.palette <- function(n = 20) {
-  rgb(colorRamp(c(
-    "#F7FCF5", "#E5F5E0", "#C7E9C0", "#A1D99B", "#74C476",
-    "#41AB5D", "#238B45", "#006D2C", "#00441B"
-  ), space = "Lab")
-  # was: brewer.pal (9, "Greens")
-  (seq(1 / 3, 1, length.out = n)^2), maxColorValue = 255)
-}
-
-
-div.palette <- colorRampPalette(c(
-  "#00008B", "#351C96", "#5235A2", "#6A4CAE", "#8164BA", "#967CC5",
-  "#AC95D1", "#C1AFDC", "#D5C9E8", "#E0E3E3", "#F8F8B0", "#F7E6C2",
-  "#EFCFC6", "#E6B7AB", "#DCA091", "#D08977", "#C4725E", "#B75B46",
-  "#A9432F", "#9A2919", "#8B0000"
-), space = "Lab")
-
-pkgSuggests <- function(...) {
-  strsplit(packageDescription(..., fields = "Suggests"), ",\\s*")[[1]]
-}
-
-pkg.exists <- function(pkg = stop("package name needed"), lib.loc = NULL) {
-  dir <- sapply(pkg, function(p) system.file(package = p, lib.loc = lib.loc))
-  nzchar(dir) > 0L
-}
-
-is.basepkg <- function(pkg) {
-  pkg.exists(pkg) && grepl("^base$", packageDescription(pkg, fields = "Priority"))
-}
-
-pkg.or.base <- function(pkg) {
-  pkg[sapply(pkg, is.basepkg)] <- "base"
-
-  pkg
-}
-
-citation.or.file <- function(pkg, svd.cit = sprintf("%s.CITATION", pkg)) {
-  if (pkg.exists(pkg)) {
-    citation(pkg)
-  } else if (file.exists(svd.cit)) {
-    readCitationFile(file = svd.cit)
-  } else {
-    NULL
-  }
-}
-
-make.cite.keys <- function(pkg, entries) {
-  pkg <- pkg.or.base(pkg)
-
-  if (!pkg.exists(pkg)) {
-    return(pkg)
-  }
-  
-  if (missing(entries)) {
-    entries <- citation.or.file(pkg)
-  }
-
-  keys <- sapply(unclass(entries), attr, "key")
-  noname <- which(sapply(keys, is.null))
-  if (length(keys) == 1L && noname == 1L) {
-    keys <- pkg
-  } else {
-    for (i in noname) {
-      keys[[i]] <- paste(pkg, i, sep = ".")
-    }
-  }
-  keys <- make.unique(unlist(keys))
-  keys
-}
-
-citation.with.key <- function(pkg = "base") {
-  pkg  <- pkg.or.base(pkg)
-  tmp  <- citation.or.file(pkg)
-  keys <- make.cite.keys(pkg, tmp)
-  for (entry in seq_along(tmp)) {
-    tmp[entry]$"key" <- keys[[entry]]
-  }
-  tmp
-}
-
-cite.pkg <- function(p, entries) {
-  paste0("[@", paste(make.cite.keys(p, entries), collapse = ";"), "]")
-}
-# cite.pkg <- function(p, entries, citefun = "cite") {
-#   paste("\\\\", citefun, "{", paste(make.cite.keys(p, entries), collapse = ", "), "}", sep = "")
-# }
-
-make.bib <- function(..., file = NULL) {
-  pkg <- c(...)
-
-  if (length(pkg) == 0L) {
-    pkg <- loadedNamespaces()
-
-    pkg <- unique(pkg.or.base(pkg))
-  }
-
-  l <- lapply(pkg, citation.with.key)
-  l <- do.call("c", l[!sapply(l, is.null)])
-
-  if (!is.null(file)) {
-    if (is.null(l)) {
-      cat(NULL, file = file)
-    } # touches file
-    else {
-      cat(toBibtex(l), file = file, sep = "\n")
-    }
-  }
-
-  invisible(l)
-}
+source("man/vignette-functions.R", encoding = "UTF-8")
 
 # Settings -------------------------------------------------------------------
-knitr::opts_chunk$set(
-  echo       = TRUE,     # Should blocks with program code be shown in knitted documents?
-  eval       = TRUE,     # Should program code be evaluated?
-  fig.height = 3,        # Default height for plots.
-  fig.width  = 5,        # Default width for plots.
-  fig.align  = "center", # Default alignment for plots in knitted documents.
-  collapse   = TRUE,
-  comment    = "#>",
-  fig.path   = "man/figures/plotting--",
-  # out.width  = "100%",
-  small.mar  = TRUE      # custom option
-)
+source("man/vignette-default-settingsR.R", encoding = "UTF-8")
 
-trellis.pars <- trellis.par.get("layout.heights")
-trellis.pars[grep("padding", names(trellis.pars))] <- 0
-trellis.par.set(layout.heights = trellis.pars)
-
-trellis.pars <- trellis.par.get("layout.widths")
-trellis.pars[grep("padding", names(trellis.pars))] <- 0
-trellis.par.set(layout.widths = trellis.pars)
-
-options("width" = 100, "digits" = 5)
-
-set.seed(2020)
+# knitr::opts_chunk$set(
+#   fig.path   = "man/figures/plotting--"
+# )
 ```
 
 ```{r bib, echo=FALSE, paged.print=FALSE}
-make.bib(c("hyperSpec", "lattice", "latticeExtra", "rgl", "ggplot2",
-  "playwith", "plotrix",  "deldir", "tripack"),
-  file = "plotting-pkg.bib"
+make_bib(
+  c(
+    "hyperSpec",
+    "lattice",
+    "latticeExtra",
+    "rgl",
+    "ggplot2",
+    # "playwith",     # Is "playwith" used?
+    "plotrix",
+    "deldir",
+    "tripack"
+  ),
+  file = "man/plotting-pkg.bib"
 )
 ```
+
+
 
 
 # Suggested Packages and Setup {-}
@@ -264,28 +147,35 @@ For details about the pre-processing, please refer to the example workflow in `v
 Package **hyperSpec** comes with 6 major predefined plotting functions:
 
 **`plot()`{.r}** 
-  ~  main switchyard for most plotting tasks
-  
-**`levelplot()`{.r}** 
-  ~  package **hyperSpec** has a method for package **lattice**`r cite.pkg("lattice")` function `levelplot()`{.r}
+  ~  main switchyard for most plotting tasks.
+     More details in section \@ref(fun-plot).
   
 **`plotspc()`{.r}** 
-  ~  plots spectra
-
-**`plotmat()`{.r}** 
-  ~  plots the spectra matrix
+  ~  plots spectra.
+     More details in sections \@ref(exm-plotspc), \@ref(arg-spc), and \@ref(fun-plotspc).
 
 **`plotc()`{.r}** 
-  ~  calibration plot, time series, depth profile.  
+  ~  calibration plot, time series, depth profile.
+     More details in sections \@ref(exm-plotc), \@ref(arg-c), \@ref(arg-ts), \@ref(arg-depth), and \@ref(fun-plotc).  
   (`plotc()`{.r} is a package **lattice** function)
 
+**`levelplot()`{.r}** 
+  ~  package **hyperSpec** has a method for package **lattice**`r cite_pkg("lattice")` function `levelplot()`{.r}.
+  More details in sections \@ref(exm-levelplot), and \@ref(fun-levelplot).
+
+**`plotmat()`{.r}** 
+  ~  plots the spectra matrix.
+     More details in sections \@ref(exm-plotmat), \@ref(arg-mat), and \@ref(fun-plotmat).
+
 **`plotmap()`{.r}** 
-  ~  more specialized version of `levelplot()`{.r} for map or image plots.  
-  (`plotmap()`{.r} is a package **lattice** function)
+  ~  more specialized version of `levelplot()`{.r} for map or image plots.
+   More details in sections \@ref(exm-plotmap), \@ref(arg-map), and \@ref(fun-plotmap).    (`plotmap()`{.r} is a package **lattice** function)
   
 **`plotvoronoi()`{.r}** 
   ~  more specialized version of `plotmap()`{.r} that produces Voronoi tesselations.  
-  (`plotvoronoi()`{.r} is a package **lattice** function) 
+     More details in sections \@ref(exm-plotvoronoi), and \@ref(arg-voronoi).      
+     (`plotvoronoi()`{.r} is a package **lattice** function) 
+  
 
 > **NOTE.**
 > Functions `plotmap()`{.r}, `plotvoronoi()`{.r}, and `levelplot()`{.r} are package **lattice** functions.
@@ -294,7 +184,7 @@ Package **hyperSpec** comes with 6 major predefined plotting functions:
 
 
 
-## Function `plotspc()`{.r}
+## Function `plotspc()`{.r} {#exm-plotspc}
 
 Function `plotspc()`{.r} plots the spectra (Fig. \@ref(fig:plotspc)), i.e., the intensities (`$spc`{.r}) over the wavelengths (`@wavelength`{.r}).
 
@@ -307,7 +197,7 @@ plotspc(flu)
 ```
 
 
-## Function `plotmat()`{.r}
+## Function `plotmat()`{.r} {#exm-plotmat}
 
 Function `plotmat()`{.r} plots the spectra, i.e., the colour coded intensities (`$spc`{.r}) over the wavelengths (`@wavelength`{.r}) and the row number (Fig. \@ref(fig:plotmat-flu)).
 
@@ -320,7 +210,7 @@ plotmat(flu)
 ```
 
 
-## Function `plotc()`{.r}
+## Function `plotc()`{.r} {#exm-plotc}
 
 Function `plotc()`{.r} plots an intensity over a single other data column, e.g., concentration (calibration plot, e.g., Fig. \@ref(fig:plotflu)), depth (depth profile plot), or time (time series plot).
 
@@ -334,7 +224,7 @@ plotc(flu)
 > The following warning is expected: `Intensity at first wavelengh only is used.`
 
 
-## Function `levelplot()`{.r}
+## Function `levelplot()`{.r} {#exm-levelplot}
 
 Function `levelplot()`{.r} plots a false colour map, defined by a formula (Fig. \@ref(fig:levelplot)).
 
@@ -349,7 +239,7 @@ levelplot(spc ~ x * y, chondro, aspect = "iso")
 > The following warning is expected: `Only first wavelength is used for plotting`.
 
 
-## Function `plotmap()`{.r}
+## Function `plotmap()`{.r} {#exm-plotmap}
 
 Function `plotmap()`{.r} is a specialized version of `levelplot()`{.r}.
 It uses a single value (e.g., average intensity or cluster membership) over two data columns (default are `$x`{.r} and `$y`{.r}) to plot a false colour map (Fig. \@ref(fig:plotmap)).
@@ -362,7 +252,7 @@ CAPTION = "False colour map created with `plotmap()`{.r}.  "
 plotmap(chondro)
 ```
 
-## Function `plotvoronoi()`{.r}
+## Function `plotvoronoi()`{.r} {#exm-plotvoronoi}
 
 Function `plotvoronoi()`{.r} is a special version of `plotmap()`{.r} that produces Voronoi diagram of the `hyperSpec` object (Fig. \@ref(fig:voronoi)).
 
@@ -377,14 +267,14 @@ plotvoronoi(sample(chondro, 300), clusters ~ x * y)
 
 
 
-# Arguments for `plot()`{.r} {#sec:argum-rmeth}
+# Arguments for `plot()`{.r} {#fun-plot}
 
 The **hyperSpec**'s `plot()`{.r} method uses its second argument to determine which of the specialized plots to produce. 
 This allows some handy abbreviations.
 All further arguments are handed over to the function actually producing the plot.
 
 
-## Argument `"spc"`{.r}
+## Argument `"spc"`{.r} {#arg-spc}
 
 Command `plot(x, "spc")`{.r} is equivalent to `plotspc(flu)`{.r} (Fig. \@ref(fig:plotspcflu)).
 
@@ -397,7 +287,7 @@ plot(flu, "spc")
 ```
 
 
-## Argument `"spcmeansd"`{.r}
+## Argument `"spcmeansd"`{.r} {#arg-spcmeansd}
 
 Command `plot(x, "spcmeansd")`{.r} plots mean spectrum $\pm$ 1 standard deviation (Fig. \@ref(fig:plotchomean)).
 
@@ -410,7 +300,7 @@ plot(chondro.preproc, "spcmeansd")
 ```
 
 
-## Argument `"spcprctile"`{.r}
+## Argument `"spcprctile"`{.r} {#arg-spcprctile}
 
 Code `plot(x, "spcprctile")`{.r} plots median, 16^th^ and 84^th^ percentile for each wavelength (Fig. \@ref(fig:plotchoprctl)).
 For Gaussian distributed data, 16^th^, 50^th^ and 84^th^ percentile are equal to mean $\pm$ standard deviation.
@@ -427,7 +317,7 @@ plot(chondro.preproc, "spcprctile")
 ```
 
 
-## Argument `"spcprctl5"`{.r}
+## Argument `"spcprctl5"`{.r} {#arg-spcprctl5}
 
 The code `plot(x, "spcprctl5")`{.r} is like `"spcprctile"`{.r} plus 5^th^ and 95^th^ percentile (Fig. \@ref(fig:plotchoprctl5)).
 
@@ -440,7 +330,7 @@ plot(chondro.preproc, "spcprctl5")
 ```
 
 
-## Argument `"c"`{.r}
+## Argument `"c"`{.r} {#arg-c}
 
 Command `plot(x, "c")`{.r} is equivalent to `plotc(flu)`{.r} (Fig. \@ref(fig:plotflu2)).
 
@@ -453,7 +343,7 @@ plot(flu, "c")
 ```
 
 
-## Argument `"ts"`{.r}
+## Argument `"ts"`{.r} {#arg-ts}
 
 Function `plot(x, "ts")`{.r} plots a time series plot and is equivalent to `plotc(laser, spc ~ t)`{.r} (Fig. \@ref(fig:plotts)).
 
@@ -466,7 +356,7 @@ plot(laser[, , 405], "ts")
 ```
 
 
-## Argument `"depth"`{.r}
+## Argument `"depth"`{.r}  {#arg-depth}
 
 Code `plot(x, "depth")`{.r} plots a depth profile plot and is the same as `plotc(laser, spc ~ z)`{.r} (Fig. \@ref(fig:plotdepth)).
 
@@ -489,7 +379,7 @@ plot(depth.profile, "depth")
 ```
 
 
-## Argument `"mat"`{.r}
+## Argument `"mat"`{.r}  {#arg-mat}
 
 Code `plot(x, "mat")`{.r} plots the spectra matrix (Fig. \@ref(fig:plotmat)).
 
@@ -514,7 +404,7 @@ levelplot(spc ~ .wavelength * .row, data = laser)
 ```
 
 
-## Argument `"map"`{.r}
+## Argument `"map"`{.r}  {#arg-map}
 
 Code `plot(x, "map")`{.r} is equivalent to `plotmap(chondro)`{.r} (Fig. \@ref(fig:plotmapcho2)).
 
@@ -527,7 +417,7 @@ plot(chondro, "map")
 ```
 
 
-## Argument `"voronoi"`{.r}
+## Argument `"voronoi"`{.r}  {#arg-voronoi}
 
 Use `plot(x, "voronoi")`{.r} for a Voronoi plot (Fig. \@ref(fig:plotvoronoi)).
 
@@ -542,9 +432,9 @@ plot(sample(chondro, 300), "voronoi")
 See `?plotvoronoi`{.r} and `?latticeExtra::panel.voronoi`{.r}.
 
 
-# Customized Plots of Spectra: `plotspc()`{.r}
-<!-- \mFun{`plotspc()`{.r}} -->
 
+# Customized Plots of Spectra: `plotspc()`{.r} {#fun-plotspc}
+<!-- \mFun{`plotspc()`{.r}} -->
 Function `plotspc()`{.r} offers a variety of parameters for customized plots.
 
 
@@ -568,6 +458,7 @@ For more details refer to `vignette("hyperspec", package = "hyperSpec")`{.r}.
 
 To plot severel wavelength ranges (Fig. \@ref(fig:wavelength-2)), use `wl.range = list (600 ~ 1800, 2800 ~ 3100)`{.r}.
 Cut the wavelength axis appropriately with `xoffset = 750`{.r}.
+If available, the package package **plotrix**`r cite_pkg("plotrix")` is used to produce the cut mark.
 
 ```{r include=FALSE}
 CAPTION = "Plot of several wavelength (wavenumber) ranges.  "
@@ -579,7 +470,6 @@ plotspc(paracetamol,
   xoffset = 750
 )
 ```
-If available, the package package **plotrix**`r cite.pkg("plotrix")` is used to produce the cut mark.
 
 
 ## Plot with Reversed Abscissa
@@ -700,6 +590,8 @@ abline(
 
 ## Stacked Spectra {#sec:stacked-spectra}
 
+### Simple Stacking
+
 To stack spectra, use `stacked = TRUE`{.r} (Fig. \@ref(fig:stacked1)).
 
 ```{r include=FALSE}
@@ -810,18 +702,10 @@ for (i in 1:3) {
 ```
 
 
-
-
-
-
-# Calibration Plots, (Depth) Profiles, and Time Series Plots
+# Calibration, (Depth) Profile, and Time Series Plots: `plotc()`{.r} {#fun-plotc}
 <!-- \mFun{`plotc()`{.r}} -->
 
-
-## Calibration Plots: `plotc()`{.r} {#sec:line-calibr-plots}
-
-
-### Intensities over Concentration
+## Intensities over Concentration
 
 Spectra intensities of one wavelength can be plotted over the concentration for univariate calibration (Fig. \@ref(fig:lin-cal-1)).
 
@@ -835,7 +719,7 @@ plotc(flu[, , 450])
 The default is to use the first intensity only.
 
 
-### Summary Intensities over Concentration
+## Summary Intensities over Concentration
 
 A function to compute a summary of the intensities before the drawing can be used via argument `func` (Fig. \@ref(fig:lin-cal-3)).
 
@@ -850,7 +734,7 @@ plotc(flu, func = range, groups = .wavelength)
 If `func()`{.r} returns more than one value, the different results are accessible by `.wavelength`.
 
 
-### Conditioning: Plotting More Traces Separately
+## Conditioning: Plotting More Traces Separately
 
 **Lattice** conditioning (operator `|`) can be used to plot more traces separately (Fig. \@ref(fig:plotc2)).
 
@@ -865,7 +749,7 @@ plotc(flu[, , c(405, 445)], spc ~ c | .wavelength,
 ```
 
 
-### Grouping: Plot More Traces in One Panel
+## Grouping: Plot More Traces in One Panel
 
 Argument `groups`{.r} may be used as a grouping parameter to plot more traces in one panel (Fig. \@ref(fig:plotc3)).
 
@@ -878,7 +762,7 @@ plotc(flu[, , c(405, 445)], groups = .wavelength)
 ```
 
 
-### Changing Axis Labels (and Other Parameters)
+## Changing Axis Labels (and Other Parameters)
 
 Arguments of **lattice** function `xyplot()`{.r} can be given to `plotc()`{.r} (Fig. \@ref(fig:lin-cal-4)).
 
@@ -896,7 +780,7 @@ plotc(flu[, , 450],
 ```
 
 
-### Adding Things to the Plot: Customized Panel Function
+## Adding Things to the Plot: Customized Panel Function
 
 As `plotc()`{.r} uses the package **lattice** function `xyplot()`{.r}, additions to the plot must be made via the panel function (Fig. \@ref(fig:lin-cal-5)).
 
@@ -947,7 +831,7 @@ plotc(laser[, , c(405.0063, 405.1121, 405.2885, 405.3591)],
 ```
 
 
-# Levelplot: `levelplot()`{.r} {#sec:levelplot}
+# Levelplot: `levelplot()`{.r}  {#fun-levelplot}
 
 Package **hyperSpec**'s function `levelplot()`{.r} can use two special column names:
 
@@ -979,7 +863,7 @@ levelplot(clusters ~ x * y, data = chondro)
 
 
 
-# Spectra Matrix {#sec:plotmat}
+# Spectra Matrix: `plotmat()`{.r} {#fun-plotmat}
 
 It is often useful to plot the spectra against an additional coordinate, e.g., the time for time
 series, the depth for depth profiles, etc.
@@ -1063,7 +947,7 @@ levelplot(spc ~ .wavelength * z, barb,
 ```
 
 
-# False-Colour Maps: `plotmap()`{.r} {#false-colour-maps}
+# False-Colour Maps: `plotmap()`{.r} {#fun-plotmap}
 
 ## Plotting map {#plotmap}
 
@@ -1095,9 +979,9 @@ plotmap(chondro, spc ~ y * x)
 ```
 
 
-## Colour-Coded Factors
+## Discrete Colours
 
-Factor variables may also be used for colour coding (Fig. \@ref(fig:plotmap-clu)).
+Factor variables may be used for discrete colour coding (Fig. \@ref(fig:plotmap-clu)).
 
 ```{r include=FALSE}
 CAPTION = "False colour map with colours defined by a factor variable.  "
@@ -1125,7 +1009,7 @@ plotmap(chondro, clusters ~ x * y,
 ```
 
 
-# Fine-Tuning **lattice** Parameters
+# Fine-Tuning **_lattice_** Parameters
 
 The plotting of colour maps is done via R package **lattice** (aka Trellis graphic approach), which is highly customizable. 
 Use function `trellis.par.get()`{.r} and `trellis.par.set()`{.r} to get/set the settings for the current graphics device.
@@ -1262,8 +1146,8 @@ levelplot(spc ~ y * x | as.factor(.wavelength),
 ## Voronoi Plot
 
 Fig. \@ref(fig:voronoi-2) shows an example of a Voronoi plot.
-Voronoi uses `panel.voronoi()`{.r} from package **latticeExtra**`r cite.pkg("latticeExtra")`.
-The tesselation is calculated by default using package **deldir**`r cite.pkg("deldir")`, but package **tripack**`r cite.pkg("tripack")` can also be used. 
+Voronoi uses `panel.voronoi()`{.r} from package **latticeExtra**`r cite_pkg("latticeExtra")`.
+The tesselation is calculated by default using package **deldir**`r cite_pkg("deldir")`, but package **tripack**`r cite_pkg("tripack")` can also be used. 
 Package **tripack** seems to be faster in general, but may "hang" with certain data sets (particularly regular grids with missing spectra as in this example). 
 Furthermore, it is not FOSS (free and open-source software), so users are kindly asked to review package **tripack**'s license before using it.
 
@@ -1375,13 +1259,76 @@ plotmap(uneven)
 ```
 
 
-# Using **_ggplot2_** with **_hyperSpec_** objects {#sec:ggplot2}
+# 3D Plots (with package **_rgl_**) {#plots-3d}
+
+Package **rgl**`r cite_pkg("rgl")` offers fast 3d plotting in R. 
+As package **rgl**'s axis annotations are sometimes awkward, they may better be set manually:
+
+
+<!-- evaluation in rgl-do -->
+```{r rgl-plot, eval=FALSE, fig.cap=CAPTION}
+library(rgl)
+
+laser <- laser [, , 404.8 ~ 405.6] / 10000
+laser$t <- laser$t / 3600
+cols <- rep(matlab.palette(nrow(laser)), nwl(laser))
+surface3d(
+  y = wl(laser), x = laser$t,
+  z = laser$spc, col = cols
+)
+aspect3d(c(1, 1, 0.25))
+axes3d(c("x+-", "y--", "z--"))
+axes3d("y--", nticks = 25, labels = FALSE)
+mtext3d("t / h", "x+-", line = 2.5)
+mtext3d("lambda / nm", "y--", line = 2.5)
+mtext3d("I / a.u.", edge = "z--", line = 2.5)
+```
+
+```{r include=FALSE}
+CAPTION = "A snapshot of an **rgl** plot.  "
+```
+
+```{r rgl-plot-png, echo=FALSE, fig.cap=CAPTION, out.width="100%"}
+knitr::include_graphics("man/plotting--fig-3D-01.png")
+```
+
+
+```{r rgl-do, echo=FALSE, results='hide', eval=FALSE}
+# FIXME: is this code block still needed?
+
+if (require(rgl)) {
+  open3d(windowRect = c(20, 20, 600, 350)) # this is needed only for automatically
+  # producing the snapshot
+  # <<rgl-plot>>
+  par3d(
+    userMatrix = matrix(c(
+      -0.52, 0.4, -0.75, 0,
+      -0.85, -0.28, 0.44, 0,
+      -0.04, 0.87, 0.49, 0,
+      -0.75, 0.75, 0, 1
+    ), ncol = 4L),
+    scale = c(2.75, 5, 0.175),
+    windowRect = c(20L, 50L, 520L, 330L),
+    zoom = 0.75
+  )
+  rgl.snapshot("fig-3D.png", fmt = "png", top = TRUE)
+  rgl.quit()
+  
+} else {
+  png("fig-3D.png")
+  ploterrormsg("", "rgl")
+  dev.off()
+}
+```
+
+
+# Using **_ggplot2_** with **_hyperSpec_** objects {#plots-ggplot2}
 
 ```{r FIXME-3, include=FALSE}
 # FIXME: ggplot2 method for "hyperSpec" objects can be easily created
 ```
 
-Class `hyperSpec`{.r} objects do not yet directly support plotting with package **ggplot2**`r cite.pkg("ggplot2")`.
+Class `hyperSpec`{.r} objects do not yet directly support plotting with package **ggplot2**`r cite_pkg("ggplot2")`.
 Nevertheless, package **ggplot2** graphics can easily be obtained, and `qplot*`{.r} equivalents to `plotspc()`{.r} and `plotmap()`{.r}. 
 
 
@@ -1400,7 +1347,7 @@ qplotspc(flu) + aes(colour = c)
 
 ## Function `ggplotmap()`{.r} {#ggplotmap}
 
-Fig. \@ref(fig:ggplotmap) shows map with package **ggplot2**.
+Fig. \@ref(fig:ggplotmap) shows a map created with package **ggplot2**.
 
 ```{r include=FALSE}
 CAPTION = "False-colour map with package **ggplot2**  "
@@ -1480,87 +1427,7 @@ if (require(ggplot2)) {
 ```
 
 
-# 3D Plots (with package **rgl**) {#sec:3-d}
-
-Package **rgl**`r cite.pkg("rgl")` offers fast 3d plotting in R. 
-As package **rgl**'s axis annotations are sometimes awkward, they may better be set manually:
-
-
-<!-- evaluation in rgl-do -->
-```{r rgl-plot, eval=FALSE, fig.cap=CAPTION}
-library(rgl)
-
-laser <- laser [, , 404.8 ~ 405.6] / 10000
-laser$t <- laser$t / 3600
-cols <- rep(matlab.palette(nrow(laser)), nwl(laser))
-surface3d(
-  y = wl(laser), x = laser$t,
-  z = laser$spc, col = cols
-)
-aspect3d(c(1, 1, 0.25))
-axes3d(c("x+-", "y--", "z--"))
-axes3d("y--", nticks = 25, labels = FALSE)
-mtext3d("t / h", "x+-", line = 2.5)
-mtext3d("lambda / nm", "y--", line = 2.5)
-mtext3d("I / a.u.", edge = "z--", line = 2.5)
-```
-
-```{r include=FALSE}
-CAPTION = "A snapshot of an **rgl** plot.  "
-```
-
-```{r rgl-plot-png, echo=FALSE, fig.cap=CAPTION, out.width="100%"}
-knitr::include_graphics("fig-3D-01.png")
-```
-
-
-```{r rgl-do, echo=FALSE, results='hide', eval=FALSE}
-# FIXME: is this code block still needed?
-
-if (require(rgl)) {
-  open3d(windowRect = c(20, 20, 600, 350)) # this is needed only for automatically
-  # producing the snapshot
-  # <<rgl-plot>>
-  par3d(
-    userMatrix = matrix(c(
-      -0.52, 0.4, -0.75, 0,
-      -0.85, -0.28, 0.44, 0,
-      -0.04, 0.87, 0.49, 0,
-      -0.75, 0.75, 0, 1
-    ), ncol = 4L),
-    scale = c(2.75, 5, 0.175),
-    windowRect = c(20L, 50L, 520L, 330L),
-    zoom = 0.75
-  )
-  rgl.snapshot("fig-3D.png", fmt = "png", top = TRUE)
-  rgl.quit()
-  
-} else {
-  png("fig-3D.png")
-  ploterrormsg("", "rgl")
-  dev.off()
-}
-```
-
-
-
-
-# Troubleshooting {#sec:troubleshooting}
-
-## No Output Is Produced {#sec:no-output-produced}
-
-Methods `plotmap`{.r}, `plotvoronoi`{.r}, `levelplot`{.r}, and `plotc`{.r} use package **lattice** functions.
-Therefore, in loops, functions, Sweave chunks, etc. the lattice object needs to be printed explicitly by `print(plotmap(object))`{.r} 
-([R FAQ: Why do lattice/trellis graphics not work?](http://cran.r-project.org/doc/FAQ/R-FAQ.html#Why-do-lattice_002ftrellis-graphics-not-work_003f)).
-The same holds for package **ggplot2** graphics.
-
-```{r FIXME-4, include=FALSE}
-# FIXME: in my opinion, "vignettes.defs" shouldn't be mentioned
-```
-For suggestions on how the lattice functions can be redefined so that the result is printed without external print command, see the file `vignettes.defs`.
-
-
-# Interactive Graphics {#sec:interactive-graphics}
+# Interactive Graphics {#interactive-plots}
 
 Package **hyperSpec** offers basic interaction, `spc.identify()`{.r} for spectra plots, and `map.identify()`{.r} and `map.sel.poly()`{.r} for maps. 
 The first two identify points in spectra plots and map plots, respectively.
@@ -1615,6 +1482,21 @@ grid.locator()
 
 Function `identify()`{.r} (or `panel.identify()`{.r} for lattice graphics) allows to identify points of the plot directly.
 Note that the returned indices correspond to the plotted object.
+
+
+# Troubleshooting {#sec:troubleshooting}
+
+## No Output Is Produced {#sec:no-output-produced}
+
+Methods `plotmap`{.r}, `plotvoronoi`{.r}, `levelplot`{.r}, and `plotc`{.r} use package **lattice** functions.
+Therefore, in loops, functions, Sweave chunks, etc. the lattice object needs to be printed explicitly by `print(plotmap(object))`{.r} 
+([R FAQ: Why do lattice/trellis graphics not work?](http://cran.r-project.org/doc/FAQ/R-FAQ.html#Why-do-lattice_002ftrellis-graphics-not-work_003f)).
+The same holds for package **ggplot2** graphics.
+
+```{r FIXME-4, include=FALSE}
+# FIXME: in my opinion, "vignettes.defs" shouldn't be mentioned
+```
+For suggestions on how the lattice functions can be redefined so that the result is printed without external print command, see the file `vignettes.defs`.
 
 
 # Session Info {-}
