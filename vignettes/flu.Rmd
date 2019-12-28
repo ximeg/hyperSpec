@@ -93,8 +93,8 @@ The function to import these files,  `read.txt.PerkinElmer()`{.r}, is discussed 
 It  needs to be `source()`{.r}d before use:
 
 ```{r read.txt.PE}
-source ("read.txt.PerkinElmer.R")
-flu <- read.txt.PerkinElmer (Sys.glob ("rawdata/flu?.txt"), skip = 54)
+source("read.txt.PerkinElmer.R")
+flu <- read.txt.PerkinElmer(Sys.glob("rawdata/flu?.txt"), skip = 54)
 ```
 Now the spectra are in a `hyperSpec`{.r} object and can be examined e.g. by
 
@@ -105,12 +105,12 @@ flu
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r rawfig, fig.cap=CAPTION, width=6, height=3}
 
-plot (flu)
+plot(flu)
 ```
 
 # Adding further Data Columns
@@ -118,10 +118,10 @@ The calibration model needs the quinine concentrations for the spectra.
 This information can be stored together with the spectra, and also gets an appropriate label:
 
 ```{r newdata}
-flu$c <- seq (from = 0.05, to = 0.30, by = 0.05)
-labels (flu, "c") <- "c / (mg / l)"
+flu$c <- seq(from = 0.05, to = 0.30, by = 0.05)
+labels(flu, "c") <- "c / (mg / l)"
 flu
-save (flu, file = 'flu.rda')
+save(flu, file = "flu.rda")
 ```
 
 Now the `hyperSpec`{.r}  object `flu`{.r} contains two data columns, holding the actual spectra and the
@@ -152,12 +152,12 @@ concentration is done by:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r calplot1, fig.cap=CAPTION, width=6, height=6}
 
-plotc (flu[,,450])
+plotc(flu[, , 450])
 ```
 
 The square bracket operator extracts parts of a `hyperSpec`{.r} object.
@@ -167,8 +167,8 @@ third gives the spectral range.
 We discard all the wavelengths but 450 nm:
 
 ```{r cutspc}
-flu <- flu [,,450]
-labels (flu, "spc") <- expression (I ["450 nm"] / a.u.)
+flu <- flu[, , 450]
+labels(flu, "spc") <- expression(I["450 nm"] / a.u.)
 ```
 
 The plot could be enhanced by annotating the ordinate with the emission wavelength.
@@ -178,12 +178,12 @@ function will go through the origin:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r calplot2, fig.cap=CAPTION, width=6, height=6}
 
-plotc (flu, xlim = range (0, flu$c), ylim = range (0, flu$spc))
+plotc(flu, xlim = range(0, flu$c), ylim = range(0, flu$spc))
 ```
 
 The actual calibration is a linear model, which can be fitted by the R function `lm()`{.r}.
@@ -221,13 +221,13 @@ flu$..
 Putting this together, the calibration model is calculated:
 
 ```{r cal}
-calibration <- lm (c ~ spc, data = flu$.)
+calibration <- lm(c ~ spc, data = flu$.)
 ```
 
 The `summary()`{.r} gives a good overview of our model:
 
 ```{r summarymodel}
-summary (calibration)
+summary(calibration)
 ```
 
 In order to get predictions for new measurements, a new `data.frame`{.r} with the same independent
@@ -236,9 +236,11 @@ variables (in columns with the same names) as in the calibration data are needed
 If we observe e.g. an intensity of 125 or 400 units, the corresponding concentrations and their 99 \% prediction intervals are:
 
 ```{r pred}
-I <- c (125, 400)
-conc <- predict (calibration, newdata = list (spc = as.matrix(I)), interval = "prediction",
-                 level = .99)
+I <- c(125, 400)
+conc <- predict(calibration,
+  newdata = list(spc = as.matrix(I)), interval = "prediction",
+  level = .99
+)
 conc
 ```
 
@@ -248,25 +250,27 @@ Finally, we can draw the calibration function and its 99 \% confidence interval
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r calplot3, fig.cap=CAPTION, pdf=TRUE, eps=FALSE, width=6, height=6}
 
 
-int <- list (spc = as.matrix(seq (min (flu), max(flu), length.out = 25)))
-ci <- predict (calibration, newdata = int, interval = "confidence", level = 0.99)
+int <- list(spc = as.matrix(seq(min(flu), max(flu), length.out = 25)))
+ci <- predict(calibration, newdata = int, interval = "confidence", level = 0.99)
 
-panel.ci <-  function (x, y, ...,
-                       intensity, ci.lwr, ci.upr, ci.col = "#606060") {
-   panel.xyplot (x, y, ...)
-   panel.lmline (x, y,...)
-   panel.lines (ci.lwr, intensity, col = ci.col)
-   panel.lines (ci.upr, intensity, col = ci.col)
+panel.ci <- function(x, y, ...,
+                     intensity, ci.lwr, ci.upr, ci.col = "#606060") {
+  panel.xyplot(x, y, ...)
+  panel.lmline(x, y, ...)
+  panel.lines(ci.lwr, intensity, col = ci.col)
+  panel.lines(ci.upr, intensity, col = ci.col)
 }
 
-plotc (flu, panel = panel.ci,
-       intensity = int$spc, ci.lwr = ci [, 2], ci.upr = ci [, 3])
+plotc(flu,
+  panel = panel.ci,
+  intensity = int$spc, ci.lwr = ci[, 2], ci.upr = ci[, 3]
+)
 ```
 
 Or, we can add the respective data to the `hyperSpec`{.r} object. The meaning of the data can be saved in a new extra data column that acts as grouping variable for the plot.
@@ -279,14 +283,16 @@ flu$type <- "data points"
 Next, the calculated confidence intervals are appended:
 
 ```{r calplot4.2}
-tmp <- new ("hyperSpec", spc = as.matrix(seq (min (flu), max(flu), length.out = 25)),
-                         wavelength = 450)
-ci <-  predict (calibration, newdata = tmp$., interval = "confidence", level = 0.99)
-tmp <- tmp [rep (seq (tmp, index = TRUE), 3)]
-tmp$c <- as.numeric (ci)
-tmp$type <- rep (colnames (ci), each = 25)
+tmp <- new("hyperSpec",
+  spc = as.matrix(seq(min(flu), max(flu), length.out = 25)),
+  wavelength = 450
+)
+ci <- predict(calibration, newdata = tmp$., interval = "confidence", level = 0.99)
+tmp <- tmp[rep(seq(tmp, index = TRUE), 3)]
+tmp$c <- as.numeric(ci)
+tmp$type <- rep(colnames(ci), each = 25)
 
-flu <- collapse (flu, tmp)
+flu <- collapse(flu, tmp)
 ```
 
 Finally, the resulting object is plotted. Our prediction example is handled by another customized panel function:
@@ -294,29 +300,32 @@ Finally, the resulting object is plotted. Our prediction example is handled by a
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r calplot4, fig.cap=CAPTION, pdf=TRUE, eps=FALSE, width=6, height=6}
-
-panel.predict <- function (x, y, ...,
-                 intensity, ci, pred.col = "red", pred.pch = 19, pred.cex = 1) {
-   panel.xyplot (x, y, ...)
-   mapply (function (i, lwr, upr, ...) {
-                 panel.lines (c (lwr, upr), rep (i, 2), ...)
-              },
-           intensity, ci [, 2], ci [, 3], MoreArgs = list (col = pred.col))
-   panel.xyplot (ci [, 1], intensity, col = pred.col, pch = pred.pch, cex = pred.cex, type = "p")
+panel.predict <- function(x, y, ...,
+                          intensity, ci, pred.col = "red", pred.pch = 19, pred.cex = 1) {
+  panel.xyplot(x, y, ...)
+  mapply(function(i, lwr, upr, ...) {
+    panel.lines(c(lwr, upr), rep(i, 2), ...)
+  },
+  intensity, ci[, 2], ci[, 3],
+  MoreArgs = list(col = pred.col)
+  )
+  panel.xyplot(ci[, 1], intensity, col = pred.col, pch = pred.pch, cex = pred.cex, type = "p")
 }
 
-plotc (flu, groups = type, type = c("l", "p"),
-       col = c ("black", "black", "#606060", "#606060"),
-       pch = c (19, NA, NA, NA), cex = 0.5,
-       lty = c (0, 1, 1, 1),
-       panel = panel.predict,
-       intensity = I,
-       ci = conc,
-       pred.cex = 0.5)
+plotc(flu,
+  groups = type, type = c("l", "p"),
+  col = c("black", "black", "#606060", "#606060"),
+  pch = c(19, NA, NA, NA), cex = 0.5,
+  lty = c(0, 1, 1, 1),
+  panel = panel.predict,
+  intensity = I,
+  ci = conc,
+  pred.cex = 0.5
+)
 ```
 
 # Session Info {-}
