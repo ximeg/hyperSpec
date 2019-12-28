@@ -194,7 +194,7 @@ make.bib(c("hyperSpec", "lattice", "latticeExtra", "rgl", "ggplot2",
 > **Reproducing the examples in this vignette.**  
 > All spectra used in this manual are installed automatically with package **hyperSpec**.
 
-<!-- Note that some definitions are executed in `vignette.defs`, and others invisibly at the beginning of the file in order to have the code as similar as possible to interactive sessions. -->
+<!-- Note that some definitions are executed in `vignette.defs`, and others invisibly at the beginning of the file to have the code as similar as possible to interactive sessions. -->
 
 
 
@@ -236,7 +236,7 @@ set.seed(2020)
 # FIXME: Is "latticist" really mentioned in this vignette?
 ```
 
-In addition, package **tripack**, and package **latticist** are mentioned, but not used in this vignette.
+Besides, package **tripack**, and package **latticist** are mentioned, but not used in this vignette.
 
 
 
@@ -256,7 +256,7 @@ cluster.meansd <- aggregate(chondro.preproc, chondro$clusters, mean_pm_sd)
 cluster.means  <- aggregate(chondro.preproc, chondro$clusters, mean)
 ```
 
-For details about the pre-processing, please refer to the example work flow in `vignette("chondro")`, or the help `?chondro`.
+For details about the pre-processing, please refer to the example workflow in `vignette("chondro")`, or the help `?chondro`.
 
 
 # Predefined Functions
@@ -379,7 +379,7 @@ plotvoronoi(sample(chondro, 300), clusters ~ x * y)
 
 # Arguments for `plot()`{.r} {#sec:argum-rmeth}
 
-**hyperSpec**'s `plot()`{.r} method uses its second argument to determine which of the specialized plots to produce. 
+The **hyperSpec**'s `plot()`{.r} method uses its second argument to determine which of the specialized plots to produce. 
 This allows some handy abbreviations.
 All further arguments are handed over to the function actually producing the plot.
 
@@ -564,7 +564,7 @@ If `wl.range`{.r} already contains indices use `wl.index = TRUE`{.r}.
 For more details refer to `vignette("hyperspec", package = "hyperSpec")`{.r}.
 
 
-## Plot Severel Wavelength Ranges
+## Plot Several Wavelength Ranges
 
 To plot severel wavelength ranges (Fig. \@ref(fig:wavelength-2)), use `wl.range = list (600 ~ 1800, 2800 ~ 3100)`{.r}.
 Cut the wavelength axis appropriately with `xoffset = 750`{.r}.
@@ -651,12 +651,12 @@ plotspc(chondro[300, , ], add = TRUE, col = "blue")
 
 ## Plot Summary Characteristics
 
-Argument `func`{.r} may be used to calculate summary characteristics prior to plotting. 
+Argument `func`{.r} may be used to calculate summary characteristics before plotting. 
 To plot, e.g., the standard deviation of the spectra, use `plotspc(..., func = sd)`{.r} (Fig. \@ref(fig:sd)).
 
 ```{r include=FALSE}
 CAPTION = "A spectrum of summary statistics calculated via `func` parameter.
-In the example, standard deviation is used.  "
+In the example, the standard deviation is used.  "
 ```
 
 ```{r sd, width=4, height=2.6, fig.cap=CAPTION}
@@ -718,7 +718,7 @@ plotspc(cluster.means,
 
 
 ```{r FIXME-2, include=FALSE}
-# FIXME: gramatical structure of these sentences are dificult to understand.
+# FIXME: grammatical structure of these sentences are difficult to understand.
 # Does this alternative formulation reflect the idea of the sub-chapter well enough?
 
 # Argument `stacked = "factor"`{.r} can be used to stack groups of spectra (Fig. \@ref(fig:stacked2)).
@@ -727,7 +727,7 @@ plotspc(cluster.means,
 
 
 The spectra to be stacked can be grouped: `stacked = "factor"`{.r}. 
-Alternatively, the name of extra data column can be used for grouping (Fig. \@ref(fig:stacked2)).
+Alternatively, the name of an extra data column can be used for grouping (Fig. \@ref(fig:stacked2)).
 
 ```{r include=FALSE}
 CAPTION = "Stacked summary spectra (mean $\\pm$ one standard deviation).  "
@@ -850,7 +850,7 @@ plotc(flu, func = range, groups = .wavelength)
 If `func()`{.r} returns more than one value, the different results are accessible by `.wavelength`.
 
 
-### Conditioning: plotting more traces separately
+### Conditioning: Plotting More Traces Separately
 
 **Lattice** conditioning (operator `|`) can be used to plot more traces separately (Fig. \@ref(fig:plotc2)).
 
@@ -1005,9 +1005,9 @@ plotmat(laser, col = heat.colors(20))
 ```
 
 
-## Different Y Axis
+## Different Y-Axis
 
-Different extra data column can be used as y axis (Fig. \@ref(fig:plotmat2)).
+Different extra data column can be used as y-axis (Fig. \@ref(fig:plotmat2)).
 
 ```{r include=FALSE}
 CAPTION = "Spectra matrix with time (in column `t`) on y axis.    "
@@ -1081,13 +1081,13 @@ plotmap(chondro)
 ```
 
 
-## Plotting Maps with Manully Specified X and Y Axes {#plotmap-manual-xy}
+## Plotting Maps with Manually Specified X and Y Axes {#plotmap-manual-xy}
 
 Specify the colour-coded variable, abscissa and ordinate as formula: `colour.coded ~ abscissa * ordinate`{.r} (Fig. \@ref(fig:plotmap-yx)).
 
 
 ```{r include=FALSE}
-CAPTION = "False colour map with explicit spacification of x and y axes.  "
+CAPTION = "False colour map with an explicit specification of x and y axes.  "
 ```
 
 ```{r plotmap-yx, width=4, height=2.6, fig.cap=CAPTION}
@@ -1107,8 +1107,7 @@ CAPTION = "False colour map with colours defined by a factor variable.  "
 plotmap(chondro, clusters ~ x * y)
 ```
 
-If the colour-coded variable is a factor, each level gets its own colour, and the legend is labeled
-accordingly.
+If the colour-coded variable is a factor, each level gets its own colour, and the legend is labelled accordingly.
 
 
 ## Different Palette
@@ -1126,9 +1125,9 @@ plotmap(chondro, clusters ~ x * y,
 ```
 
 
-# Fine tuning **lattice** parameters
+# Fine-Tuning **lattice** Parameters
 
-The plotting of color maps is done via R package **lattice** (aka Trellis graphic approach), which is highly customizable. 
+The plotting of colour maps is done via R package **lattice** (aka Trellis graphic approach), which is highly customizable. 
 Use function `trellis.par.get()`{.r} and `trellis.par.set()`{.r} to get/set the settings for the current graphics device.
 
 ```{r lattice-params}
@@ -1138,10 +1137,10 @@ names(my.theme) # note how many parameters are tunable
 
 Any of these parameters can be fine-tuned to produce the desired output.
 For example, parameter `my.theme$region`{.r} is responsible for the appearance of color maps, and it contains elements `$alpha`{.r} and `$col`{.r}.
-By changing this parameters you can create your own theme for plotting and pass it to the plotting function via `par.settings`{.r}.
+By changing these parameters you can create your own theme for plotting and pass it to the plotting function via `par.settings`{.r}.
 
 
-## Changed palette
+## Changed Palette
 
 Fig. \@ref(fig:plotmap-col-default) uses a customized **lattice** theme.
 
@@ -1161,7 +1160,7 @@ The current settings can be visualized via a call to `show.settings()`{.r}
 
 
 
-## Show current **_lattice_** settings
+## Show Current **_lattice_** Settings
 
 Graphical parameters for *trellis* may be displayed via `show.settings()`{.r} (Fig. \@ref(fig:lattice-settings)).
 
@@ -1179,11 +1178,11 @@ show.settings(my.theme)
 ```
 
 
-An overview of different color palettes, and ways to create your own, can be found
-in the [R color cheatsheet](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/colorPaletteCheatsheet.pdf).
+An overview of different colour palettes, and ways to create your own, can be found
+in the [R colour cheatsheet](https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/colorPaletteCheatsheet.pdf).
 
 
-## Defined wavelengths
+## Defined Wavelengths
 
 A map of the average intensity at particular wavelengths can be plotted if the wavelengths of interested are explicitly extracted (Fig. \@ref(fig:plotmap-wave)).
 
@@ -1224,7 +1223,7 @@ Argument `func`{.r} defaults to function `mean()`{.r}.
 In order to suppress this, use `func = NULL`{.r}.
 This allows conditioning on the wavelengths.
 
-Fig. \@ref(fig:plotmap-pca2) demonstrates an exaple to plot the maps of principal componens scores.
+Fig. \@ref(fig:plotmap-pca2) demonstrates an example to plot the maps of principal components scores.
 
 ```{r include=FALSE}
 CAPTION = "The maps of the scores of the first two principal components (I).  "
@@ -1260,13 +1259,13 @@ levelplot(spc ~ y * x | as.factor(.wavelength),
 ```
 
 
-## Voronoi plot
+## Voronoi Plot
 
-Fig. \@ref(fig:voronoi-2) shows an example of Voronoi plot.
+Fig. \@ref(fig:voronoi-2) shows an example of a Voronoi plot.
 Voronoi uses `panel.voronoi()`{.r} from package **latticeExtra**`r cite.pkg("latticeExtra")`.
 The tesselation is calculated by default using package **deldir**`r cite.pkg("deldir")`, but package **tripack**`r cite.pkg("tripack")` can also be used. 
 Package **tripack** seems to be faster in general, but may "hang" with certain data sets (particularly regular grids with missing spectra as in this example). 
-Furthermore, it is not FOSS (free and open source software), so users are kindly asked to review package **tripack**'s license before using it.
+Furthermore, it is not FOSS (free and open-source software), so users are kindly asked to review package **tripack**'s license before using it.
 
 
 ```{r include=FALSE}
@@ -1280,7 +1279,7 @@ plotvoronoi(sample(chondro, 300), clusters ~ x * y,
 ```
 
 
-## Mark missing spectra
+## Mark Missing Spectra
 
 If the spectra come from a rectangular grid, missing positions can be marked with the following panel function:
 
@@ -1310,11 +1309,11 @@ plotmap(sample(chondro, length(chondro) - 20),
 ```
 
 
-## Unevenly spaced measurement grid
+## Unevenly Spaced Measurement Grid
 
 The panel function used by `plotmap()`{.r} defaults to `panel.levelplot.raster()`{.r} which assumes an evenly spaced measurement grid.
-Even if the spectra are measured on a nominally evenly spaced grid, the actual stage position may be slightly varying due to positioning inaccuracy and some manufacturers (e.g., Kaiser) record the position reported by the stage rather than the position requested by the stage control.
-This leads to weird looking output with holes, and possibly wrong columns (Fig. \@ref(fig:uneven-I)).
+Even if the spectra are measured on a nominally evenly spaced grid, the actual stage position may slightly vary due to positioning inaccuracy and some manufacturers (e.g., Kaiser) record the position reported by the stage rather than the position requested by the stage control.
+This leads to weird-looking output with holes, and possibly wrong columns (Fig. \@ref(fig:uneven-I)).
 
 ```{r uneven-prep, echo=FALSE, results='hide'}
 uneven <- chondro
@@ -1330,10 +1329,10 @@ Note warnings `values are not equispaced; output may be wrong`."
 ```{r uneven-I, width=4, height=2.6, fig.cap=CAPTION}
 plotmap(uneven)
 ```
-The symptom of this situation are warnings about values in x and/or y not being equispaced; and that the output therefore may be wrong.
+The symptom of this situation are warnings about values in x and/or y not being equispaced; and that the output, therefore, may be wrong.
 
 
-One possibility to obtain a correct map is using `plotvoronoi()`{.r} instead which will construct a mosaic-like image with the respective"ixe"areas being centered around the actually recorded `$x` and `$y` position (Fig. \@ref(fig:uneven-II)).
+One possibility to obtain a correct map is using `plotvoronoi()`{.r} instead which will construct a mosaic-like image with the respective "pixel" areas being centred around the actually recorded `$x` and `$y` position (Fig. \@ref(fig:uneven-II)).
 
 ```{r include=FALSE}
 CAPTION = "Unevenly spaced measurement grid: example II.  "
@@ -1373,69 +1372,6 @@ ry <- makeraster(uneven$y, startx = -4.77, d = 1, tol = 0.3)
 uneven$y <- ry$x
 
 plotmap(uneven)
-```
-
-
-# 3D plots (with package **rgl**) {#sec:3-d}
-
-Package **rgl**`r cite.pkg("rgl")` offers fast 3d plotting in R. 
-As package **rgl**'s axis annotations are sometimes awkward, they may better be set manually:
-
-
-<!-- evaluation in rgl-do -->
-```{r rgl-plot, eval=FALSE, fig.cap=CAPTION}
-library(rgl)
-
-laser <- laser [, , 404.8 ~ 405.6] / 10000
-laser$t <- laser$t / 3600
-cols <- rep(matlab.palette(nrow(laser)), nwl(laser))
-surface3d(
-  y = wl(laser), x = laser$t,
-  z = laser$spc, col = cols
-)
-aspect3d(c(1, 1, 0.25))
-axes3d(c("x+-", "y--", "z--"))
-axes3d("y--", nticks = 25, labels = FALSE)
-mtext3d("t / h", "x+-", line = 2.5)
-mtext3d("lambda / nm", "y--", line = 2.5)
-mtext3d("I / a.u.", edge = "z--", line = 2.5)
-```
-
-```{r include=FALSE}
-CAPTION = "A snapshot of an **rgl** plot.  "
-```
-
-```{r rgl-plot-png, echo=FALSE, fig.cap=CAPTION, out.width="100%"}
-knitr::include_graphics("fig-3D-01.png")
-```
-
-
-```{r rgl-do, echo=FALSE, results='hide', eval=FALSE}
-# FIXME: is this code block still needed?
-
-if (require(rgl)) {
-  open3d(windowRect = c(20, 20, 600, 350)) # this is needed only for automatically
-  # producing the snapshot
-  # <<rgl-plot>>
-  par3d(
-    userMatrix = matrix(c(
-      -0.52, 0.4, -0.75, 0,
-      -0.85, -0.28, 0.44, 0,
-      -0.04, 0.87, 0.49, 0,
-      -0.75, 0.75, 0, 1
-    ), ncol = 4L),
-    scale = c(2.75, 5, 0.175),
-    windowRect = c(20L, 50L, 520L, 330L),
-    zoom = 0.75
-  )
-  rgl.snapshot("fig-3D.png", fmt = "png", top = TRUE)
-  rgl.quit()
-  
-} else {
-  png("fig-3D.png")
-  ploterrormsg("", "rgl")
-  dev.off()
-}
 ```
 
 
@@ -1479,7 +1415,7 @@ The two special columns `.wavelength`{.r} and `.rownames`{.r} contain the wavele
 
 
 
-## More general plotting with **_ggplot2_** {#general-plotting-ggplot2}
+## More General Plotting with **_ggplot2_** {#general-plotting-ggplot2}
 
 
 For more general plotting, `as.long.df()`{.r} transforms a `hyperSpec`{.r} object into a long-form `data.frame`{.r} that is suitable for `qplot()`{.r}, while `as.t.df()`{.r} produces a `data.frame`{.r} where each spectrum is one column, and an additional first column gives the wavelength. 
@@ -1544,9 +1480,74 @@ if (require(ggplot2)) {
 ```
 
 
+# 3D Plots (with package **rgl**) {#sec:3-d}
+
+Package **rgl**`r cite.pkg("rgl")` offers fast 3d plotting in R. 
+As package **rgl**'s axis annotations are sometimes awkward, they may better be set manually:
+
+
+<!-- evaluation in rgl-do -->
+```{r rgl-plot, eval=FALSE, fig.cap=CAPTION}
+library(rgl)
+
+laser <- laser [, , 404.8 ~ 405.6] / 10000
+laser$t <- laser$t / 3600
+cols <- rep(matlab.palette(nrow(laser)), nwl(laser))
+surface3d(
+  y = wl(laser), x = laser$t,
+  z = laser$spc, col = cols
+)
+aspect3d(c(1, 1, 0.25))
+axes3d(c("x+-", "y--", "z--"))
+axes3d("y--", nticks = 25, labels = FALSE)
+mtext3d("t / h", "x+-", line = 2.5)
+mtext3d("lambda / nm", "y--", line = 2.5)
+mtext3d("I / a.u.", edge = "z--", line = 2.5)
+```
+
+```{r include=FALSE}
+CAPTION = "A snapshot of an **rgl** plot.  "
+```
+
+```{r rgl-plot-png, echo=FALSE, fig.cap=CAPTION, out.width="100%"}
+knitr::include_graphics("fig-3D-01.png")
+```
+
+
+```{r rgl-do, echo=FALSE, results='hide', eval=FALSE}
+# FIXME: is this code block still needed?
+
+if (require(rgl)) {
+  open3d(windowRect = c(20, 20, 600, 350)) # this is needed only for automatically
+  # producing the snapshot
+  # <<rgl-plot>>
+  par3d(
+    userMatrix = matrix(c(
+      -0.52, 0.4, -0.75, 0,
+      -0.85, -0.28, 0.44, 0,
+      -0.04, 0.87, 0.49, 0,
+      -0.75, 0.75, 0, 1
+    ), ncol = 4L),
+    scale = c(2.75, 5, 0.175),
+    windowRect = c(20L, 50L, 520L, 330L),
+    zoom = 0.75
+  )
+  rgl.snapshot("fig-3D.png", fmt = "png", top = TRUE)
+  rgl.quit()
+  
+} else {
+  png("fig-3D.png")
+  ploterrormsg("", "rgl")
+  dev.off()
+}
+```
+
+
+
+
 # Troubleshooting {#sec:troubleshooting}
 
-## No output is produced {#sec:no-output-produced}
+## No Output Is Produced {#sec:no-output-produced}
 
 Methods `plotmap`{.r}, `plotvoronoi`{.r}, `levelplot`{.r}, and `plotc`{.r} use package **lattice** functions.
 Therefore, in loops, functions, Sweave chunks, etc. the lattice object needs to be printed explicitly by `print(plotmap(object))`{.r} 
@@ -1556,7 +1557,7 @@ The same holds for package **ggplot2** graphics.
 ```{r FIXME-4, include=FALSE}
 # FIXME: in my opinion, "vignettes.defs" shouldn't be mentioned
 ```
-For suggestions how the lattice functions can be redefined so that the result is printed without external print command, see the file `vignettes.defs`.
+For suggestions on how the lattice functions can be redefined so that the result is printed without external print command, see the file `vignettes.defs`.
 
 
 # Interactive Graphics {#sec:interactive-graphics}
@@ -1566,7 +1567,7 @@ The first two identify points in spectra plots and map plots, respectively.
 Function `map.sel.poly()`{.r} selects the part of a `hyperSpec`{.r} object that lies inside the user defined polygon.
 
 
-## `spc.identify()`{.r} finding out wavelength, intensity and spectrum {#sec:spc.identify}
+## `spc.identify()`{.r} Finding Out Wavelength, Intensity and Spectrum {#sec:spc.identify}
 
 Function `spc.identify()`{.r} allows to measure points in graphics produced by `plotspc()`{.r}.
 It works correctly with reversed and cut wavelength axes.
@@ -1597,7 +1598,7 @@ map.sel.poly(chondro)
 ```
 
 
-## Related functions provided by base graphics and lattice {#sec:identify-other}
+## Related Functions Provided by Base Graphics and **_lattice_** {#sec:identify-other}
 
 For base graphics (as produced by `plotspc()`{.r}), `locator()`{.r} may be useful as well.
 It returns the clicked coordinates. Note that these are *not* transformed according to `xoffset` & Co.
