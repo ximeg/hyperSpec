@@ -1,0 +1,9 @@
+---
+title: "laser"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{laser}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
