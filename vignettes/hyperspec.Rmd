@@ -1,0 +1,8 @@
+---
+title: "hyperspec"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{hyperspec}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
