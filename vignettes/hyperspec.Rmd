@@ -5,7 +5,7 @@ title:       Introduction to Package **hyperSpec**
 # Authors --------------------------------------------------------------------
 # author:    C. Beleites
 author:
-  - name: Claudia Beleites
+  - name:  Claudia Beleites
     email: chemometrie@beleites.de
     address: |
         DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)
@@ -27,7 +27,7 @@ vignette: >
     %\VignetteEncoding{UTF-8}
 # Citations/References -------------------------------------------------------
 link-citations: yes
-bibliography: man/hyperSpec-into-pkg.bib
+bibliography: man/hyperspec-pkg.bib
 biblio-style: plain
 csl: man/elsevier-with-titles.csl
 ---
@@ -49,13 +49,11 @@ source("man/vignette-default-settingsR.R", encoding = "UTF-8")
 ```
 
 ```{r bib, echo=FALSE, paged.print=FALSE}
-make_bib(
-  c(
-    "hyperSpec"
-  ),
-  file = "man/hyperSpec-into-pkg.bib"
+make_bib(c("hyperSpec", "baseline", "compiler", "Rcpp", "inline"),
+  file = "man/hyperspec-pkg.bib"
 )
 ```
+
 
 
 \SweaveOpts{concordance=TRUE}
@@ -80,17 +78,27 @@ will take you to package **hyperSpec**'s issue tracking page at
 <!-- latticeExtra -->
 
 ```{r check-required, echo=FALSE, results='tex'}
-check.req.pkg ("pls", special = list (msc = function (x) {texterrormsg ("msc", "pls"); x}))
-check.req.pkg ("baseline",
-               special = list (
-                 baseline = function (x) {texterrormsg ("baseline", "baseline"); x},
-                 getCorrected = function (x) {texterrormsg ("getCorrected", "baseline"); x}
-                 ))
-check.req.pkg ("ggplot2", donothing = "")
-check.req.pkg ("compiler", donothing = "")
-check.req.pkg ("inline", donothing = "")
+check.req.pkg("pls", special = list(msc = function(x) {
+  texterrormsg("msc", "pls")
+  x
+}))
+check.req.pkg("baseline",
+  special = list(
+    baseline = function(x) {
+      texterrormsg("baseline", "baseline")
+      x
+    },
+    getCorrected = function(x) {
+      texterrormsg("getCorrected", "baseline")
+      x
+    }
+  )
+)
+check.req.pkg("ggplot2",  donothing = "")
+check.req.pkg("compiler", donothing = "")
+check.req.pkg("inline",   donothing = "")
 ```
-%
+
 
 }
 
@@ -106,6 +114,7 @@ package **hyperSpec**, it is organized in spectroscopic tasks. However, the func
 margin for a quick overview.
 
 package **hyperSpec** comes with five data sets,
+
 <!-- wavelength:  -->
 -  [`chondro`{.r}] \index{data sets!chondro}a Raman map of chondrocytes in cartilage,
 -  [`flu`{.r}] \index{data sets!flu}a set of fluorescence spectra of a calibration series, and
@@ -128,16 +137,14 @@ appendix~\@ref(tab:functions)~(p.~\pageref{tab:functions}).
 
 ## Notation and Terms
 Throughout the documentation of the package, the following terms are used:
+
 <!-- wavelength:  -->
 -  [wavelength:] \index{wavelength}spectral abscissa
-
   frequency, wavenumbers, chemical shift, Raman shift,
   $\frac{m}{z}$, etc.
 -  [intensity:] \index{intensity}spectral ordinate
-
   transmission, absorbance, $\frac{e^{-}}{s}$, intensity, \textellipsis
 -  [extra data:] \index{extra data}further information/data belonging to each spectrum
-
   spatial information (spectral images, maps, or profiles), temporal information
   (kinetics, time series), concentrations (calibration  series), class membership information, etc.
 
@@ -157,7 +164,7 @@ objects is discussed in section~\@ref(sec:structure-chy), p.~\pageref{sec:struct
 access e.g., by:
 
 ```{r}
-maintainer ("hyperSpec")
+maintainer("hyperSpec")
 ```
 
 In case you want to report an issue, \R provides a function to do so.
@@ -165,7 +172,7 @@ In case you want to report an issue, \R provides a function to do so.
 the issue tracker URL given in the package `DESCRIPTION`.
 
 ```{r eval=FALSE}
-bug.report (package = "hyperSpec")
+bug.report(package = "hyperSpec")
 ```
 will take you to package **hyperSpec**'s issue tracking page at
 <https://github.com/cbeleites/hyperSpec/issues>. It also displays essential
@@ -195,8 +202,7 @@ workspace.
 This offers the opportunity of easily writing specialized functions that are adapted to specific
 tasks. package **hyperSpec**'s vignettes use this to set up special versions of the lattice graphics functions that
 are already wrapped in `print()`{.r} (see also
-[R
-  FAQ: Why do lattice/trellis graphics not work?](http://cran.r-project.org/doc/FAQ/R-FAQ.html#Why-do-lattice_002ftrellis-graphics-not-work_003f)) and allow the code in the code chunks of the
+[R FAQ: Why do lattice/trellis graphics not work?](http://cran.r-project.org/doc/FAQ/R-FAQ.html#Why-do-lattice_002ftrellis-graphics-not-work_003f)) and allow the code in the code chunks of the
 vignettes to be exactly what one would type during an interactive \R session. For the code, check the
 `vignettes.defs` file accompanying all package **hyperSpec** vignettes.
 
@@ -206,40 +212,43 @@ appropriate for this class. In other words, there is a mechanism of *\index{vali
 
 The functions provided by package **hyperSpec** check the validity of `hyperSpec`{.r} objects at the beginning, and
 -- if the validity could be broken by inappropriate arguments -- also before leaving the
-function. \index{validObject|texttt}\index{chk.hy|texttt} \mFun{validObject, chk.hy}
+function. 
+\index{validObject|texttt}
+\index{chk.hy|texttt} 
+\mFun{validObject, chk.hy}
 
 It is highly recommended to use validity checking also for user-defined functions. In addition,
 non-generic functions should first ensure that the argument actually is a `hyperSpec`{.r} object. The two tasks
 are accomplished by:
 
 ```{r eval=FALSE}
-chk.hy (object)
-validObject (object)
+chk.hy(object)
+validObject(object)
 ```
-%
+
 The first line checks whether `object`{.r} is a `hyperSpec`{.r} object, the second checks its validity.
 Both functions return `TRUE`{.r} if the checks succeed, otherwise they raise an error and stop.
 
 ## Special Function Names {#sec:spec-funct-names}
 
 ### The Names of Operators {#sec:names-operators}
-\index{operators}Operators such as \verb/+/, `-`,`*`, `%%`, etc. are in fact functions
+\index{operators}Operators such as `+`, `-`,`*`, `%%`, etc. are in fact functions
 in R. Thus they
 can be handed over as arguments to other functions (particularly to the vectorization functions
-`*apply()`{.r}, `sweep()`{.r}, etc.). In this case the name of the function must be quoted:
+`*apply()`{.r}, `sweep()`{.r}, etc.). In this case t he name of the function must be quoted:
 ``-`` is the recommended style (although `"-"` will often work as well), e.g.,:
 
 ```{r eval=FALSE}
-sweep (flu, 2, mean, `-`)
+sweep(flu, 2, mean, `-`)
 ```
-%
+
 
 These functions can also be called in a more function-like style (prefix notation):
 
 ```{r}
-`+` (3, 5)
+`+`(3, 5)
 ```
-%
+
 
 ### Assignment Functions {#sec:assignment-functions}
 \index{assignment functions}
@@ -247,7 +256,7 @@ These functions can also be called in a more function-like style (prefix notatio
 R allows the definition of functions that do an assignment (set some part of the object), such as:
 
 ```{r eval=false}
-wl (flu) <- new.wavelength.values
+wl(flu) <- new.wavelength.values
 ```
 The actual name of the function is `wl<-` and must be quoted in order to avoid confusion with
 an assignment to variable `wl`: ``wl<-``.
@@ -256,9 +265,9 @@ an assignment to variable `wl`: ``wl<-``.
 To \index{loading}load package **hyperSpec**, use\nopagebreak
 
 ```{r init}
-library ("hyperSpec")
+library("hyperSpec")
 ```
-%
+
 \index{options|textbf}
 \index{options!debuglevel}
 \index{options!gc}
@@ -297,8 +306,10 @@ retrieved with `hy.getOptions()`{.r} and `hy.getOption()`{.r}, and changed with
 \end{table}
 
 ```{r checkCompleteOptionTable, echo=FALSE, results='hide'}
-stopifnot (all (names (hy.getOptions(TRUE)) %in% c ("debuglevel", "gc", "file.remove.emptyspc",
-                  "file.keep.name", "tolerance", "wl.tolerance", "plot.spc.nmax", "ggplot.spc.nmax")))
+stopifnot(all(names(hy.getOptions(TRUE)) %in% c(
+  "debuglevel", "gc", "file.remove.emptyspc",
+  "file.keep.name", "tolerance", "wl.tolerance", "plot.spc.nmax", "ggplot.spc.nmax"
+)))
 ```
 
 # The structure of `hyperSpec`{.r objects} {#sec:structure-chy}
@@ -313,24 +324,20 @@ While the parts of the `hyperSpec`{.r} object can be accessed directly, it is go
 provided by package **hyperSpec** to handle the objects rather than accessing the slots directly
 (tab.~\@ref(tab:getset)). This also ensures that proper (*valid*) objects are returned. In some
 cases, however, direct access to the slots can considerably speed up calculations, see section
-\@ref(sec:speed-considerations) (p.~\pageref{sec:speed-considerations}).
+\@ref{sec:speed-considerations} (p.~\pageref{sec:speed-considerations}).
 \begin{table}[t]
   \centering
   \begin{tabular}{>{\Robject}lll}
     \toprule
-    **slot** & **get**                                                                   & **set**                        
-
+    \textbf{slot} & \textbf{get}                                                                   & \textbf{set}                        \\
     \cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3}
-    @wavelength   & `wl`                                                                      & wl<-                                
-
-    @data         & `[`, `[[`, `$`, `as.data.frame`, `as.long.df`, ... & `[<-`, `[[<-`, `$<-` 
- %] emacs font lock gets confused otherwise
-    @label        & `labels`                                                                  & `labels<-`                     
-
+    @wavelength   & \verb+wl+                                                                      & wl<-                                \\
+    @data         & \verb+[+, \verb+[[+, \verb+$+, \verb+as.data.frame+, \verb+as.long.df+, \ldots & \verb+[<-+, \verb+[[<-+, \verb+$<-+ \\ %] emacs font lock gets confused otherwise
+    @label        & \verb+labels+                                                                  & \verb+labels<-+                     \\
     \bottomrule
   \end{tabular}
-  \caption{Get and set functions for the slots of `hyperSpec`{.r} objects}
-   {#tab:getset}
+  \caption{Get and set functions for the slots of \chy objects}
+  \label{tab:getset}
 \end{table}
 
 Most of the data is stored in `@data`{.r}. This `data.frame`{.r} has one special column, `\$spc`{.r}. It is
@@ -355,31 +362,36 @@ Table~\@ref(tab:functions)~(p.~\pageref{tab:functions}) in the appendix gives an
 functions implemented by package **hyperSpec**.
 
 # Obtaining Basic Information about package **hyperSpec** Objects
-As \mFun{print, show, summary} usual, the `print()`{.r} and `show()`{.r} methods display
+
+As 
+\mFun{print, show, summary}
+usual, the `print()`{.r} and `show()`{.r} methods display
 information about the object, and `summary()`{.r} yields some additional details about the data
 handling done so far:
 
 ```{r print}
 chondro
-summary (chondro)
+summary(chondro)
 ```
-%
-The\mFun{nrow, ncol, nwl, dim} data set `chondro`{.r} consists of `r nrow (chondro)` spectra
+
+The
+\mFun{nrow, ncol, nwl, dim}
+data set `chondro`{.r} consists of `r nrow (chondro)` spectra
 with `r nwl (chondro)` data points each, and `r ncol (chondro)` data columns: two for the
 spatial information, one factor with the results of a cluster analysis plus `\$spc`{.r}.  These
 information can be directly obtained by
 
 ```{r nwl}
-nrow (chondro)
-nwl (chondro)
-ncol (chondro)
-dim (chondro)
+nrow(chondro)
+nwl(chondro)
+ncol(chondro)
+dim(chondro)
 ```
 
 The names of the columns in `@data`{.r} are accessed by\mFun{colnames, rownames, dimnames, wl}
 
 ```{r names}
-colnames (chondro)
+colnames(chondro)
 ```
 
 Likewise, `rownames()`{.r} returns the names assigned to the spectra, and `dimnames()`{.r} yields
@@ -388,23 +400,26 @@ of the spectra matrix contain the wavelengths as character, while `wl()`{.r} (se
 section~\@ref(sec:wavel-axis-conv), p.~\pageref{sec:wavel-axis-conv}) yields the numeric vector of
 wavelengths.
 
-Extra\mFun{colnames<-, rownames<-} data column names and rownames of the object may be set by
+Extra
+\mFun{colnames<-, rownames<-}
+data column names and rownames of the object may be set by
 `colnames<-()`{.r} and `rownames<-()`{.r}, respectively. `colnames<-()`{.r} renames the
 labels as well.
 
 # Creating a `hyperSpec`{.r Object, Data Import and Export} {#sec:create}
+
 package **hyperSpec** comes with filters for a variety of file formats. These are discussed in detail in a separate
 vignette accessible via `vignette ("fileio")`.
 
-\subsection{Creating a `hyperSpec`{.r} Object from Spectra Matrix
-and Wavelength Vector}
+
+## Creating a `hyperSpec`{.r} Object from Spectra Matrix and Wavelength Vector
 
 If the data is in R's workspace, a `hyperSpec`{.r} object is created by:
 
 ```{r eval=FALSE}
-spc <- new ("hyperSpec", spc = spectra.matrix, wavelength = wavelength.vector, data = extra.data)
+spc <- new("hyperSpec", spc = spectra.matrix, wavelength = wavelength.vector, data = extra.data)
 ```
-%
+
 The most frequently needed arguments are:
 <!-- `wavelength`{.r -->}
 -  [{`spc`{.r}}] the spectra matrix
@@ -423,21 +438,21 @@ Mean spectra and pooled covariance matrix can be calculated using
 `pooled.cov()`{.r}\mFun{pooled.cov}:
 
 ```{r}
-pcov <- pooled.cov (chondro, chondro$clusters)
-rnd <- rmmvnorm (rep (10, 3), mean = pcov$mean, sigma = pcov$COV)
+pcov <- pooled.cov(chondro, chondro$clusters)
+rnd <- rmmvnorm(rep(10, 3), mean = pcov$mean, sigma = pcov$COV)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r simspc, fig.cap=CAPTION, width=10, height=5, include=FALSE}
-
-cluster.cols <- c ("dark blue", "orange", "#C02020")
-plot (rnd, col = cluster.cols [rnd$.group])
+cluster.cols <- c("dark blue", "orange", "#C02020")
+plot(rnd, col = cluster.cols[rnd$.group])
 ```
+
 \begin{figure}[t]
 \subfloat[ {#fig:sim:spc} `rmmvnorm()`{.r}]{\includegraphics[width=.66\linewidth]{hyperspec-fig-simspc}}
 \subfloat[ {#fig:sim:lda} LDA of simulated spectra. Crosses mark real spectra.]{\includegraphics[width=.33\linewidth]{hyperspec-fig-simlda}}
@@ -446,28 +461,27 @@ plot (rnd, col = cluster.cols [rnd$.group])
 \end{figure}
 
 fig.~\@ref(fig:sim:lda) shows the linear discriminant analysis (LDA) scores of such  simulated specta in comparison to the real spectra in the `chondro`{.r} object:
-@
+<!-- @ -->
 
 ```{r lda}
-require ("MASS")
-rnd <- rmmvnorm (rep (200, 3), mean = pcov$mean, sigma = pcov$COV)
-lda <- lda (clusters ~ spc, rnd)
+require("MASS")
+rnd <- rmmvnorm(rep(200, 3), mean = pcov$mean, sigma = pcov$COV)
+lda <- lda(clusters ~ spc, rnd)
 
-pred.chondro <- predict (lda, chondro)
-pred.sim     <- predict (lda)
+pred.chondro <- predict(lda, chondro)
+pred.sim <- predict(lda)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r simlda, fig.cap=CAPTION, pnr  width=5, height=5, include=FALSE}
-
 colors <- c("#00008040", "#FFA50040", "#C0202040")
-plot (pred.chondro$x, col = colors [chondro$clusters], pch = 3)
-points (pred.sim$x, col = colors [rnd$clusters], pch = 20, cex = 0.5)
+plot(pred.chondro$x, col = colors[chondro$clusters], pch = 3)
+points(pred.sim$x,   col = colors[rnd$clusters], pch = 20, cex = 0.5)
 ```
 
 If individual covariance matrices should be used for each group, `sigma`{.r} should be an array
@@ -475,7 +489,7 @@ with the 3rd dimension corresponding to the group.
 
 # Access to the data {#sec:access-parts}
 The main functions to retrieve the data of a `hyperSpec`{.r} object are `[]()`{.r}\mFun{`[]()`{.r},
-  `[[]]()`{.r}} and `[[]]()`{.r}.
+`[[]]()`{.r}} and `[[]]()`{.r}.
 
 The difference between these functions is that `[]()`{.r} returns a `hyperSpec`{.r} object, whereas the
 result of `[[]]()`{.r} is a `data.frame`{.r} if extra data columns were selected or otherwise the
@@ -514,37 +528,34 @@ given to `[]()`{.r} will be treated as a vector.
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r selspc, fig.cap=CAPTION}
-
-plot (flu, col = "gray")
-plot (flu [1 : 3], add = TRUE)
+plot(flu, col = "gray")
+plot(flu [1:3], add = TRUE)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r delspc, fig.cap=CAPTION}
-
-plot (flu, col = "gray")
-plot (flu [-3], add = TRUE)
+plot(flu, col = "gray")
+plot(flu [-3], add = TRUE)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r selspc2, fig.cap=CAPTION}
-
-plot (flu, col = "gray")
-plot (flu [flu$c > 0.2], add = TRUE)
+plot(flu, col = "gray")
+plot(flu [flu$c > 0.2], add = TRUE)
 ```
 
 ### Random Samples {#sec:random-samples}
@@ -552,20 +563,20 @@ A random subset of spectra is conveniently selected by `sample()`{.r}
 \mFun{`sample()`{.r}}:
 
 ```{r sample}
-sample (chondro, 3)
+sample(chondro, 3)
 ```
 If appropriate indices into the spectra are needed instead, use `isample()`{.r}\mFun{`isample()`{.r}}:
 
 ```{r isample}
-isample (chondro, 3)
+isample(chondro, 3)
 ```
 
 ### Sequences {#sec:seq}
 Sequences of every n^th^ spectrum or the like can be retrieved with `seq()`{.r}\mFun{`seq()`{.r}}:
 
 ```{r seq}
-seq (chondro, length.out = 3, index = TRUE)
-seq (chondro, by = 100)
+seq(chondro, length.out = 3, index = TRUE)
+seq(chondro, by = 100)
 ```
 Here, indices may be requested using `index = TRUE`{.r}.
 
@@ -575,11 +586,11 @@ The second argument of the extraction functions `[]()`{.r} and `[[]]()`{.r} spec
 numeric, logical, or by a vector of the column names:
 
 ```{r data}
-colnames (chondro)
-chondro [[1 : 3, 1]]
-chondro [[1 : 3, -5]]
-chondro [[1 : 3, "x"]]
-chondro [[1 : 3, c (FALSE, TRUE)]]      # note the recycling!
+colnames(chondro)
+chondro[[1:3, 1]]
+chondro[[1:3, -5]]
+chondro[[1:3, "x"]]
+chondro[[1:3, c(FALSE, TRUE)]] # note the recycling!
 ```
 
 To select one column, the `\$()`{.r} operator is more convenient\mFun{`\$()`{.r}}:
@@ -592,29 +603,29 @@ flu$c
 The extra data may also be set this way\mFun{`\$<-()`{.r}}:
 
 ```{r data3}
-flu$n <- list (1 : 6, label = "sample no.")
+flu$n <- list(1:6, label = "sample no.")
 ```
 This function will append new columns, if necessary.
 
-## More on the `[[]]()`{.r}and `[[]]<-()`{.r Operators: Accessing Single Elements of the Spectra Matrix} {#sec:square-brack-replace}
+## More on the `[[]]()`{.r} and `[[]]<-()`{.r} Operators: Accessing Single Elements of the Spectra Matrix {#sec:square-brack-replace}
 `[[]]()`{.r} works mostly analogous to []. In addition, however, these two functions also accept
 index matrices of size $n × 2$. In this case, a vector of values from the spectra matrix is
 returned.
 
 ```{r data2}
-indexmatrix <- matrix (c (1 : 3, 1 : 3), ncol = 2)
+indexmatrix <- matrix(c(1:3, 1:3), ncol = 2)
 indexmatrix
-chondro [[indexmatrix, wl.index = TRUE]]
-diag (chondro [[1 : 3, , min ~ min + 2i]])
+chondro[[indexmatrix, wl.index = TRUE]]
+diag(chondro[[1:3, , min ~ min + 2i]])
 ```
 
 `[[]]<-()`{.r} also accepts index matrices of size $n × 2$.
 
 ```{r data2}
-indexmatrix <- matrix (c (1 : 3, 1 : 3), ncol = 2)
+indexmatrix <- matrix(c(1:3, 1:3), ncol = 2)
 indexmatrix
-chondro [[indexmatrix, wl.index = TRUE]]
-diag (chondro [[1 : 3, , min ~ min + 2i]])
+chondro[[indexmatrix, wl.index = TRUE]]
+diag(chondro[[1:3, , min ~ min + 2i]])
 ```
 
 ## Wavelengths {#sec:wavelength-axis}
@@ -641,19 +652,19 @@ The result of the formula conversion differs from the numeric vector conversion 
   $n$^th^ point or repetitions of the same index:
 
 ```{r wl2ivec}
-wl2i (flu, 405 : 410)
+wl2i(flu, 405:410)
 ```
 
 ```{r wl2ivec2}
-wl2i (flu, 405 ~ 410)
+wl2i(flu, 405 ~ 410)
 ```
 
 ```{r wl2ivec3}
-wl2i (chondro, 1000 : 1010)
+wl2i(chondro, 1000:1010)
 ```
 
 ```{r wl2ivec4}
-wl2i (chondro, 1000 ~ 1010)
+wl2i(chondro, 1000 ~ 1010)
 ```
 -  If the object's wavelength axis is not ordered, the formula approach will give weird
   results. In that (probably rare) case, use `orderwl()`{.r} first to obtain an object with
@@ -663,7 +674,7 @@ wl2i (chondro, 1000 ~ 1010)
 correspond to the lowest and highest wavelengths of the object:
 
 ```{r wl2i.minmax}
-wl2i (flu, min ~ 410)
+wl2i(flu, min ~ 410)
 ```
 
 Often, specifications like *wavelength \textpm $n$\ data points* are needed. They can be given
@@ -671,15 +682,15 @@ using complex numbers in the formula.  The imaginary part is added to the index 
 wavelength in the real part:
 
 ```{r wl2i.im}
-wl2i (flu, 450 - 2i ~ 450 + 2i)
-wl2i (flu, max - 2i ~ max)
+wl2i(flu, 450 - 2i ~ 450 + 2i)
+wl2i(flu, max - 2i ~ max)
 ```
 
 To specify several wavelength ranges, use a list containing the formulas
 and vectors^[Formulas are combined to a list by `c()`{.r].}:
 
 ```{r wl2i.list}
-wl2i (flu, c (min ~ 406.5, max - 2i ~ max))
+wl2i(flu, c(min ~ 406.5, max - 2i ~ max))
 ```
 
 This mechanism also works for the wavelength arguments of `[]()`{.r}, `[[]]()`{.r}, and
@@ -691,12 +702,11 @@ Wavelength ranges can easily be selected using `[]()`{.r}'s third argument:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig.cap=CAPTION}
-
-plot (paracetamol [,, 2800 ~ 3200])
+plot(paracetamol [, , 2800 ~ 3200])
 ```
 
 By default, the values given are treated as wavelengths. If they are indices into the columns of the
@@ -705,12 +715,11 @@ spectra matrix, use `wl.index = TRUE`{.r}:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig.cap=CAPTION}
-
-plot (paracetamol [,, 2800 : 3200, wl.index = TRUE])
+plot(paracetamol [, , 2800:3200, wl.index = TRUE])
 ```
 
 Section~\@ref(sec:wavelength-indices)~(p.~\pageref{sec:wavelength-indices}) details into the different
@@ -722,12 +731,12 @@ Deleting wavelength ranges may be accomplished using negative index vectors toge
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig.cap=CAPTION}
 
-plot (paracetamol [,, -(500 : 1000), wl.index = TRUE])
+plot(paracetamol [, , -(500:1000), wl.index = TRUE])
 ```
 
 However, this mechanism works only if the proper indices are known.
@@ -739,12 +748,12 @@ select the remainder of the spectrum instead. To delete the spectral range from 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig.cap=CAPTION}
 
-plot (paracetamol [,, c (min ~ 1750, 2800 ~ max)])
+plot(paracetamol [, , c(min ~ 1750, 2800 ~ max)])
 ```
 
 (It is possible to produce a plot of this data where the cut range is actually omitted and the
@@ -763,44 +772,44 @@ factor of 1000 is needed:
 
 ```{r merged}
 laser
-wavelengths <- wl (laser)
+wavelengths <- wl(laser)
 frequencies <- 2.998e8 / wavelengths / 1000
-wl (laser) <- frequencies
-labels (laser, ".wavelength") <- "f / THz"
+wl(laser) <- frequencies
+labels(laser, ".wavelength") <- "f / THz"
 laser
-rm (laser)
+rm(laser)
 ```
 
 There are other possibilities of invoking `wl<-()`{.r} including the new label, e.g.,
 
 ```{r}
-wl (laser, "f / THz") <- frequencies
+wl(laser, "f / THz") <- frequencies
 ```
 and
 
 ```{r}
-wl (laser) <- list (wl = frequencies, label = "f / THz")
+wl(laser) <- list(wl = frequencies, label = "f / THz")
 ```
-see `?`wl<-`` for more information.
+see `?wl<-` for more information.
 
 ### Ordering the Wavelength Axis {#sec:orderwl}
 If the wavelength axis of an object needs reordering (e.g., after `collapse()`{.r}), `orderwl()`{.r}\mFun{`orderwl()`{.r}} can be used:
 
 ```{r orderwl}
-barb <- collapse (barbiturates [1 : 3])
-wl (barb)
-barb <- orderwl (barb)
-wl (barb)
+barb <- collapse(barbiturates [1:3])
+wl(barb)
+barb <- orderwl(barb)
+wl(barb)
 ```
 
 ## Conversion to Long- and Wide-Format `data.frame`{.r}{s} {#sec:conv-long-form}
 \mFun{`as.data.frame()`{.r}}`as.data.frame()`{.r} extracts the `@data`{.r} slot as a `data.frame`{.r}:
 
 ```{r}
-flu <- flu [,,400 ~ 407] # make a small and handy version of the flu data set
-as.data.frame (flu)
-colnames (as.data.frame (flu))
-as.data.frame (flu) $ spc
+flu <- flu[, , 400 ~ 407] # make a small and handy version of the flu data set
+as.data.frame(flu)
+colnames(as.data.frame(flu))
+as.data.frame(flu)$spc
 ```
 Note that the spectra matrix is still a matrix inside column `\$spc`{.r}.
 
@@ -814,24 +823,25 @@ flu$..
 If another subset of colums needs to be extracted, use \mFun{`[[]]()`{.r}}`[[]]()`{.r}:
 
 ```{r}
-flu [[, c ("c", "spc")]]
+flu[[, c("c", "spc")]]
 ```
-%
+
 This can be combined with extracting certain spectra and wavelengths, see below in subsection"nameref{sec:conv-matrix"on page \pageref{sec:conv-matrix}.
 
 The transpose of a wide format `data.frame`{.r} can be obtained by
-\mFun{`as.t.df()`{.r}}`as.t.df()`{.r}. For further examples, see the discussion of
+\mFun{`as.t.df()`{.r}}
+`as.t.df()`{.r}. For further examples, see the discussion of
 package **ggplot2** in `vignette ("plotting")`{.r}.
 
 ```{r}
-as.t.df (apply (flu, 2, mean_pm_sd))
+as.t.df(apply(flu, 2, mean_pm_sd))
 ```
 
 Some functions need the data being an *unstacked* or *long-format*
 `data.frame`{.r}. \mFun{`as.long.df()`{.r}}`as.long.df()`{.r} is the appropriate conversion function.
 
 ```{r}
-head (as.long.df (flu), 20)
+head(as.long.df(flu), 20)
 ```
 
 ## Conversion to Matrix {#sec:conv-matrix}
@@ -839,23 +849,23 @@ head (as.long.df (flu), 20)
 `as.matrix()`{.r}, the convenient abbreviation is `[[]]()`{.r}:
 
 ```{r}
-flu [[]]
-class (flu [[]])
+flu[[]]
+class(flu[[]])
 ```
 `[[]]()`{.r} takes the same arguments as `[]()`{.r}, and can be used to extract a matrix
 containing parts of the spectra matrix:
 
 ```{r}
-flu [[1:3,, 406 ~ 407]]
+flu[[1:3, , 406 ~ 407]]
 ```
 If indices for the columns to extract are given, a `data.frame`{.r} is returned instead of a matrix:
 
 ```{r}
-flu [[1:3, c ("filename", "spc"), 406 ~ 407]]
+flu[[1:3, c("filename", "spc"), 406 ~ 407]]
 ```
 
 ```{r}
-rm (flu)
+rm(flu)
 ```
 
 # Combining and Decomposing `hyperSpec`{.r} Objects {#sec:combine}
@@ -866,9 +876,9 @@ by columns (`cbind()`{.r}) to append a new spectral range or by row (`rbind()`{.
 new spectra:
 
 ```{r cbind}
-dim (flu)
-dim (cbind (flu, flu))
-dim (rbind (flu, flu))
+dim(flu)
+dim(cbind(flu, flu))
+dim(rbind(flu, flu))
 ```
 
 There is also a more general function, `bind()`{.r}, taking the direction
@@ -880,6 +890,7 @@ have the same rows and columns, respectively.
 
 For binding row-wise (`rbind()`{.r}), `collapse()`{.r}\mFun{`collapse()`{.r}} is
 more flexible but also faster.
+
 
 ## Binding Objects that do not Share the Same Extra Data and/or Wavelength Axis {#sec:collapse}
 
@@ -893,14 +904,14 @@ containing one mass spectrum. The spectra have between `r (min (sapply (barbitur
 `r (max (sapply (barbiturates, nwl)))` data points each.
 
 ```{r collapse}
-barb <- collapse (barbiturates)
-wl (barb) [1 : 25]
+barb <- collapse(barbiturates)
+wl(barb) [1:25]
 ```
 The resulting object does not have an ordered wavelength axis. This can be obtained in a second step:
 
 ```{r collapse-orderwl}
-barb <- orderwl (barb)
-barb [[1:3, , min ~ min + 10i]]
+barb <- orderwl(barb)
+barb[[1:3, , min ~ min + 10i]]
 ```
 
 ## Binding Objects that do not Share the Same Spectra {#sec:merge}
@@ -916,25 +927,25 @@ As an example, let's construct a version of the `chondro`{.r} data like being ta
 with different spectral ranges. In each data set, some spectra are missing.
 
 ```{r merge-sample}
-chondro.low <- sample (chondro [,, 600 ~ 1200], 700)
-nrow (chondro.low)
-chondro.high <- sample (chondro [,, 1400 ~ 1800], 700)
-nrow (chondro.high)
+chondro.low <- sample(chondro[, , 600 ~ 1200], 700)
+nrow(chondro.low)
+chondro.high <- sample(chondro[, , 1400 ~ 1800], 700)
+nrow(chondro.high)
 ```
 
 As all extra data columns are the same, no special declarations are needed for merging the data:
 
 ```{r merge}
-chondro.merged <- merge (chondro.low, chondro.high)
-nrow (chondro.merged)
+chondro.merged <- merge(chondro.low, chondro.high)
+nrow(chondro.merged)
 ```
-%
+
 By default, the result consists of only those spectra, where *both* spectral ranges were
 available.  To keep all spectra replacing missing parts by `NA`{.r} (see fig.~\@ref(fig:merge)):
 
 ```{r}
-chondro.merged <- merge (chondro.low, chondro.high, all = TRUE)
-nrow (chondro.merged)
+chondro.merged <- merge(chondro.low, chondro.high, all = TRUE)
+nrow(chondro.merged)
 ```
 \begin{figure}
 \setkeys{Gin}{width = .66\textwidth}
@@ -943,24 +954,25 @@ nrow (chondro.merged)
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r missing, fig.cap=CAPTION, width=10, height=4.25, echo=FALSE}
 
-print (levelplot (spc ~ x * y | as.factor (paste (.wavelength, "  1/cm")),
-                  chondro.merged [,,c(1000, 1650)],
-                  aspect = "iso", col.regions = matlab.palette ()))
+print(levelplot(spc ~ x * y | as.factor(paste(.wavelength, "  1/cm")),
+  chondro.merged[, , c(1000, 1650)],
+  aspect = "iso", col.regions = matlab.palette()
+))
 ```
 }
 \setkeys{Gin}{width = .33\textwidth}
 \subfloat[ {#fig-merge-mat}]{
 
 ```{r echo=FALSE, results='hide'}
-png ("hyperspec-fig-merged.png", width = 500, height = 425, res=100)
-plot (chondro.merged [1 : 100], "mat")
+png("hyperspec-fig-merged.png", width = 500, height = 425, res = 100)
+plot(chondro.merged[1:100], "mat")
 dev.off()
-rm (chondro)
+rm(chondro)
 ```
 \includegraphics[width = .33\textwidth]{hyperspec-fig-merged}
 }
@@ -970,10 +982,10 @@ rm (chondro)
 \end{figure}
 
 ```{r}
-merged <- merge (chondro [1:7,, 610 ~ 620], chondro [5:10,, 615 ~ 625], all = TRUE)
+merged <- merge(chondro[1:7, , 610 ~ 620], chondro[5:10, , 615 ~ 625], all = TRUE)
 merged$.
 ```
-%
+
 If the spectra overlap, the result will have both data points.  In the example here one could easily
 delete duplicate wavelengths. For real data, however, the duplicated wavelength will hardly ever
 contain the same values. The appropriate method to deal with this situation depends on the data at
@@ -987,19 +999,21 @@ the intensities will be combined by the tie function. This already defaults to t
 Thus, the function to calculate the new spectral intensities is
 
 ```{r approxfun}
-approxfun <- function (y, wl, new.wl){
-  approx (wl, y, new.wl, method = "constant",
-          ties = function (x) mean (x, na.rm = TRUE)
-          )$y
+approxfun <- function(y, wl, new.wl) {
+  approx(wl, y, new.wl,
+    method = "constant",
+    ties = function(x) mean(x, na.rm = TRUE)
+  )$y
 }
 ```
-%
+
 which can be applied to the spectra:
 
 ```{r}
-merged <- apply (merged, 1, approxfun,
-                 wl = wl (merged), new.wl = unique (wl (merged)),
-                 new.wavelength = "new.wl")
+merged <- apply(merged, 1, approxfun,
+  wl = wl(merged), new.wl = unique(wl(merged)),
+  new.wavelength = "new.wl"
+)
 merged$.
 ```
 
@@ -1008,34 +1022,34 @@ merged$.
 Assume we obtained duplicate reference measurements for some of the concentrations in `flu`{.r}:
 
 ```{r}
-flu.ref <- data.frame (filename = rep (flu$filename[1:2], each = 2), cref = rep (flu$c [1:2], each = 2) + rnorm (4, sd = 0.01))
+flu.ref <- data.frame(filename = rep(flu$filename[1:2], each = 2), cref = rep(flu$c[1:2], each = 2) + rnorm(4, sd = 0.01))
 flu.ref
 ```
 
 This information can be `merge()`{.r}d into the extra data of `flu`{.r} by:
 
 ```{r}
-flu.merged <- merge (flu, flu.ref)
+flu.merged <- merge(flu, flu.ref)
 flu.merged$..
 ```
 
 The usual rules for `merge()`{.r} apply. E. g., if to preserver all spectra of flu, use `all.x = TRUE`{.r}:
 
 ```{r}
-flu.merged <- merge (flu, flu.ref, all.x = TRUE)
+flu.merged <- merge(flu, flu.ref, all.x = TRUE)
 flu.merged$..
 ```
 
 The class of the first object (`x`{.r}) determines the resulting class:
 
 ```{r}
-merge (flu, flu.ref)
-merge (flu.ref, flu)
+merge(flu, flu.ref)
+merge(flu.ref, flu)
 ```
 
 ## Matrix Multiplication {#sec:matmult}
 
-Two `hyperSpec`{.r} objects can be matrix multiplied by `\%*\%()`{.r}\mFun{`\%*\%()`{.r}}. For an
+Two `hyperSpec`{.r} objects can be matrix multiplied by `%*%()`{.r}\mFun{`%*%()`{.r}}. For an
 example, see the principal component analysis below (section~\@ref(sec:pca) on page
 \pageref{sec:pca}).
 
@@ -1071,8 +1085,8 @@ whether it should be included or not.
 (or the `data.frame`{.r} `@data`{.r} if in addition data columns were specified) only.
 
 ```{r cut.wl}
-flu [,, min ~ 408.5]
-flu [[,, c (min ~ min + 2i, max - 2i ~ max)]]
+flu[, , min ~ 408.5]
+flu[[, , c(min ~ min + 2i, max - 2i ~ max)]]
 ```
 
 ## Shifting Spectra {#sec:shifting-spectra}
@@ -1088,19 +1102,18 @@ The first method is very straightforward (see fig~\@ref(fig:shift:wl)):
 
 ```{r}
 tmp <- chondro
-wl (tmp) <- wl (tmp) - 10
+wl(tmp) <- wl(tmp) - 10
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r shift-wl, fig.cap=CAPTION, echo=FALSE, include=FALSE}
-
-plot (chondro [135])
-plot (tmp [135,,], add = TRUE, col = "red")
+plot(chondro[135])
+plot(tmp[135, , ], add = TRUE, col = "red")
 ```
 but it cannot be used if each spectrum (or groups of spectra) are shifted individually.
 
@@ -1114,46 +1127,46 @@ As an example, we will use natural splines to do the interpolation. It is conven
 a function:
 
 ```{r fun-interpolate}
-interpolate <- function (spc, shift, wl){
-  spline (wl + shift, spc, xout = wl, method = "natural")$y
+interpolate <- function(spc, shift, wl) {
+  spline(wl + shift, spc, xout = wl, method = "natural")$y
 }
 ```
 
 This function can now be applied to a set of spectra (see fig~\@ref(fig:shift:interp)):
 
 ```{r}
-tmp <- apply (chondro, 1, interpolate, shift = -10, wl = wl (chondro))
+tmp <- apply(chondro, 1, interpolate, shift = -10, wl = wl(chondro))
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r shift-interp, fig.cap=CAPTION, include=FALSE, echo=FALSE, results='hide'}
-
-plot (chondro [135])
-plot (tmp [135], add = TRUE, col = "red")
+plot(chondro[135])
+plot(tmp[135], add = TRUE, col = "red")
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r shift-untsch, fig.cap=CAPTION, include=FALSE, echo=FALSE, results='hide'}
-
-tmp <- chondro [135,, 990 ~ 1010]
-plot (tmp, lines.args = list (type = "b", pch = 19, cex = 0.5))
-wl (tmp) <- wl(tmp) - 0.5
-plot (tmp, lines.args = list (type = "b", pch = 19, cex = 0.5), add = TRUE, col = "red")
-tmp <- chondro [135]
-tmp <- apply (tmp, 1, function (x, wl, shift)
-              spline (wl + shift, x, xout = wl)$y,
-              wl = wl (tmp), shift = -0.5)
-plot (tmp, lines.args = list (type = "b", pch = 19, cex = 0.5), add = TRUE, col = "blue")
+tmp <- chondro[135, , 990 ~ 1010]
+plot(tmp, lines.args = list(type = "b", pch = 19, cex = 0.5))
+wl(tmp) <- wl(tmp) - 0.5
+plot(tmp, lines.args = list(type = "b", pch = 19, cex = 0.5), add = TRUE, col = "red")
+tmp <- chondro[135]
+tmp <- apply(tmp, 1, function(x, wl, shift) {
+  spline(wl + shift, x, xout = wl)$y
+},
+wl = wl(tmp), shift = -0.5
+)
+plot(tmp, lines.args = list(type = "b", pch = 19, cex = 0.5), add = TRUE, col = "blue")
 ```
 
 If different spectra need to be offset by different shift, use a loop^[`sweep()`{.r]
@@ -1163,11 +1176,12 @@ If different spectra need to be offset by different shift, use a loop^[`sweep()`
   `[[<-()`{.r}.}
 
 ```{r}
-shifts <- rnorm (nrow (chondro))
-tmp <- chondro [[]]
-for (i in seq_len (nrow (chondro)))
-  tmp [i, ] <- interpolate (tmp [i, ], shifts [i], wl = wl (chondro))
-chondro [[]] <- tmp
+shifts <- rnorm(nrow(chondro))
+tmp <- chondro[[]]
+for (i in seq_len(nrow(chondro))) {
+  tmp[i, ] <- interpolate(tmp[i, ], shifts[i], wl = wl(chondro))
+}
+chondro[[]] <- tmp
 ```
 
 \begin{figure}[t]
@@ -1189,23 +1203,24 @@ For the `chondro`{.r} data, let's use the maximum of the phenylalanine band betw
 $cm^{-1}${1020}. As just the very maximum is too coarse, we'll use the maximum of a square polynomial
 fitted to the maximum and its two neighbours.
 
-%TODO: use vanderMonde
+```{r TODO-1}
+#  TODO: use vanderMonde
+```
 
 ```{r}
+find.max <- function(y, x) {
+  pos <- which.max(y) + (-1:1)
+  X <- x[pos] - x[pos[2]]
+  Y <- y[pos] - y[pos[2]]
 
-find.max <- function (y, x){
-  pos <- which.max (y) + (-1:1)
-  X <- x [pos] - x [pos [2]]
-  Y <- y [pos] - y [pos [2]]
+  X <- cbind(1, X, X^2)
+  coef <- qr.solve(X, Y)
 
-  X <- cbind (1, X, X^2)
-  coef <- qr.solve (X, Y)
-
-  - coef [2] / coef [3] / 2 + x [pos [2]]
+  -coef[2] / coef[3] / 2 + x[pos[2]]
 }
 
-bandpos <- apply (chondro [[,, 990 ~ 1020]], 1, find.max,  wl (chondro [,, 990 ~ 1020]))
-refpos <- find.max (colMeans (chondro[[,, 990 ~ 1020]]),  wl (chondro [,, 990 ~ 1020]))
+bandpos <- apply(chondro[[, , 990 ~ 1020]], 1, find.max, wl(chondro[, , 990 ~ 1020]))
+refpos <- find.max(colMeans(chondro[[, , 990 ~ 1020]]),  wl(chondro[, , 990 ~ 1020]))
 
 shift1 <- refpos - bandpos
 ```
@@ -1214,25 +1229,28 @@ A second possibility is to optimize the shift. For this strategy, the spectra mu
 similar, while low spectral resolution is compensated by using larger spectral windows.
 
 ```{r}
-chondro <- chondro - spc.fit.poly.below (chondro [,,min+3i ~ max - 3i], chondro)
-chondro <- sweep (chondro, 1, rowMeans (chondro [[]], na.rm = TRUE), "/")
+chondro <- chondro - spc.fit.poly.below(chondro[, , min + 3i ~ max - 3i], chondro)
+chondro <- sweep(chondro, 1, rowMeans(chondro[[]], na.rm = TRUE), "/")
 ```
 
 
 ```{r}
-targetfn <- function (shift, wl, spc, targetspc){
-  error <- spline (wl + shift, spc, xout = wl)$y - targetspc
-  sum (error^2)
+targetfn <- function(shift, wl, spc, targetspc) {
+  error <- spline(wl + shift, spc, xout = wl)$y - targetspc
+  sum(error^2)
 }
 
-shift2 <- numeric (nrow (chondro))
-tmp <- chondro [[]]
-target <- colMeans (chondro [[]])
-for (i in 1 : nrow (chondro))
-  shift2 [i] <- unlist (optimize (targetfn, interval = c (-5, 5), wl = chondro```
-wavelength,
-                                 spc = tmp[i,], targetspc = target)$minimum)
-@
+shift2 <- numeric(nrow(chondro))
+tmp <- chondro[[]]
+target <- colMeans(chondro[[]])
+for (i in 1:nrow(chondro)) {
+  shift2[i] <- unlist(optimize(targetfn,
+    interval = c(-5, 5), 
+    wl = chondro@wavelength,
+    spc = tmp[i, ], targetspc = target
+  )$minimum)
+}
+```
 
 Figure~\@ref(fig:fit-shift) shows that the second correction method works better for the chondrocyte
 data. This was expected, as the spectra are hardly or not oversampled, but are very similar to each
@@ -1243,17 +1261,22 @@ other.
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r shift-fit, fig.cap=CAPTION, echo=FALSE}
-
-df <- data.frame (shift = c (shifts, shifts + shift1, shifts + shift2),
-                method = rep (c ("original", "find maximum", "interpolation"),
-                  each = nrow (chondro)))
-plot (histogram (~ shift | method, data = df, breaks = do.breaks(range (df$shift), 25),
-           layout = c (3,1)))
+df <- data.frame(
+  shift = c(shifts, shifts + shift1, shifts + shift2),
+  method = rep(c("original", "find maximum", "interpolation"),
+    each = nrow(chondro)
+  )
+)
+plot(histogram(~ shift | method,
+  data = df, breaks = do.breaks(range(df$shift), 25),
+  layout = c(3, 1)
+))
 ```
+
 \caption{The shifts used to disturb the chondrocyte data (original), and the remaining shift after
   correction with the two methods discussed here.}
  {#fig:fit-shift}
@@ -1270,38 +1293,37 @@ for later indexing:
 
 ```{r eval=FALSE}
 ir.spc <- chondro / 1500 ## fake IR data
-high.int <- apply (ir.spc > 1, 1, any) # any point above 1 is bad
-low.int <- apply (ir.spc, 1, max) < 0.1 # the maximum should be at least 0.1
-ir.spc <- ir.spc [! high.int & ! low.int]
+high.int <- apply(ir.spc > 1, 1, any) # any point above 1 is bad
+low.int <- apply(ir.spc, 1, max) < 0.1 # the maximum should be at least 0.1
+ir.spc <- ir.spc [!high.int & !low.int]
 ```
 
 ### Removing Spectra outside mean $\pm$ $n$ sd
 
 ```{r}
-mean_sd_filter <- function (x, n  = 5) {
-  x <- x - mean (x)
-  s <- n * sd (x)
+mean_sd_filter <- function(x, n = 5) {
+  x <- x - mean(x)
+  s <- n * sd(x)
   (x <= s) & (x > -s)
 }
 
-OK <- apply (chondro [[]], 2, mean_sd_filter, n = 4) # logical matrix
+OK <- apply(chondro[[]], 2, mean_sd_filter, n = 4) # logical matrix
 
-spc.OK <- chondro [apply (OK, 1, all)]
+spc.OK <- chondro[apply(OK, 1, all)]
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r filter, fig.cap=CAPTION, width=10, height=5, include=FALSE}
-
-
-plot (chondro [! apply (OK, 1, all)])
-i <- which (! OK, arr.ind = TRUE)
-points (wl (chondro) [i [,2]], chondro[[!OK]], pch = 19, col = "red", cex = 0.5)
+plot(chondro[!apply(OK, 1, all)])
+i <- which(!OK, arr.ind = TRUE)
+points(wl(chondro)[i[, 2]], chondro[[!OK]], pch = 19, col = "red", cex = 0.5)
 ```
+
 \begin{figure}[tb]
   \subfloat[mean $\pm$ sd filter]{\includegraphics[width=0.49\textwidth]{hyperspec-fig-filter}}
   \subfloat[remove bad points]{\includegraphics[width=0.49\textwidth]{hyperspec-fig-bad}}
@@ -1313,94 +1335,94 @@ points (wl (chondro) [i [,2]], chondro[[!OK]], pch = 19, col = "red", cex = 0.5)
 Assume the data contains once in a while a detector readout of 0:
 
 ```{r}
-spc <- chondro [1 : 3,, min ~ min + 15i]
-spc [[cbind (1:3, sample (nwl (spc), 3)), wl.index = TRUE]] <- 0
-spc [[]]
+spc <- chondro[1:3, , min ~ min + 15i]
+spc[[cbind(1:3, sample(nwl(spc), 3)), wl.index = TRUE]] <- 0
+spc[[]]
 ```
 
 We can set these points to `NA`{.r}, again using that the comparison returns a suitable logical matrix:
 
 ```{r}
-spc [[spc < 1e-4]] <- NA
-spc [[]]
+spc[[spc < 1e-4]] <- NA
+spc[[]]
 ```
 
 Depending on the type of analysis, one may wants to replace the `NA`{.r}s by interpolating the
 neighbour values. So far, package **hyperSpec** provides three functions that can interpolate the `NA`{.r}s:
 \mFun{`spc.NA.approx()`{.r}, `spc.loess()`{.r}, `spc.bin()`{.r}}:
-`spc.NA.approx()`{.r}, `spc.loess()`{.r}, and `spc.bin()`{.r} with \Rcode{na.rm =
-  TRUE} (the latter two are discussed below).
+`spc.NA.approx()`{.r}, `spc.loess()`{.r}, and `spc.bin()`{.r} with `na.rm = TRUE`{.r} (the latter two are discussed below).
 
 ```{r include=FALSE}
-if (!exists("spc.NA.approx")){
+if (!exists("spc.NA.approx")) {
   spc.NA.approx <- spc.NA.linapprox
 }
 ```
 
 ```{r}
-spc.corrected <- spc.NA.approx (spc)
-spc.corrected [[]]
+spc.corrected <- spc.NA.approx(spc)
+spc.corrected[[]]
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r bad, fig.cap=CAPTION, width=10, height=5, include=FALSE, echo=FALSE, results='hide'}
 
-spc [[is.na (spc)]] <- 0
-plot (spc)
-spc [[spc < 1e-4]] <- NA
-plot (spc.NA.approx (spc), add = TRUE, col = "blue", lines.args = list (type = "b", pch = 19, cex = 0.5))
+spc[[is.na(spc)]] <- 0
+plot(spc)
+spc[[spc < 1e-4]] <- NA
+plot(spc.NA.approx(spc), add = TRUE, col = "blue", lines.args = list(type = "b", pch = 19, cex = 0.5))
 ```
 
 ### Spikes in Raman Spectra {#sec:spikes-raman-spectra}
 
-...coming soon...
+> ...coming soon...
 
 ## Smoothing Interpolation
-\mFun{`spc.bin()`{.r} `spc.loess()`{.r}} Spectra acquired by grating instruments are
+\mFun{`spc.bin()`{.r} `spc.loess()`{.r}} 
+Spectra acquired by grating instruments are
 frequently interpolated onto a new wavelength axis, e.g., because the unequal data point spacing should
 be removed. Also, the spectra can be smoothed: reducing the spectral resolution allows to increase
 the signal to noise ratio.  For chemometric data analysis reducing the number of data points per
 spectrum may be crucial as it reduces the dimensionality of the data.
 
-package **hyperSpec** provides two functions to do so: `spc.bin()`{.r} and `spc.loess()`{.r}.
+Package **hyperSpec** provides two functions to do so: `spc.bin()`{.r} and `spc.loess()`{.r}.
 
-`spc.bin()`{.r} bins the spectral axis by averaging every `by`{.r} data points.
+Function `spc.bin()`{.r} bins the spectral axis by averaging every `by`{.r} data points.
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig-loess, fig.cap=CAPTION, width=10, height=5, include=FALSE}
-
-plot (paracetamol, wl.range = c (300 ~ 1800, 2800 ~ max), xoffset = 850)
-p <- spc.loess (paracetamol, c(seq (300, 1800, 2), seq (2850, 3150, 2)))
-plot (p, wl.range = c (300 ~ 1800, 2800 ~ max), xoffset = 850, col = "red", add = TRUE)
-b <- spc.bin (paracetamol, 4)
-plot (b, wl.range = c (300 ~ 1800, 2800 ~ max), xoffset = 850,
-      lines.args = list (pch = 20, cex = .3, type = "p"), col = "blue", add = TRUE)
+plot(paracetamol, wl.range = c(300 ~ 1800, 2800 ~ max), xoffset = 850)
+p <- spc.loess(paracetamol, c(seq(300, 1800, 2), seq(2850, 3150, 2)))
+plot(p, wl.range = c(300 ~ 1800, 2800 ~ max), xoffset = 850, col = "red", add = TRUE)
+b <- spc.bin(paracetamol, 4)
+plot(b,
+  wl.range = c(300 ~ 1800, 2800 ~ max), xoffset = 850,
+  lines.args = list(pch = 20, cex = .3, type = "p"), col = "blue", add = TRUE
+)
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig-loess-kl, fig.cap=CAPTION, width=5, height=5, include=FALSE, echo=FALSE}
-
-plot (paracetamol [, , 1600 ~ 1670])
-plot (p [, , 1600 ~ 1670], col = "red", add = TRUE)
-plot (b [, , 1600 ~ 1670], col = "blue", add = TRUE)
+plot(paracetamol[, , 1600 ~ 1670])
+plot(p[, , 1600 ~ 1670], col = "red", add = TRUE)
+plot(b[, , 1600 ~ 1670], col = "blue", add = TRUE)
 ```
 
-%
+
 \begin{figure}
 \includegraphics[width=0.33\textwidth]{hyperspec-fig-fig-loess}
 \includegraphics[width=0.33\textwidth]{hyperspec-fig-fig-loess-kl}
@@ -1415,37 +1437,40 @@ cm^-1^ with 2 cm^-1^ data point distance. This corresponds to a
 spectral resolution of about 4 cm^-1^, and the decrease in spectral resolution can be
 seen at the sharp bands where the maxima are not reached (due to the fact that the interpolation
 wavelength axis does not necessarily hit the maxima. The original spectrum had
-`r nwl (paracetamol)` data points with unequal data point spacing (between
-`r signif (min (diff (wl (paracetamol))), 2)` and
-`r signif (max (diff (wl (paracetamol))), 2)` cm^-1^).  The interpolated spectrum
+`r nwl(paracetamol)` data points with unequal data point spacing (between
+`r signif(min (diff(wl (paracetamol))), 2)` and
+`r signif(max (diff(wl (paracetamol))), 2)` cm^-1^).  The interpolated spectrum
 has `r nwl (p)` data points.
 
 ## Background Correction
 
-\mFun{`sweep()`{.r}} To subtract a background spectrum of each of the spectra in an object,
+\mFun{`sweep()`{.r}}
+To subtract a background spectrum of each of the spectra in an object,
 use `sweep (spectra, 2, background.spectrum, "-")`{.r}.
 
 ## Offset Correction
 
-\mFun{`apply()`{.r} `sweep()`{.r}} Calculate the offsets and sweep them off the spectra:
+\mFun{`apply()`{.r} 
+`sweep()`{.r}} Calculate the offsets and sweep them off the spectra:
 
 ```{r ofs}
-offsets <- apply (chondro, 1, min)
-chondro.offset.corrected <- sweep (chondro, 1, offsets, "-")
+offsets <- apply(chondro, 1, min)
+chondro.offset.corrected <- sweep(chondro, 1, offsets, "-")
 ```
 If the offset is calculated by a function, as here with the `min()`{.r}, `hyperSpec`{.r}'s
 `sweep()`{.r} method offers a shortcut: `sweep()`{.r}'s `STATS`{.r} argument may be the
 function instead of a numeric vector:
 
 ```{r ofs2}
-chondro.offset.corrected <- sweep (chondro, 1, min, "-")
+chondro.offset.corrected <- sweep(chondro, 1, min, "-")
 ```
 
 ## Baseline Correction
 
 package **hyperSpec** comes with two functions to fit polynomial baselines.
 
-\mFun{`spc.fit.poly()`{.r} `spc.fit.poly.below()`{.r}}`spc.fit.poly()`{.r} fits a
+\mFun{`spc.fit.poly()`{.r} 
+`spc.fit.poly.below()`{.r}}`spc.fit.poly()`{.r} fits a
 polynomial baseline of the given order. A least-squares fit is done so that the function may be used
 on rather noisy spectra. However, the user must supply an object that is cut
 appropriately. Particularly, the supplied wavelength ranges are not weighted.
@@ -1457,7 +1482,7 @@ Both functions return a `hyperSpec`{.r} object containing the
 fitted baselines. They need to be subtracted afterwards:
 
 ```{r bl}
-bl <- spc.fit.poly.below (chondro)
+bl <- spc.fit.poly.below(chondro)
 chondro <- chondro - bl
 ```
 
@@ -1469,11 +1494,11 @@ correction. The `baseline()`{.r} function works on the spectra matrix, which is 
 `hyperSpec`{.r} object:
 
 ```{r do-bl}
-corrected <- hyperSpec::chondro [1] # start with the unchanged data set
+corrected <- hyperSpec::chondro[1] # start with the unchanged data set
 
-require ("baseline")
-bl <- baseline (corrected [[]], method = "modpolyfit", degree = 4)
-corrected [[]] <- getCorrected (bl)
+require("baseline")
+bl <- baseline(corrected[[]], method = "modpolyfit", degree = 4)
+corrected[[]] <- getCorrected(bl)
 ```
 Fig.~\@ref(fig:bl-baseline) shows the result for the first spectrum of `chondro`{.r}.
 \begin{figure}[tb]
@@ -1482,15 +1507,14 @@ Fig.~\@ref(fig:bl-baseline) shows the result for the first spectrum of `chondro`
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig.cap=CAPTION, include=TRUE, width=10, height=5, echo=FALSE, results='hide'}
-
 baseline <- corrected
-baseline [[]] <- getBaseline (bl)
-plot (hyperSpec::chondro [1], plot.args = list (ylim = range (hyperSpec::chondro [1], 0)))
-plot (baseline, add = TRUE, col = "red")
+baseline[[]] <- getBaseline(bl)
+plot(hyperSpec::chondro[1], plot.args = list(ylim = range(hyperSpec::chondro[1], 0)))
+plot(baseline, add = TRUE, col = "red")
 ```
 }\hfill%
 \subfloat[Baseline corrected spectrum]{
@@ -1498,12 +1522,11 @@ plot (baseline, add = TRUE, col = "red")
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r fig.cap=CAPTION, include=TRUE, width=10, height=5, echo=FALSE, results='hide'}
-
-plot (corrected, plot.args = list (ylim = range (hyperSpec::chondro [1], 0)))
+plot(corrected, plot.args = list(ylim = range(hyperSpec::chondro[1], 0)))
 ```
 }
 \caption{Baseline correction using the package **baseline** package: the first spectrum of
@@ -1513,7 +1536,7 @@ plot (corrected, plot.args = list (ylim = range (hyperSpec::chondro [1], 0)))
 \end{figure}
 
 ```{r}
-rm (bl, chondro)
+rm(bl, chondro)
 ```
 
 ## Intensity Calibration
@@ -1526,30 +1549,25 @@ be immediately subtracted:
 `spectra - constant`{.r}
 
 ### Correcting Wavelength Dependence
-\mFun{`sweep()`{.r}} For each of the wavelengths the same correction needs to be applied to all
-spectra.
-\begin{enumerate}
--  There might be wavelength dependent offsets (background or dark spectra).
+\mFun{`sweep()`{.r}} 
+For each of the wavelengths the same correction needs to be applied to all spectra.
+
+1. There might be wavelength dependent offsets (background or dark spectra).
   They are subtracted:
-
   `sweep (spectra, 2, offset.spectrum, "-")`{.r}
--  A multiplicative dependency such as a CCD's photon efficiency: 
-
+2. A multiplicative dependency such as a CCD's photon efficiency: 
   `sweep (spectra, 2, photon.efficiency, "/")`{.r}
-\end{enumerate}
+
 
 ### Spectra Dependent Correction
 
-\mFun{`sweep()`{.r}} If the correction depends on the spectra (e. g. due to inhomogeneous
+\mFun{`sweep()`{.r}} 
+If the correction depends on the spectra (e. g. due to inhomogeneous
 illumination while collecting imaging data, differing optical path length, etc.), the
 `MARGIN`{.r}of the `sweep()`{.r} function needs to be 1 or `SPC`{.r}:
-\begin{enumerate}
--  Pixel dependent offsets are subtracted:
 
-  `sweep (spectra, SPC, pixel.offsets, "-")`{.r}
--  A multiplicative dependency: 
-
-  `sweep (spectra, SPC, illumination.factors, "{*`{.r}")}
+1.  Pixel dependent offsets are subtracted: `sweep (spectra, SPC, pixel.offsets, "-")`{.r}
+2.  A multiplicative dependency:  `sweep (spectra, SPC, illumination.factors, "{*}")`{.r}
 \end{enumerate}
 
 ## Normalization
@@ -1557,30 +1575,28 @@ illumination while collecting imaging data, differing optical path length, etc.)
 choice. E. g. for area normalization, use:
 
 ```{r normalize1}
-chondro <- sweep (chondro, 1, mean, "/")
+chondro <- sweep(chondro, 1, mean, "/")
 ```
 (using the mean instead of the sum results in conveniently scaled spectra with intensities around 1.)
 
 If the calculation of the normalization factors is more elaborate, use a two step procedure:
-\begin{enumerate}
--  Calculate appropriate normalization factors
 
-  You may calculate the factors using only a certain wavelength range, thereby normalizing on a
-  particular band or peak.
--  Again, sweep the factor off the spectra:
+1. Calculate appropriate normalization factors
+   You may calculate the factors using only a certain wavelength range, thereby normalizing on a
+   particular band or peak.
+2. Again, sweep the factor off the spectra:
+  `normalized <- sweep (spectra, 1, factors, "{*}")`{.r}
 
-  `normalized <- sweep (spectra, 1, factors, "{*`{.r}")}
-\end{enumerate}
 
 ```{r norm}
-factors <- 1 / apply (chondro [, , 1600 ~ 1700], 1, mean)
-chondro <- sweep (chondro, 1, factors, "*")
+factors <- 1 / apply(chondro[, , 1600 ~ 1700], 1, mean)
+chondro <- sweep(chondro, 1, factors, "*")
 ```
 
 For the special case of area normalization using the `mean`{.r} spectra, the factors can be more conveniently calculated by
 
 ```{r norm-rowmeans}
-factors <- 1 / rowMeans (chondro [, , 1600 ~ 1700])
+factors <- 1 / rowMeans(chondro[, , 1600 ~ 1700])
 ```
 
 and instead of `sweep`{.r} the arithmetic operators (here `*`{.r}) can be used directly with the normalization factor:
@@ -1592,15 +1608,15 @@ chondro <- chondro * factors
 Put together, this results in:
 
 ```{r areanorm-shortcut}
-chondro <- chondro / rowMeans (chondro [, , 1600 ~ 1700])
+chondro <- chondro / rowMeans(chondro[, , 1600 ~ 1700])
 ```
 
-For minimum-maximum-normalization, first do an offset- or baseline correction, then normalize using
-`max()`{.r}.
+For minimum-maximum-normalization, first do an offset- or baseline correction, then normalize using `max()`{.r}.
 
 ## Centering and Variance Scaling the Spectra
 
-\mFun{`scale()`{.r}} Centering means that the mean spectrum is subtracted from each of the
+\mFun{`scale()`{.r}} 
+Centering means that the mean spectrum is subtracted from each of the
 spectra. Many data analysis techniques, like principal component analysis, partial least squares,
 etc., work much better on centered data. From a spectroscopic point of view it depends on the
 particular data set whether centering does make sense or not.
@@ -1619,13 +1635,12 @@ To center the `flu`{.r} data set, use:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r centre-flu, fig.cap=CAPTION, width=10, height=5}
-
-flu.centered <- scale (flu, scale = FALSE)
-plot (flu.centered)
+flu.centered <- scale(flu, scale = FALSE)
+plot(flu.centered)
 ```
 
 On the other hand, the `chondro`{.r} data set consists of Raman spectra, so the spectroscopic
@@ -1641,29 +1656,30 @@ order to avoid that, using e.g., the 5^th^ percentile spectrum is more suitable:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r perc, fig.cap=CAPTION, width=10, height=5, include=TRUE}
-
-chondro <- scale (chondro, center = quantile (chondro, 0.05), scale = FALSE)
-plot (chondro, "spcprctl5")
+chondro <- scale(chondro, center = quantile(chondro, 0.05), scale = FALSE)
+plot(chondro, "spcprctl5")
 ```
 
 See section~\@ref(sec:speed-considerations) (p.~\@ref(sec:speed-considerations)) for some tips to speed
 up these calculations.
 
 ## Multiplicative Scatter Correction (MSC)
-\mFun{`pls::msc()`{.r}}MSC can be done using `msc()`{.r} from package
+\mFun{`pls::msc()`{.r}}
+MSC can be done using `msc()`{.r} from package
 package **pls**\citep{Wehrens2007}.  It operates on the spectra matrix:
 
 ```{r msc, eval=FALSE}
-require (pls)
+require(pls)
 chondro.msc <- chondro
-chondro.msc [[]] <- msc (chondro [[]])
+chondro.msc [[]] <- msc(chondro [[]])
 ```
 
-## Spectral Arithmetic \mFun{`+ - {*()`{.r} / \textasciicircum{} log log10}}
+## Spectral Arithmetic 
+\mFun{`+ - {*()`{.r} / \textasciicircum{} log log10}}
 
 Basic mathematical functions are defined for `hyperSpec`{.r} objects.
 You may convert spectra:
@@ -1673,7 +1689,7 @@ You may convert spectra:
 In this case, do not forget to adapt the label:\mFun{`labels()`{.r}}
 
 ```{r label, eval=FALSE}
-labels (absorbance.spectra)$spc <- "A"
+labels(absorbance.spectra)$spc <- "A"
 ```
 
 Be careful: R's `log()`{.r} function calculates the natural
@@ -1694,13 +1710,13 @@ e. g. Principal Component Analysis with `prcomp()`{.r}} {#sec:pca}
 a `data.frame`{.r}. The column names can then be used in the formula:
 
 ```{r pca}
-pca <- prcomp (~ spc, data = chondro$., center = FALSE)
+pca <- prcomp(~spc, data = chondro$., center = FALSE)
 ```
 
 Many modeling functions call `as.data.frame`{.r} on their `data`{.r} argument. In that case, the conversion is done automatically:
 
 ```{r pca-auto}
-pca <- prcomp (~ spc, data = chondro, center = FALSE)
+pca <- prcomp(~spc, data = chondro, center = FALSE)
 ```
 
 Results of such a \mFun{`decomposition()`{.r}} decomposition can be put again into
@@ -1708,19 +1724,23 @@ Results of such a \mFun{`decomposition()`{.r}} decomposition can be put again in
 figure~\@ref(fig:pca).
 
 ```{r decomp}
-scores <- decomposition (chondro, pca$x, label.wavelength = "PC",
-                         label.spc = "score / a.u.")
+scores <- decomposition(chondro, pca$x,
+  label.wavelength = "PC",
+  label.spc = "score / a.u."
+)
 scores
 ```
 
 The loadings can be similarly re-imported:
 
 ```{r loadings}
-loadings <- decomposition (chondro, t(pca$rotation), scores = FALSE,
-                           label.spc = "loading I / a.u.")
+loadings <- decomposition(chondro, t(pca$rotation),
+  scores = FALSE,
+  label.spc = "loading I / a.u."
+)
 loadings
 ```
-%
+
 There is, however, one important difference. The loadings are thought of as values computed from all
 spectra together. Thus no meaningful extra data can be assigned for the loadings object (at least not
 if the column consists of different values). Therefore, the loadings object lost all extra data (see
@@ -1730,16 +1750,20 @@ above).
 it is set to `TRUE`{.r}, the columns are retained, but contain `NA`{.r}s:
 
 ```{r retain.col}
-loadings <- decomposition (chondro, t(pca$rotation), scores = FALSE,
-                           retain.columns = TRUE, label.spc = "loading I / a.u.")
+loadings <- decomposition(chondro, t(pca$rotation),
+  scores = FALSE,
+  retain.columns = TRUE, label.spc = "loading I / a.u."
+)
 loadings[1]$..
 ```
 If an extra data column does contain only one unique value, it is retained anyways:
 
 ```{r retain}
 chondro$measurement <- 1
-loadings <- decomposition (chondro, t(pca$rotation), scores = FALSE,
-                           label.spc = "loading I / a.u.")
+loadings <- decomposition(chondro, t(pca$rotation),
+  scores = FALSE,
+  label.spc = "loading I / a.u."
+)
 loadings[1]$..
 ```
 \begin{figure}
@@ -1749,12 +1773,11 @@ loadings[1]$..
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r pca-load, fig.cap=CAPTION, width=8, height=4, echo=FALSE}
-
-plot (loadings [1:3], stacked = TRUE)
+plot(loadings[1:3], stacked = TRUE)
 ```
 }
 \subfloat[ {#fig-pca-score}]{
@@ -1762,12 +1785,11 @@ plot (loadings [1:3], stacked = TRUE)
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r pca-score, fig.cap=CAPTION, width=8, height=4, echo=FALSE}
-
-plotmap (scores [,,3], col.regions = div.palette (20))
+plotmap(scores[, , 3], col.regions = div.palette(20))
 ```
 }
 \caption[]{ {#fig:pca}
@@ -1789,7 +1811,7 @@ For an ideal data set (constituents varying independently, sufficient signal to 
 If we decide that only the first 10 components actually carry spectroscopic information, we can reconstruct spectra with better signal to noise ratio\mFun{`\%*\%()`{.r}}:
 
 ```{r pca-smooth}
-smoothed <- scores [,, 1:10] %*% loadings [1:10]
+smoothed <- scores[, , 1:10] %*% loadings[1:10]
 ```
 Keep in mind, though, that we cannot be sure how much *useful* information was discarded with the higher components. This kind of noise reduction may influence further modeling of the data. Mathematically speaking, the rank of the new
 `r nrow (chondro)` $×$ `r nwl (chondro)` spectra matrix is only 10.
@@ -1799,50 +1821,48 @@ Keep in mind, though, that we cannot be sure how much *useful* information was d
 Some functions need the data being an *unstacked* or *long-format* `data.frame`{.r}. \mFun{`as.long.df()`{.r}}`as.long.df()`{.r} is the appropriate conversion function.
 
 ```{r ggplot, eval=FALSE}
-require (ggplot2)
-ggplot (as.long.df (chondro [1]), aes (x = .wavelength, y = spc)) + geom_line ()
+require(ggplot2)
+ggplot(as.long.df(chondro [1]), aes(x = .wavelength, y = spc)) + geom_line()
 ```
 
 ```{r ggplot-do, echo=FALSE}
-if (require (ggplot2)){
-# <<ggplot>>
-  ggsave (file = "hyperspec-fig-ggplot-do.pdf", width = 8, height = 4)
+if (require(ggplot2)) {
+  # <<ggplot>>
+  ggsave(file = "hyperspec-fig-ggplot-do.pdf", width = 8, height = 4)
 } else {
-  pdf ("hyperspec-fig-ggplot-do.pdf", width = 8, height = 4)
-  ploterrormsg (NULL, "ggplot2")
+  pdf("hyperspec-fig-ggplot-do.pdf", width = 8, height = 4)
+  ploterrormsg(NULL, "ggplot2")
   dev.off()
 }
 ```
 \includegraphics[width=.5\linewidth]{hyperspec-fig-ggplot-do.pdf}
 
-\subsection{Data Analysis Methods using a matrix 
+## Data Analysis Methods using a matrix e.g., Hierarchical Cluster Analysis {#HCA}
 
-e.g., Hierarchical Cluster Analysis}
- {#HCA}\mFun{`[{()`{.r}[{}]{}]}}
-Some functions expect their input data in a matrix, so either `as.matrix (object)`{.r} or the
-abbreviation `object [[]]`{.r} can be used:
+\mFun{`[{()`{.r}[{}]{}]}}
+Some functions expect their input data in a matrix, so either `as.matrix(object)`{.r} or the
+abbreviation `object[[]]`{.r} can be used:
 
 ```{r hca}
-dist <- pearson.dist (chondro [[]])
+dist <- pearson.dist(chondro[[]])
 ```
 
 Again, many such functions coerce the data to a matrix automatically, so the `hyperSpec`{.r} object can be
 handed over:
 
 ```{r hca-asmatrix}
-dist <- pearson.dist (chondro)
-dendrogram <- hclust (dist, method = "ward.D")
+dist <- pearson.dist(chondro)
+dendrogram <- hclust(dist, method = "ward.D")
 ```
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r dend, fig.cap=CAPTION, width=5, height=5, include=FALSE}
-
-plot (dendrogram)
+plot(dendrogram)
 ```
 
 In order to plot a cluster map, the cluster membership needs to be
@@ -1851,24 +1871,23 @@ calculated from the dendrogram.
 First, cut the dendrogram so that three clusters result:
 
 ```{r dendcut}
-chondro$clusters <- as.factor (cutree (dendrogram, k = 3))
+chondro$clusters <- as.factor(cutree(dendrogram, k = 3))
 ```
 As the cluster membership was stored as factor, the levels can be meaningful names, which are displayed in the color legend.
 
 ```{r clustname}
-levels (chondro$clusters) <- c ("matrix", "lacuna", "cell")
+levels(chondro$clusters) <- c("matrix", "lacuna", "cell")
 ```
 Then the result may be plotted (figure~\@ref(fig:clust:map)):
 
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r clustmap, fig.cap=CAPTION, width=7.5, height=5, include=FALSE, echo=FALSE}
-
-plotmap (chondro, clusters ~ x * y, col.regions = cluster.cols)
+plotmap(chondro, clusters ~ x * y, col.regions = cluster.cols)
 ```
 \begin{figure}
 \subfloat[ {#fig:clust:dend}]{\includegraphics[width=0.33\textwidth]{hyperspec-fig-dend}}
@@ -1879,9 +1898,7 @@ dendrogram \subref{fig:clust:map} the map of the 3 clusters \subref{fig:clust:sp
 the mean spectra.}
 \end{figure}
 
-\subsection[Calculating group-wise Sum Characteristics, e. g. Cluster Mean Spectra]{Calculating group-wise Sum Characteristics, 
-
-e. g. Cluster Mean Spectra}
+## Calculating group-wise Sum Characteristics, e. g. Cluster Mean Spectra
 
 `aggregate()`{.r}\mFun{`aggregate()`{.r}} applies the function given in `FUN`{.r}
 to each of the groups of spectra specified in `by`{.r}.
@@ -1891,13 +1908,12 @@ So we may plot the cluster mean spectra:
 
 
 ```{r include=FALSE}
-CAPTION = " ??? "
+CAPTION <- " ??? "
 ```
 
 ```{r clustmean, fig.cap=CAPTION, width=7.5, height=5, include=FALSE}
-
-means <- aggregate (chondro, by = chondro$clusters, mean_pm_sd)
-plot (means, col = cluster.cols, stacked = ".aggregate", fill = ".aggregate")
+means <- aggregate(chondro, by = chondro$clusters, mean_pm_sd)
+plot(means, col = cluster.cols, stacked = ".aggregate", fill = ".aggregate")
 ```
 
 ## Factor columns in `hyperSpec`{.r} Objects: dropping factor levels that are not needed
@@ -1905,19 +1921,18 @@ plot (means, col = cluster.cols, stacked = ".aggregate", fill = ".aggregate")
 For subsections of `hyperSpec`{.r} objects that do not contain all levels of a factor column, \mFun{`droplevels()`{.r}}`droplevels()`{.r} drops the"npopulate"levels: 
 
 ```{r droplevels}
-tmp <- chondro [1 : 50]
-table (tmp$clusters)
-tmp <- droplevels (tmp)
-table (tmp$clusters)
+tmp <- chondro[1:50]
+table(tmp$clusters)
+tmp <- droplevels(tmp)
+table(tmp$clusters)
 ```
 
 ## Splitting an Object, and Binding a List of `hyperSpec`{.r} Objects
 
-\mFun{`split()`{.r}}A `hyperSpec`{.r} object may also be split into a list of `hyperSpec`{.r}
-objects:
+\mFun{`split()`{.r}}A `hyperSpec`{.r} object may also be split into a list of `hyperSpec`{.r} objects:
 
 ```{r split}
-clusters <- split (chondro, chondro$clusters)
+clusters <- split(chondro, chondro$clusters)
 clusters
 ```
 
@@ -1929,13 +1944,13 @@ section~\@ref(sec:collapse), page~\pageref{sec:collapse}).
 Both `rbind()`{.r} and `collapse()`{.r} take care that factor levels are expanded as necessary:
 
 ```{r}
-lacunae <- droplevels (chondro [chondro$clusters == "lacuna" & ! is.na (chondro$clusters)])
-summary (lacunae$clusters)
-cells <- droplevels (chondro [chondro$clusters == "cell" & ! is.na (chondro$clusters)])
-summary (cells$clusters)
+lacunae <- droplevels(chondro[chondro$clusters == "lacuna" & !is.na(chondro$clusters)])
+summary(lacunae$clusters)
+cells <- droplevels(chondro[chondro$clusters == "cell" & !is.na(chondro$clusters)])
+summary(cells$clusters)
 
-summary (rbind (cells, lacunae)$clusters)
-summary (collapse (cells, lacunae)$clusters)
+summary(rbind(cells, lacunae)$clusters)
+summary(collapse(cells, lacunae)$clusters)
 ```
 
 # Speed and Memory Considerations {#sec:speed-considerations}
@@ -1946,11 +1961,12 @@ validation may ask for special speed considerations.
 As an example, let's again consider the code for shifting the spectra:
 
 ```{r speed1}
-tmp <- chondro [1 : 50]
-shifts <- rnorm (nrow (tmp))
-system.time ({
-  for (i in seq_len (nrow (tmp)))
-    tmp [[i]] <- interpolate (tmp [[i]], shifts [i], wl = wl (tmp))
+tmp <- chondro[1:50]
+shifts <- rnorm(nrow(tmp))
+system.time({
+  for (i in seq_len(nrow(tmp))) {
+    tmp[[i]] <- interpolate(tmp[[i]], shifts[i], wl = wl(tmp))
+  }
 })
 ```
 
@@ -1961,17 +1977,18 @@ in \R are much faster if the formula interface is avoided and the appropriate `d
 handed over directly.
 
 ```{r speed3}
-tmp <- chondro [1 : 50]
-system.time ({
-  tmp.matrix <- tmp [[]]
-  wl <- wl (tmp)
-  for (i in seq_len (nrow (tmp)))
-    tmp.matrix [i, ] <- interpolate (tmp.matrix [i, ], shifts [i], wl = wl)
-  tmp [[]] <- tmp.matrix
+tmp <- chondro[1:50]
+system.time({
+  tmp.matrix <- tmp[[]]
+  wl <- wl(tmp)
+  for (i in seq_len(nrow(tmp))) {
+    tmp.matrix[i, ] <- interpolate(tmp.matrix[i, ], shifts[i], wl = wl)
+  }
+  tmp[[]] <- tmp.matrix
 })
 ```
 
-#### Additional packages.
+#### Additional packages
 
 \begin{description}
 - **package **matrixStats**** implements fast functions to calculate summary statistics for each row
@@ -1980,15 +1997,19 @@ system.time ({
   <http://hyperSpec.r-forge.r-project.org/>
 \end{description}
 
-#### Compiled code. R provides interfaces to Fortran and C code,
-see the manual"riting R Extension" package **Rcpp**`r cite.pkg("Rcpp")` allows to
+#### Compiled code
+
+R provides interfaces to Fortran and C code,
+see the manual "Writing R Extensions" package **Rcpp**`r cite.pkg("Rcpp")` allows to
 conveniently integrate C++ code. package **inline**`r cite.pkg("inline")` adds another layer of
 convenience: inline definition of functions in C, C++, or Fortran.
 
 An intermediate level is byte compilation of R code, which is done by
 package **compiler**`r cite.pkg("compiler")`.
 
-#### Memory use. In general, it is recommended not to work with variables that are more than
+#### Memory use
+
+In general, it is recommended not to work with variables that are more than
 approximately a third of the available RAM in size. Particularly the import of raw spectroscopic data
 can consume large amounts of memory. At certain points, package **hyperSpec** provides switches that allow working
 with data sets that are actually close to this memory limit.
@@ -2021,64 +2042,25 @@ of `read.txt.Renishaw()`{.r} can be lowered by importing the data in chunks (arg
 \endhead
 
 ```{r tab-fn, results='tex', echo=FALSE}
-make.fn.table <- function (){
-load ("functions.RData")
-functions <- subset (functions, !internal)
-functions$group <- functions$group[,drop=TRUE]
+make.fn.table <- function() {
+  load("functions.RData")
+  functions <- subset(functions, !internal)
+  functions$group <- functions$group[, drop = TRUE]
 
-TeX.escape <- function (x){
-#  x <- gsub ("^
+  TeX.escape <- function(x) {
+    #  x <- gsub ("^\\\\([^\\\\])", "\\\\\\\\\\1", x)
+    #  x <- gsub ("[^\\\\]\\\\$", "\\1\\\\\\\\", x)
+    x <- gsub("([^\\\\]|^)\\$", "\\1\\\\$", x)
+    x <- gsub("([^\\\\]|^)_", "\\1\\\\_", x)
+    x <- gsub("([^\\\\]|^)%", "\\1\\\\%", x)
+    x
+  }
 
-([^
-
-])", "
-
-
-
-1", x)
-#  x <- gsub ("[^
-
-]
-
-$", "
-1
-
-
-", x)
-  x <- gsub ("([^
-
-]|^)
-$", "
-1
-
-$", x)
-  x <- gsub ("([^
-
-]|^)_", "
-1
-
-_", x)
-  x <- gsub ("([^
-
-]|^)%", "
-1
-
-%", x)
-  x
-}
-
-for (g in levels (functions$group)){
-  cat ("
-multicolumn{2}{l}{\*",g, "*}
-
-\n", sep = "")
-  df <- t (functions [functions$group == g, c ("name", "description")])
-  cat (paste (paste ("\`", df[1,], "`", sep = ""), df[2,], sep = " & ", collapse ="
-
-\n"),"
-
-\n")
-}
+  for (g in levels(functions$group)) {
+    cat("\\multicolumn{2}{l}{\\emph{", g, "}}\\\\\n", sep = "")
+    df <- t(functions [functions$group == g, c("name", "description")])
+    cat(paste(paste("\\verb+", df[1, ], "+", sep = ""), df[2, ], sep = " & ", collapse = "\\\\\n"), "\\\\\n")
+  }
 }
 make.fn.table()
 ```
@@ -2091,12 +2073,10 @@ make.fn.table()
 \begin{footnotesize}
 
 ```{r echo=FALSE}
-make.bib (c ("baseline", "compiler", "Rcpp", "inline"), file = "hyperspec-pkg.bib")
-print (as.matrix(Sys.info()))
+# print (as.matrix(Sys.info()))
 # <<cleanup>>
-#for (f in Sys.glob ("fig/*.pdf"))
-#  compactPDF ('$```
-', qpdf =" gs_quality = 'screen', gs_extras = '-dDownsampleColorImages=false')
-@
-%
+# for (f in Sys.glob ("fig/*.pdf"))
+#  compactPDF ('$@', qpdf = '', gs_quality = 'screen', gs_extras = '-dDownsampleColorImages=false')
+```
+
 \end{footnotesize}
