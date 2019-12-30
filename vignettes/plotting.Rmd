@@ -6,7 +6,8 @@ title:     "**_hyperSpec_** Plotting Functions"
 author:
   - name: Claudia Beleites
     email: chemometrie@beleites.de
-    address: |
+    corresponding : yes
+    affiliation   : |
         DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)  
         Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)  
         ÖPV, JKI, Berlin/Germany (2017--2019)  
