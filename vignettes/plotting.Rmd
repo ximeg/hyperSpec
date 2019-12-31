@@ -4,15 +4,15 @@ title:     "**_hyperSpec_** Plotting Functions"
 # file_name: plotting
 # Authors --------------------------------------------------------------------
 author:
-  - name: Claudia Beleites
+  - name: Claudia Beleites^1,2,3,4,5^
     email: chemometrie@beleites.de
     corresponding : yes
     affiliation   : |
-        DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)  
-        Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)  
-        ÖPV, JKI, Berlin/Germany (2017--2019)  
-        Arbeitskreis Lebensmittelmikrobiologie und Biotechnologie, Hamburg University, Hamburg/Germany (2019 -- 2020)  
-        Chemometric Consulting and Chemometrix GmbH, Wölfersheim/Germany (since 2016)
+        1. DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)  
+        2. Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)  
+        3. ÖPV, JKI, Berlin/Germany (2017--2019)  
+        4. Arbeitskreis Lebensmittelmikrobiologie und Biotechnologie, Hamburg University, Hamburg/Germany (2019 -- 2020)  
+        5. Chemometric Consulting and Chemometrix GmbH, Wölfersheim/Germany (since 2016)
 # Document -------------------------------------------------------------------
 date:      "`r Sys.Date()`"
 output:
@@ -61,12 +61,11 @@ make_bib(
     "latticeExtra",
     "rgl",
     "ggplot2",
-    # "playwith",     # Is "playwith" used?
     "plotrix",
     "deldir",
     "tripack"
   ),
-  file = "man/plotting-pkg.bib"
+  file   = "man/plotting-pkg.bib"
 )
 ```
 
@@ -80,6 +79,13 @@ make_bib(
 
 <!-- Note that some definitions are executed in `vignette.defs`, and others invisibly at the beginning of the file to have the code as similar as possible to interactive sessions. -->
 
+
+> **Terminology**  
+> Throughout the documentation of the package, the following terms are used:
+> 
+> - **wavelength** indicates any type of spectral abscissa. 
+> - **intensity** indicates any type of spectral ordinate.
+> - **extra data** indicates non-spectroscopic data.
 
 
 ```{r check-required, echo=FALSE, results='tex', eval=FALSE}
@@ -115,13 +121,7 @@ set.seed(2020)
 ```
 
 
-
-```{r FIXME-1, include=FALSE}
-# FIXME: Is "latticist" really mentioned in this vignette?
-```
-
-Besides, package **tripack**, and package **latticist** are mentioned, but not used in this vignette.
-
+Besides, package **tripack**`r cite_pkg("tripack")` is mentioned, but not used in this vignette.
 
 
 # Preliminary Calculations {-}
@@ -611,9 +611,14 @@ plotspc(cluster.means,
 ### Stacking Groups of Spectra
 
 
-```{r FIXME-2, include=FALSE}
-# FIXME: grammatical structure of these sentences are difficult to understand.
-# Does this alternative formulation reflect the idea of the sub-chapter well enough?
+```{r FIXME-2}
+# FIXME: grammatical structure of these sentences makes them difficult to understand:
+# 
+# The spectra to be stacked can be grouped: `stacked = "factor"`{.r}. 
+# Alternatively, the name of an extra data column can be used for grouping (Fig. \@ref(fig:stacked2)).
+
+
+# Would this alternative formulation reflect the idea of the sub-chapter well enough:
 
 # Argument `stacked = "factor"`{.r} can be used to stack groups of spectra (Fig. \@ref(fig:stacked2)).
 # Here `"factor"`{.r} is a column name of factor variable in extra data. 
@@ -1326,9 +1331,6 @@ if (require(rgl)) {
 
 # Using **_ggplot2_** with **_hyperSpec_** objects {#plots-ggplot2}
 
-```{r FIXME-3, include=FALSE}
-# FIXME: ggplot2 method for "hyperSpec" objects can be easily created
-```
 
 Class `hyperSpec`{.r} objects do not yet directly support plotting with package **ggplot2**`r cite_pkg("ggplot2")`.
 Nevertheless, package **ggplot2** graphics can easily be obtained, and `qplot*`{.r} equivalents to `plotspc()`{.r} and `plotmap()`{.r}. 
@@ -1495,8 +1497,8 @@ Therefore, in loops, functions, Sweave chunks, etc. the lattice object needs to 
 ([R FAQ: Why do lattice/trellis graphics not work?](http://cran.r-project.org/doc/FAQ/R-FAQ.html#Why-do-lattice_002ftrellis-graphics-not-work_003f)).
 The same holds for package **ggplot2** graphics.
 
-```{r FIXME-4, include=FALSE}
-# FIXME: in my opinion, "vignettes.defs" shouldn't be mentioned
+```{r FIXME-4}
+# FIXME: in my opinion, "vignettes.defs" shouldn't be mentioned at all
 ```
 For suggestions on how the lattice functions can be redefined so that the result is printed without external print command, see the file `vignettes.defs`.
 
