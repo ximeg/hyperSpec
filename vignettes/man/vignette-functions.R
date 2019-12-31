@@ -58,7 +58,7 @@ make_cite_keys <- function(pkg, entries) {
     return(pkg)
   }
 
-  if (missing(entries)) {
+  if (missing(entries) || is.null(entries)) {
     entries <- citation_or_file(pkg)
   }
 
@@ -101,19 +101,27 @@ make_bib <- function(..., file = NULL) {
     pkg <- unique(pkg_or_base(pkg))
   }
 
-  l <- lapply(pkg, citation_with_key)
-  l <- do.call("c", l[!sapply(l, is.null)])
-
-  if (!is.null(file)) {
-    if (is.null(l)) {
-      cat(NULL, file = file)
-    } # touches file
-    else {
-      cat(toBibtex(l), file = file, sep = "\n")
-    }
+  if (is.null(file)) {
+    file <- ""
   }
 
-  invisible(l)
+  pkg  <- unique(pkg_or_base(pkg))
+
+  knitr::write_bib(pkg, prefix = "", file = file)
+
+  # l <- lapply(pkg, citation_with_key)
+  # l <- do.call("c", l[!sapply(l, is.null)])
+  #
+  # if (!is.null(file)) {
+  #   if (is.null(l)) {
+  #     cat(NULL, file = file)
+  #   } # touches file
+  #   else {
+  #     cat(toBibtex(l), file = file, sep = "\n")
+  #   }
+  # }
+  #
+  # invisible(l)
 }
 
 
@@ -145,8 +153,8 @@ nice.paste <- function(...) {
   fnames
 }
 
-texListFun <- function (pattern){
-  funs <- ls (envir = getNamespace ("hyperSpec"), pattern = pattern)
-  funs <- paste ("\\\\Rfunction{", funs, "}", sep ="")
-  nice.paste (funs)
+texListFun <- function(pattern){
+  funs <- ls(envir = getNamespace("hyperSpec"), pattern = pattern)
+  funs <- paste("`", funs, "`{.r}", sep ="")
+  nice.paste(funs)
 }
