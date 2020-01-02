@@ -20,6 +20,9 @@ output:
       base_format: rmarkdown::html_vignette
       toc: yes
       fig_caption: yes
+      css:
+        - man/vignette.css
+        - man/style.css
 vignette: >
     % \VignetteIndexEntry{plotting: manual of hyperSpec's plotting functions}
     % \VignetteKeywords{hyperspec}
@@ -65,7 +68,7 @@ make_bib(
     "deldir",
     "tripack"
   ),
-  file   = "man/plotting-pkg.bib"
+  file = "man/plotting-pkg.bib"
 )
 ```
 
@@ -84,7 +87,7 @@ make_bib(
 > Throughout the documentation of the package, the following terms are used:
 > 
 > - **wavelength** indicates any type of spectral abscissa. 
-> - **intensity** indicates any type of spectral ordinate.
+> - **intensity**  indicates any type of spectral ordinate.
 > - **extra data** indicates non-spectroscopic data.
 
 
