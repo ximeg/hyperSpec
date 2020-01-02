@@ -4,21 +4,26 @@ subtitle:    Vignette for the Data Set `laser` of the R package package **hyperS
 # subtitle:  Vignette on hyperSpec's laser data set
 # file_name: laser
 # Authors --------------------------------------------------------------------
-# author:    C. Beleites
 author:
-  - name: Claudia Beleites
+  - name: Claudia Beleites^1,2,3,4,5^
     email: chemometrie@beleites.de
-    address: |
-        DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)
-        Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)
-        ÖPV, JKI, Berlin/Germany (2017--2019)
-        Arbeitskreis Lebensmittelmikrobiologie und Biotechnologie, Hamburg University, Hamburg/Germany (2019 -- 2020)
-        Chemometric Consulting and Chemometrix GmbH, Wölfersheim/Germany (since 2016)
+    corresponding : yes
+    affiliation   : |
+        1. DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)
+        2. Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)
+        3. ÖPV, JKI, Berlin/Germany (2017--2019)
+        4. Arbeitskreis Lebensmittelmikrobiologie und Biotechnologie, Hamburg University, Hamburg/Germany (2019 -- 2020)
+        5. Chemometric Consulting and Chemometrix GmbH, Wölfersheim/Germany (since 2016)
 # Document -------------------------------------------------------------------
 date:        "`r Sys.Date()`"
 output:
     bookdown::html_document2:
       base_format: rmarkdown::html_vignette
+      toc: yes
+      fig_caption: yes
+      css:
+        - man/vignette.css
+        - man/style.css
 vignette: >
     % \VignetteIndexEntry{laser: Vignette on hyperSpec's laser data set.}
     % \VignetteKeywords{hyperSpec, laser, time series}
@@ -51,15 +56,26 @@ source("man/vignette-default-settingsR.R", encoding = "UTF-8")
 ```{r bib, echo=FALSE, paged.print=FALSE}
 make_bib(
   c(
-    "hyperSpec"
+    "hyperSpec",
+    "rgl"
   ),
   file = "man/laser-pkg.bib"
 )
 ```
 
+<div class="redbox">
+This file went through the automatic translation phase only.
+Now it must be carefully reviewed!
+```{r}
+knitr::opts_chunk$set(eval = FALSE)
+
+# TODO: Continue reviewing from here...
+``` 
+</div>
+
 
 \SweaveOpts{concordance=TRUE}
-\title{Unstable Laser Emission Vignette for the Data Set `laser` of the R package package **hyperSpec** }
+\title{Unstable Laser Emission Vignette for the Data Set `laser` of the **R** package **hyperSpec** }
 
 \warnbox{Reproducing the Examples in this Vignette}{
 All spectra used in this manual are installed automatically with package **hyperSpec**. 
@@ -259,7 +275,7 @@ plotc(laser[, , wls], spc ~ t | .wavelength, type = "b", cex = 0.3, col = "black
 \end{figure}
 
 # False-colour plot of the spectral intensity over wavelength and time {#sec:plotmat}
-package **hyperSpec** supplies functions to draw the spectral matrix using package **lattice**'s `levelplot()`{.r}.
+Package **hyperSpec** supplies functions to draw the spectral matrix using package **lattice**'s `levelplot()`{.r}.
 
 
 
@@ -271,7 +287,7 @@ CAPTION <- " ??? "
 plot(laser, "mat", contour = TRUE, col = "#00000060")
 ```
 
-package **hyperSpec**'s `levelplot()`{.r} method can be used to display the spectra matrix over a data column (instead of the row number): figure~\@ref(fig:tsmat). Note that the `hyperSpec`{.r} object is the *second* argument to the function (according to the notation in `levelplot()`{.r}).
+Package **hyperSpec**'s `levelplot()`{.r} method can be used to display the spectra matrix over a data column (instead of the row number): figure~\@ref(fig:tsmat). Note that the `hyperSpec`{.r} object is the *second* argument to the function (according to the notation in `levelplot()`{.r}).
 
 
 
@@ -292,12 +308,12 @@ levelplot(spc ~ .wavelength * t, laser, contour = TRUE, col = "#00000080")
 \end{figure}
 
 # 3d plot of the spectral intensity over wavelength and time {#sec:3d-plot-spectral}
-`hyperSpec`{.r} objects  can easily be drawn with package **rgl**`r cite.pkg ("rgl")`:
+`hyperSpec`{.r} objects  can easily be drawn with package **rgl**`r cite_pkg("rgl")`:
 
 ```{r libraryrgl}
 require(rgl)
 ```
-package **rgl**'s `persp3d()`{.r} plots a surface in 3d defined by points in x, y, and z. Handing over the appropriate data columns of the `hyperSpec`{.r} object is easy (fig.~\@ref(fig:laser3d)):
+Package **rgl**'s function `persp3d()`{.r} plots a surface in 3d defined by points in x, y, and z. Handing over the appropriate data columns of the `hyperSpec`{.r} object is easy (fig.~\@ref(fig:laser3d)):
 
 ```{r rgl-plot, eval=FALSE}
 message("plot chunk")
@@ -351,19 +367,13 @@ if (require(rgl)) {
    {#fig:laser3d}
 \end{figure}
 
-```{r makebib, echo=FALSE, results='hide'}
-make.bib(file = "laser-pkg.bib")
+
+
+
+# Session Info {-}
+
+```{r echo=FALSE}
+sessioninfo::session_info()
 ```
 
 # References {-}
-
-# Session Info {-}
-\begin{footnotesize}
-
-
-<!--   -->
-```{r echo=FALSE}
-make.bib(file = "laser-pkg.bib")
-# <<cleanup>>
-```
-\end{footnotesize}
