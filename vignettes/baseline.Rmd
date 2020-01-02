@@ -3,21 +3,26 @@ title:       Fitting Baselines to Spectra
 # subtitle:  Vignette on hyperSpec's baselinebelow data set
 # file_name: baseline
 # Authors --------------------------------------------------------------------
-# author:    C. Beleites
 author:
-  - name: Claudia Beleites
+  - name: Claudia Beleites^1,2,3,4,5^
     email: chemometrie@beleites.de
-    address: |
-        DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)
-        Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)
-        ÖPV, JKI, Berlin/Germany (2017--2019)
-        Arbeitskreis Lebensmittelmikrobiologie und Biotechnologie, Hamburg University, Hamburg/Germany (2019 -- 2020)
-        Chemometric Consulting and Chemometrix GmbH, Wölfersheim/Germany (since 2016)
+    corresponding : yes
+    affiliation   : |
+        1. DIA Raman Spectroscopy Group, University of Trieste/Italy (2005--2008)
+        2. Spectroscopy $\cdot$ Imaging, IPHT, Jena/Germany (2008--2017)
+        3. ÖPV, JKI, Berlin/Germany (2017--2019)
+        4. Arbeitskreis Lebensmittelmikrobiologie und Biotechnologie, Hamburg University, Hamburg/Germany (2019 -- 2020)
+        5. Chemometric Consulting and Chemometrix GmbH, Wölfersheim/Germany (since 2016)
 # Document -------------------------------------------------------------------
 date:        "`r Sys.Date()`"
 output:
     bookdown::html_document2:
       base_format: rmarkdown::html_vignette
+      toc: yes
+      fig_caption: yes
+      css:
+        - man/vignette.css
+        - man/style.css
 vignette: >
     % \VignetteIndexEntry{baseline: Vignette explaining hyperSpec's baseline fitting functions.}
     % \VignetteKeywords{hyperspec, baseline}
@@ -58,6 +63,19 @@ make_bib(
 ```
 
 
+<div class="redbox">
+This file went through the automatic translation phase only.
+Now it must be carefully reviewed!
+```{r}
+knitr::opts_chunk$set(eval = FALSE)
+noise <- "???"
+
+# TODO: Continue reviewing from here...
+``` 
+</div>
+
+
+
 \SweaveOpts{concordance=TRUE}
 \title{Fitting Baselines to Spectra}
 
@@ -71,7 +89,7 @@ fitting functions for polynomial baselines, `spc.fit.poly()`{.r} and
 then piecewise linear or (smoothing) splines through the support points.
 
 Please note that a specialized package for baseline fitting,
-package **baseline**`r cite.pkg("baseline")`, exists that provides many more methods to fit
+package **baseline**`r cite_pkg("baseline")`, exists that provides many more methods to fit
 baselines to spectroscopic data. Using package **baseline** with `hyperSpec`{.r} objects is demonstrated in
 `vignette ("hyperspec")`{.r}.
 
@@ -109,8 +127,7 @@ squares fit through the complete spectrum that is given in `fit.to`{.r} whereas
   `npts.min()`{.r} defaults to the larger of 3 times (`poly.order()`{.r} + 1) or
   $\frac{1}{20th}$ of the number of data points per spectrum.
 
-  If `npts.min()`{.r} $\leq$ {poly.order}, a warning is issued and \Rcode{npts.min <- poly.order
-    + 1} is used.
+  If `npts.min()`{.r} $\leq$ {poly.order}, a warning is issued and `npts.min <- poly.order + 1`{.r} is used.
  - **`noise`{.r}:** a vector giving the amount of noise, see below.
  
 
@@ -341,7 +358,7 @@ bl <- spc.fit.poly.below(chondro[1], poly.order = 1, noise = 15, max.iter = 8, d
 \end{center}
 \end{figure}
 
-Besides defining a minimal number of supporting points, a"oise leve"may be given.  Consider a
+Besides defining a minimal number of supporting points, a "noise level" may be given.  Consider a
 spectral range consisting only of noise.  The upper part of figure~\@ref(fig:noise) illustrates the
 problem. As the baseline fitting algorithm cannot distinguish between noise and real bands appearing
 above the fitted polynomial, the resulting baseline (black) is too low if the `noise`{.r} parameter
