@@ -1,5 +1,5 @@
-# Plotting settings ----------------------------------------------------------
-# Base plot parameters
+# Plotting settings ==========================================================
+# Base plot parameters -------------------------------------------------------
 knitr::knit_hooks$set(small.mar = function(before, options, envir) {
   if (before) {
     par(mar = c(4.1, 4.1, 1, .6))
@@ -8,7 +8,7 @@ knitr::knit_hooks$set(small.mar = function(before, options, envir) {
 
 knitr::opts_chunk$set(small.mar = TRUE)
 
-# Lattice parameters
+# Lattice parameters ---------------------------------------------------------
 trellis.pars <- trellis.par.get("layout.heights")
 trellis.pars[grep("padding", names(trellis.pars))] <- 0
 trellis.par.set(layout.heights = trellis.pars)
@@ -17,7 +17,7 @@ trellis.pars <- trellis.par.get("layout.widths")
 trellis.pars[grep("padding", names(trellis.pars))] <- 0
 trellis.par.set(layout.widths = trellis.pars)
 
-# Settings -------------------------------------------------------------------
+# Settings ===================================================================
 knitr::opts_chunk$set(
   echo       = TRUE,     # Should blocks with program code be shown in knitted documents?
   eval       = TRUE,     # Should program code be evaluated?
